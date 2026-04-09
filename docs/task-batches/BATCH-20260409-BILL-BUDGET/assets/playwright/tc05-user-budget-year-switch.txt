@@ -1,0 +1,6 @@
+### Result
+{"before":"2026 年预算","after":"2025 年预算"}
+### Ran Playwright code
+```js
+await (async (page) => { const before = await page.locator('.finance-switcher strong').first().innerText(); const nextButton = page.locator('.finance-switcher button').nth(1); const prevButton = page.locator('.finance-switcher button').nth(0); const nextDisabled = await nextButton.isDisabled(); if (nextDisabled === false) { await nextButton.click(); } else { await prevButton.click(); } await page.waitForTimeout(200); const after = await page.locator('.finance-switcher strong').first().innerText(); return { before, after }; })(page);
+```

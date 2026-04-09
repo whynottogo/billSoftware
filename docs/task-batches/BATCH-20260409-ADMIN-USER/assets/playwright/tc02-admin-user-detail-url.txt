@@ -1,0 +1,6 @@
+### Result
+"http://localhost:9000/admin/users/u-zhangxiaoming"
+### Ran Playwright code
+```js
+await page.evaluate('() => location.href');
+```

@@ -1,0 +1,11 @@
+### Result
+"http://localhost:9000/user/families/FAM-4821"
+### Ran Playwright code
+```js
+await (async (page) => { await page.goto('http://localhost:9000/user/families'); await page.locator('.family-card').first().getByRole('button', { name: '查看详情' }).click(); await page.waitForTimeout(500); return page.url(); })(page);
+```
+### Page
+- Page URL: http://localhost:9000/user/families/FAM-4821
+- Page Title: Bill Software
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T13-56-32-941Z.log#L3-L30

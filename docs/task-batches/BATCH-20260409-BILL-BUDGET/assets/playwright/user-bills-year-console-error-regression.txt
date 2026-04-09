@@ -1,0 +1,7 @@
+### Result
+Total messages: 4 (Errors: 2, Warnings: 0)
+Returning 2 messages for level "error"
+
+[ERROR] [webpack-dev-server] Errors while compiling. Reload prevented. @ webpack-internal:///./node_modules/webpack-dev-server/client/modules/logger/index.js:607
+[ERROR] [webpack-dev-server] ERROR in ./src/router/index.js 16:0-55
+Module not found: Error: Can't resolve '@/pages/user/UserProfile.vue' in '/Users/shynin/software/billSoftware/frontend/src/router' @ webpack-internal:///./node_modules/webpack-dev-server/client/modules/logger/index.js:607

@@ -1,0 +1,8 @@
+### Error
+Error: locator.fill: Error: strict mode violation: getByRole('dialog', { name: '加入家庭' }).getByLabel('家庭 ID') resolved to 2 elements:
+    1) <input checked value="id" type="radio" name="el-id-9046-9" class="el-radio__original"/> aka getByRole('radio', { name: '家庭 ID' })
+    2) <input type="text" tabindex="0" autocomplete="off" id="el-id-9046-13" class="el-input__inner" placeholder="例如：FAM-4821"/> aka getByRole('textbox', { name: '家庭 ID' })
+
+Call log:
+[2m  - waiting for getByRole('dialog', { name: '加入家庭' }).getByLabel('家庭 ID')[22m
+

@@ -1,0 +1,12 @@
+### Result
+"left-family"
+### Ran Playwright code
+```js
+await (async (page) => { const card = page.locator('.family-card').filter({ hasText: 'FAM-4821' }).first(); await card.getByRole('button', { name: '退出家庭' }).click(); const dialog = page.getByRole('dialog', { name: '退出家庭' }); await dialog.getByRole('button', { name: '确认退出' }).click(); await page.waitForTimeout(500); return 'left-family'; })(page);
+```
+### Page
+- Page URL: http://localhost:9000/user/families
+- Page Title: Bill Software
+- Console: 0 errors, 2 warnings
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T13-50-03-317Z.log#L29-L39

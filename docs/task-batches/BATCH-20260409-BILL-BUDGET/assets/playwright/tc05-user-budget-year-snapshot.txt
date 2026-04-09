@@ -1,0 +1,203 @@
+### Page
+- Page URL: http://localhost:9000/user/budget/year
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: playwright-user
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "‹" [ref=e41] [cursor=pointer]
+          - generic [ref=e42]:
+            - strong [ref=e43]: 2025 年预算
+            - paragraph [ref=e44]: 预算是独立视图，不复制月预算的信息结构。
+          - button "›" [active] [ref=e45] [cursor=pointer]
+        - generic [ref=e46]:
+          - button "查看月预算" [ref=e47] [cursor=pointer]
+          - button "调整年度预算" [ref=e48] [cursor=pointer]
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: 年
+          - generic [ref=e52]: 2025 年预算总览
+        - generic [ref=e53]:
+          - heading "年度预算最重要的是看节奏，而不是盯着某一个分类的瞬时高点" [level=2] [ref=e54]
+          - paragraph [ref=e55]: 2025 年四季度控制已经开始见效，但全年仍被上半年拉高。
+        - generic [ref=e57]:
+          - generic [ref=e58]: 预算执行进度
+          - strong [ref=e59]: 110.9%
+        - generic [ref=e62]:
+          - article [ref=e63]:
+            - generic [ref=e64]: 本年预算
+            - strong [ref=e65]: ¥168,000
+            - generic [ref=e66]: 已执行 12 个月
+          - article [ref=e67]:
+            - generic [ref=e68]: 本年支出
+            - strong [ref=e69]: ¥186,320
+            - generic [ref=e70]: 预算节奏需要持续盯盘
+          - article [ref=e71]:
+            - generic [ref=e72]: 剩余预算
+            - strong [ref=e73]: ¥18,320
+            - generic [ref=e74]: 当前已经透支
+      - article [ref=e75]:
+        - generic [ref=e77]:
+          - heading "月度预算执行情况" [level=3] [ref=e78]
+          - paragraph [ref=e79]: 每个月的预算与实际支出并列展示，更容易发现全年失控点。
+        - generic [ref=e80]:
+          - img [ref=e81]:
+            - generic [ref=e83]: ¥0k
+            - generic [ref=e85]: ¥5k
+            - generic [ref=e87]: ¥10k
+            - generic [ref=e89]: ¥15k
+            - generic [ref=e91]: ¥20k
+            - generic [ref=e95]: 1月
+            - generic [ref=e99]: 2月
+            - generic [ref=e103]: 3月
+            - generic [ref=e107]: 4月
+            - generic [ref=e110]: 5月
+            - generic [ref=e113]: 6月
+            - generic [ref=e116]: 7月
+            - generic [ref=e119]: 8月
+            - generic [ref=e122]: 9月
+            - generic [ref=e125]: 10月
+            - generic [ref=e128]: 11月
+            - generic [ref=e131]: 12月
+          - generic [ref=e132]:
+            - generic [ref=e133]: 预算
+            - generic [ref=e135]: 实际支出
+      - generic [ref=e137]:
+        - generic [ref=e139]:
+          - heading "分类年度预算汇总" [level=3] [ref=e140]
+          - paragraph [ref=e141]: 年预算看的是长期分配结果，所以每一类都应该有明确状态。
+        - generic [ref=e142]:
+          - article [ref=e143]:
+            - generic [ref=e144]:
+              - generic [ref=e145]:
+                - generic [ref=e146]: 餐
+                - generic [ref=e147]:
+                  - strong [ref=e148]: 餐饮
+                  - paragraph [ref=e149]: ¥35,400 / ¥32,000
+              - button "调整" [ref=e150] [cursor=pointer]
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]: 执行比例
+                - strong [ref=e154]: 110.6%
+              - generic [ref=e155]:
+                - generic [ref=e156]: 超支
+                - strong [ref=e157]: ¥3,400
+            - paragraph [ref=e160]: 年度预算已经超支
+          - article [ref=e161]:
+            - generic [ref=e162]:
+              - generic [ref=e163]:
+                - generic [ref=e164]: 购
+                - generic [ref=e165]:
+                  - strong [ref=e166]: 购物
+                  - paragraph [ref=e167]: ¥29,780 / ¥28,000
+              - button "调整" [ref=e168] [cursor=pointer]
+            - generic [ref=e169]:
+              - generic [ref=e170]:
+                - generic [ref=e171]: 执行比例
+                - strong [ref=e172]: 106.4%
+              - generic [ref=e173]:
+                - generic [ref=e174]: 超支
+                - strong [ref=e175]: ¥1,780
+            - paragraph [ref=e178]: 年度预算已经超支
+          - article [ref=e179]:
+            - generic [ref=e180]:
+              - generic [ref=e181]:
+                - generic [ref=e182]: 交
+                - generic [ref=e183]:
+                  - strong [ref=e184]: 交通
+                  - paragraph [ref=e185]: ¥21,240 / ¥22,000
+              - button "调整" [ref=e186] [cursor=pointer]
+            - generic [ref=e187]:
+              - generic [ref=e188]:
+                - generic [ref=e189]: 执行比例
+                - strong [ref=e190]: 96.5%
+              - generic [ref=e191]:
+                - generic [ref=e192]: 剩余
+                - strong [ref=e193]: ¥760
+            - paragraph [ref=e196]: 预算接近上限，需要持续关注
+          - article [ref=e197]:
+            - generic [ref=e198]:
+              - generic [ref=e199]:
+                - generic [ref=e200]: 娱
+                - generic [ref=e201]:
+                  - strong [ref=e202]: 娱乐
+                  - paragraph [ref=e203]: ¥12,620 / ¥14,000
+              - button "调整" [ref=e204] [cursor=pointer]
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - generic [ref=e207]: 执行比例
+                - strong [ref=e208]: 90.1%
+              - generic [ref=e209]:
+                - generic [ref=e210]: 剩余
+                - strong [ref=e211]: ¥1,380
+            - paragraph [ref=e214]: 预算接近上限，需要持续关注
+          - article [ref=e259]:
+            - generic [ref=e260]:
+              - generic [ref=e261]:
+                - generic [ref=e262]: 社
+                - generic [ref=e263]:
+                  - strong [ref=e264]: 社交
+                  - paragraph [ref=e265]: ¥10,980 / ¥12,000
+              - button "调整" [ref=e266] [cursor=pointer]
+            - generic [ref=e267]:
+              - generic [ref=e268]:
+                - generic [ref=e269]: 执行比例
+                - strong [ref=e270]: 91.5%
+              - generic [ref=e271]:
+                - generic [ref=e272]: 剩余
+                - strong [ref=e273]: ¥1,020
+            - paragraph [ref=e276]: 预算接近上限，需要持续关注
+          - article [ref=e277]:
+            - generic [ref=e278]:
+              - generic [ref=e279]:
+                - generic [ref=e280]: 杂
+                - generic [ref=e281]:
+                  - strong [ref=e282]: 其他
+                  - paragraph [ref=e283]: ¥56,300 / ¥60,000
+              - button "调整" [ref=e284] [cursor=pointer]
+            - generic [ref=e285]:
+              - generic [ref=e286]:
+                - generic [ref=e287]: 执行比例
+                - strong [ref=e288]: 93.8%
+              - generic [ref=e289]:
+                - generic [ref=e290]: 剩余
+                - strong [ref=e291]: ¥3,700
+            - paragraph [ref=e294]: 预算接近上限，需要持续关注
+```

@@ -1,0 +1,203 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: playwright-user
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "‹" [disabled] [ref=e41]
+          - strong [ref=e42]: 2026年4月
+          - button "›" [ref=e43] [cursor=pointer]
+        - generic [ref=e44]:
+          - button "记一笔支出" [ref=e45] [cursor=pointer]
+          - button "记一笔收入" [ref=e46] [cursor=pointer]
+          - button "分类管理" [ref=e47] [cursor=pointer]
+      - generic [ref=e48]:
+        - article [ref=e49]:
+          - generic [ref=e50]: 本月收入
+          - strong [ref=e51]: ¥0
+        - article [ref=e52]:
+          - generic [ref=e53]: 本月支出
+          - strong [ref=e54]: ¥1,926.5
+        - article [ref=e55]:
+          - generic [ref=e56]: 结余
+          - strong [ref=e57]: ¥-1,926.5
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - article [ref=e60]:
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - heading "2026-04-09" [level=2] [ref=e63]
+                - text: 星期四
+              - generic [ref=e64]:
+                - generic [ref=e65]: 收 ¥0
+                - generic [ref=e66]: 支 ¥646.5
+            - generic [ref=e67]:
+              - article [ref=e211]:
+                - generic [ref=e212]: 餐
+                - generic [ref=e213]:
+                  - generic [ref=e214]:
+                    - strong [ref=e215]: 餐饮
+                    - generic [ref=e216]: 21:52
+                  - paragraph [ref=e217]: 测试新增支出-WorkerE-R2
+                - strong [ref=e218]: "-¥188.5"
+              - article [ref=e68]:
+                - generic [ref=e69]: 茶
+                - generic [ref=e70]:
+                  - generic [ref=e71]:
+                    - strong [ref=e72]: 奶茶
+                    - generic [ref=e73]: 15:20
+                  - paragraph [ref=e74]: 下午茶
+                - strong [ref=e75]: "-¥72"
+              - article [ref=e76]:
+                - generic [ref=e77]: 餐
+                - generic [ref=e78]:
+                  - generic [ref=e79]:
+                    - strong [ref=e80]: 餐饮
+                    - generic [ref=e81]: 12:30
+                  - paragraph [ref=e82]: 午餐聚会
+                - strong [ref=e83]: "-¥258"
+              - article [ref=e84]:
+                - generic [ref=e85]: 交
+                - generic [ref=e86]:
+                  - generic [ref=e87]:
+                    - strong [ref=e88]: 交通
+                    - generic [ref=e89]: 09:15
+                  - paragraph [ref=e90]: 打车
+                - strong [ref=e91]: "-¥128"
+          - article [ref=e92]:
+            - generic [ref=e93]:
+              - generic [ref=e94]:
+                - heading "2026-04-08" [level=2] [ref=e95]
+                - text: 星期三
+              - generic [ref=e96]:
+                - generic [ref=e97]: 收 ¥0
+                - generic [ref=e98]: 支 ¥1,280
+            - generic [ref=e99]:
+              - article [ref=e100]:
+                - generic [ref=e101]: 娱
+                - generic [ref=e102]:
+                  - generic [ref=e103]:
+                    - strong [ref=e104]: 娱乐
+                    - generic [ref=e105]: 20:00
+                  - paragraph [ref=e106]: 看电影
+                - strong [ref=e107]: "-¥300"
+              - article [ref=e108]:
+                - generic [ref=e109]: 购
+                - generic [ref=e110]:
+                  - generic [ref=e111]:
+                    - strong [ref=e112]: 购物
+                    - generic [ref=e113]: 19:30
+                  - paragraph [ref=e114]: 日用品采购
+                - strong [ref=e115]: "-¥980"
+        - complementary [ref=e116]:
+          - generic [ref=e117]:
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - heading "常用分类" [level=3] [ref=e120]
+                - paragraph [ref=e121]: 按本月使用频次展示
+              - button "管理" [ref=e122] [cursor=pointer]
+            - generic [ref=e123]:
+              - article [ref=e124]:
+                - generic [ref=e125]: 餐
+                - strong [ref=e126]: 餐饮
+                - generic [ref=e127]: 2 笔
+              - article [ref=e128]:
+                - generic [ref=e129]: 购
+                - strong [ref=e130]: 购物
+                - generic [ref=e131]: 1 笔
+              - article [ref=e132]:
+                - generic [ref=e133]: 交
+                - strong [ref=e134]: 交通
+                - generic [ref=e135]: 1 笔
+              - article [ref=e136]:
+                - generic [ref=e137]: 茶
+                - strong [ref=e138]: 奶茶
+                - generic [ref=e139]: 1 笔
+              - article [ref=e140]:
+                - generic [ref=e141]: 娱
+                - strong [ref=e142]: 娱乐
+                - generic [ref=e143]: 1 笔
+              - article [ref=e144]:
+                - generic [ref=e145]: 工
+                - strong [ref=e146]: 工资
+                - generic [ref=e147]: 0 笔
+          - generic [ref=e148]:
+            - generic [ref=e150]:
+              - heading "本月概况" [level=3] [ref=e151]
+              - paragraph [ref=e152]: 保留 Make 原型里的信息节奏
+            - article [ref=e153]:
+              - generic [ref=e154]:
+                - generic [ref=e155]: 记账天数
+                - strong [ref=e156]: 2天
+            - article [ref=e159]:
+              - generic [ref=e160]:
+                - generic [ref=e161]: 日均支出
+                - strong [ref=e162]: ¥963
+            - article [ref=e165]:
+              - generic [ref=e166]:
+                - generic [ref=e167]: 高频分类
+                - strong [ref=e168]: 餐饮 · 2笔
+    - dialog "新增收入" [ref=e224]:
+      - generic [active] [ref=e225]:
+        - generic [ref=e226]:
+          - heading "新增收入" [level=2] [ref=e227]
+          - button "Close this dialog" [ref=e228] [cursor=pointer]:
+            - img [ref=e230]
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - generic [ref=e235]: 分类
+            - generic [ref=e237] [cursor=pointer]:
+              - generic:
+                - combobox "分类 工资" [ref=e239]
+                - generic [ref=e240]: 工资
+              - img [ref=e243]
+          - generic [ref=e245]:
+            - generic [ref=e246]: 金额
+            - spinbutton "金额" [ref=e247]
+          - generic [ref=e248]:
+            - generic [ref=e249]: 备注
+            - generic [ref=e250]:
+              - textbox "备注 0 / 60" [ref=e251]
+              - generic [ref=e252]: 0 / 60
+          - generic [ref=e253]:
+            - generic [ref=e254]: 日期
+            - textbox "日期" [ref=e255]: 2026-04-09
+          - generic [ref=e256]:
+            - generic [ref=e257]: 图片（可选，最多 1 张）
+            - button "图片（可选，最多 1 张）" [ref=e258]
+          - generic [ref=e259]:
+            - button "取消" [ref=e260] [cursor=pointer]
+            - button "保存" [ref=e261] [cursor=pointer]

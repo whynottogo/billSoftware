@@ -1,0 +1,50 @@
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: B
+        - generic [ref=e10]:
+          - heading "Bill Software" [level=1] [ref=e11]
+          - paragraph [ref=e12]: 轻松记账，明智理财
+      - generic [ref=e13]:
+        - heading "把记账这件事，做得清楚一点。" [level=2] [ref=e14]
+        - paragraph [ref=e15]: 面向个人与家庭的桌面端记账工作台，帮助你快速录入每一笔收支， 用清晰的统计卡和分类视角看懂自己的财务节奏。
+      - generic [ref=e16]:
+        - article [ref=e17]:
+          - strong [ref=e18]: 趋势看板
+          - paragraph [ref=e19]: 月度收入、支出与结余统一汇总，默认首页就是你的账本概览。
+        - article [ref=e20]:
+          - strong [ref=e21]: 分类统计
+          - paragraph [ref=e22]: 账单、预算和图表采用一致的分类体系，方便快速回看消费结构。
+        - article [ref=e23]:
+          - strong [ref=e24]: 家庭协作
+          - paragraph [ref=e25]: 支持家庭维度的汇总查看，但不干扰个人账本的独立管理。
+    - generic [ref=e27]:
+      - generic [ref=e28]: 用户端登录
+      - heading "欢迎回来" [level=3] [ref=e29]
+      - paragraph [ref=e30]: 支持“用户名或手机号 + 密码”登录。
+      - generic [ref=e31]:
+        - generic [ref=e32]:
+          - generic [ref=e33]: 用户名或手机号
+          - textbox "用户名或手机号" [ref=e34]:
+            - /placeholder: 请输入用户名或手机号
+            - text: e2e0410000402
+        - generic [ref=e35]:
+          - generic [ref=e36]: 密码
+          - generic [ref=e37]:
+            - textbox "密码 显示" [ref=e38]:
+              - /placeholder: 请输入密码
+              - text: Test@123456
+            - button "显示" [ref=e39] [cursor=pointer]
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - checkbox "记住我" [checked] [ref=e42]
+            - generic [ref=e43]: 记住我
+          - button "管理员登录入口" [ref=e44] [cursor=pointer]
+        - button "登录" [active] [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]: 还没有账户？
+        - button "立即注册" [ref=e48] [cursor=pointer]
+  - alert [ref=e49]:
+    - img [ref=e51]
+    - paragraph [ref=e53]: user is disabled

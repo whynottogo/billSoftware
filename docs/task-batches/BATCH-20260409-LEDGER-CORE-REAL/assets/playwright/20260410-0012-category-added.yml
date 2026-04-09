@@ -1,0 +1,374 @@
+- generic [ref=e1]:
+  - generic [ref=e49]:
+    - complementary [ref=e50]:
+      - generic [ref=e51]:
+        - generic [ref=e52]: B
+        - generic [ref=e53]:
+          - strong [ref=e54]: Bill Software
+          - paragraph [ref=e55]: 轻松记账
+      - navigation [ref=e56]:
+        - button "收支 当月收支" [ref=e57] [cursor=pointer]:
+          - generic [ref=e58]: 收支
+          - generic [ref=e59]: 当月收支
+        - button "账单 账单" [ref=e60] [cursor=pointer]:
+          - generic [ref=e61]: 账单
+          - generic [ref=e62]: 账单
+        - button "预算 预算" [ref=e63] [cursor=pointer]:
+          - generic [ref=e64]: 预算
+          - generic [ref=e65]: 预算
+        - button "资产 资产管家" [ref=e66] [cursor=pointer]:
+          - generic [ref=e67]: 资产
+          - generic [ref=e68]: 资产管家
+        - button "图表 图表" [ref=e69] [cursor=pointer]:
+          - generic [ref=e70]: 图表
+          - generic [ref=e71]: 图表
+        - button "资料 个人信息" [ref=e72] [cursor=pointer]:
+          - generic [ref=e73]: 资料
+          - generic [ref=e74]: 个人信息
+        - button "家庭 家庭功能" [ref=e75] [cursor=pointer]:
+          - generic [ref=e76]: 家庭
+          - generic [ref=e77]: 家庭功能
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - paragraph [ref=e80]: 当前会话
+          - strong [ref=e81]: e2e0410000402
+          - text: 用户端与管理端登录态相互隔离
+        - button "退出登录" [ref=e82] [cursor=pointer]
+    - main [ref=e83]:
+      - generic [ref=e84]:
+        - generic [ref=e85]:
+          - generic [ref=e86]:
+            - button "‹" [disabled] [ref=e87]
+            - strong [ref=e88]: 2026年4月
+            - button "›" [ref=e89] [cursor=pointer]
+          - generic [ref=e90]:
+            - button "记一笔支出" [ref=e91] [cursor=pointer]
+            - button "记一笔收入" [ref=e92] [cursor=pointer]
+            - button "分类管理" [ref=e93] [cursor=pointer]
+        - generic [ref=e94]:
+          - article [ref=e95]:
+            - generic [ref=e96]: 本月收入
+            - strong [ref=e97]: ¥0
+          - article [ref=e98]:
+            - generic [ref=e99]: 本月支出
+            - strong [ref=e100]: ¥0
+          - article [ref=e101]:
+            - generic [ref=e102]: 结余
+            - strong [ref=e103]: ¥0
+        - generic [ref=e104]:
+          - article [ref=e106]:
+            - strong [ref=e107]: 当前月份还没有收支记录
+            - paragraph [ref=e108]: 点击右上角“记一笔支出”或“记一笔收入”开始记录。
+          - complementary [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - heading "常用分类" [level=3] [ref=e113]
+                  - paragraph [ref=e114]: 按本月使用频次展示
+                - button "管理" [ref=e115] [cursor=pointer]
+              - generic [ref=e116]:
+                - article [ref=e117]:
+                  - generic [ref=e118]: 交
+                  - strong [ref=e119]: 交通
+                  - generic [ref=e120]: 0 笔
+                - article [ref=e121]:
+                  - generic [ref=e122]: 亲
+                  - strong [ref=e123]: 亲友
+                  - generic [ref=e124]: 0 笔
+                - article [ref=e125]:
+                  - generic [ref=e126]: 住
+                  - strong [ref=e127]: 住房
+                  - generic [ref=e128]: 0 笔
+                - article [ref=e129]:
+                  - generic [ref=e130]: 其
+                  - strong [ref=e131]: 其他
+                  - generic [ref=e132]: 0 笔
+                - article [ref=e133]:
+                  - generic [ref=e134]: 兼
+                  - strong [ref=e135]: 兼职
+                  - generic [ref=e136]: 0 笔
+                - article [ref=e137]:
+                  - generic [ref=e138]: 办
+                  - strong [ref=e139]: 办公
+                  - generic [ref=e140]: 0 笔
+            - generic [ref=e141]:
+              - generic [ref=e143]:
+                - heading "本月概况" [level=3] [ref=e144]
+                - paragraph [ref=e145]: 保留 Make 原型里的信息节奏
+              - article [ref=e146]:
+                - generic [ref=e147]:
+                  - generic [ref=e148]: 记账天数
+                  - strong [ref=e149]: 0天
+              - article [ref=e151]:
+                - generic [ref=e152]:
+                  - generic [ref=e153]: 日均支出
+                  - strong [ref=e154]: ¥0
+              - article [ref=e156]:
+                - generic [ref=e157]:
+                  - generic [ref=e158]: 高频分类
+                  - strong [ref=e159]: 交通
+      - dialog "分类管理" [ref=e168]:
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - heading "分类管理" [level=2] [ref=e171]
+            - button "Close this dialog" [ref=e172] [cursor=pointer]:
+              - img [ref=e174]
+          - generic [ref=e177]:
+            - generic [ref=e178]:
+              - tablist [ref=e182]:
+                - tab "支出分类" [selected] [ref=e184]
+                - tab "收入分类" [ref=e185]
+              - generic:
+                - tabpanel "支出分类"
+            - generic [ref=e186]:
+              - generic [ref=e187]:
+                - generic [ref=e188]: 分类名称
+                - textbox "分类名称" [ref=e191]:
+                  - /placeholder: 例如：旅行
+              - generic [ref=e192]:
+                - generic [ref=e193]: 徽章
+                - textbox "徽章" [ref=e196]:
+                  - /placeholder: 旅
+              - button "新增分类" [active] [ref=e197] [cursor=pointer]
+            - generic [ref=e198]:
+              - article [ref=e199]:
+                - generic [ref=e200]:
+                  - generic [ref=e201]: 早
+                  - generic [ref=e202]:
+                    - strong [ref=e203]: 早午晚餐
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e204]
+              - article [ref=e205]:
+                - generic [ref=e206]:
+                  - generic [ref=e207]: 餐
+                  - generic [ref=e208]:
+                    - strong [ref=e209]: 餐饮
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e210]
+              - article [ref=e211]:
+                - generic [ref=e212]:
+                  - generic [ref=e213]: 购
+                  - generic [ref=e214]:
+                    - strong [ref=e215]: 购物
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e216]
+              - article [ref=e217]:
+                - generic [ref=e218]:
+                  - generic [ref=e219]: 日
+                  - generic [ref=e220]:
+                    - strong [ref=e221]: 日用
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e222]
+              - article [ref=e223]:
+                - generic [ref=e224]:
+                  - generic [ref=e225]: 奶
+                  - generic [ref=e226]:
+                    - strong [ref=e227]: 奶茶
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e228]
+              - article [ref=e229]:
+                - generic [ref=e230]:
+                  - generic [ref=e231]: 交
+                  - generic [ref=e232]:
+                    - strong [ref=e233]: 交通
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e234]
+              - article [ref=e235]:
+                - generic [ref=e236]:
+                  - generic [ref=e237]: 蔬
+                  - generic [ref=e238]:
+                    - strong [ref=e239]: 蔬菜
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e240]
+              - article [ref=e241]:
+                - generic [ref=e242]:
+                  - generic [ref=e243]: 水
+                  - generic [ref=e244]:
+                    - strong [ref=e245]: 水果
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e246]
+              - article [ref=e247]:
+                - generic [ref=e248]:
+                  - generic [ref=e249]: 零
+                  - generic [ref=e250]:
+                    - strong [ref=e251]: 零食
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e252]
+              - article [ref=e253]:
+                - generic [ref=e254]:
+                  - generic [ref=e255]: 运
+                  - generic [ref=e256]:
+                    - strong [ref=e257]: 运动
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e258]
+              - article [ref=e259]:
+                - generic [ref=e260]:
+                  - generic [ref=e261]: 娱
+                  - generic [ref=e262]:
+                    - strong [ref=e263]: 娱乐
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e264]
+              - article [ref=e265]:
+                - generic [ref=e266]:
+                  - generic [ref=e267]: 通
+                  - generic [ref=e268]:
+                    - strong [ref=e269]: 通讯
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e270]
+              - article [ref=e271]:
+                - generic [ref=e272]:
+                  - generic [ref=e273]: 服
+                  - generic [ref=e274]:
+                    - strong [ref=e275]: 服饰
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e276]
+              - article [ref=e277]:
+                - generic [ref=e278]:
+                  - generic [ref=e279]: 美
+                  - generic [ref=e280]:
+                    - strong [ref=e281]: 美容
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e282]
+              - article [ref=e283]:
+                - generic [ref=e284]:
+                  - generic [ref=e285]: 住
+                  - generic [ref=e286]:
+                    - strong [ref=e287]: 住房
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e288]
+              - article [ref=e289]:
+                - generic [ref=e290]:
+                  - generic [ref=e291]: 居
+                  - generic [ref=e292]:
+                    - strong [ref=e293]: 居家
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e294]
+              - article [ref=e295]:
+                - generic [ref=e296]:
+                  - generic [ref=e297]: 孩
+                  - generic [ref=e298]:
+                    - strong [ref=e299]: 孩子
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e300]
+              - article [ref=e301]:
+                - generic [ref=e302]:
+                  - generic [ref=e303]: 长
+                  - generic [ref=e304]:
+                    - strong [ref=e305]: 长辈
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e306]
+              - article [ref=e307]:
+                - generic [ref=e308]:
+                  - generic [ref=e309]: 社
+                  - generic [ref=e310]:
+                    - strong [ref=e311]: 社交
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e312]
+              - article [ref=e313]:
+                - generic [ref=e314]:
+                  - generic [ref=e315]: 旅
+                  - generic [ref=e316]:
+                    - strong [ref=e317]: 旅行
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e318]
+              - article [ref=e319]:
+                - generic [ref=e320]:
+                  - generic [ref=e321]: 烟
+                  - generic [ref=e322]:
+                    - strong [ref=e323]: 烟酒
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e324]
+              - article [ref=e325]:
+                - generic [ref=e326]:
+                  - generic [ref=e327]: 数
+                  - generic [ref=e328]:
+                    - strong [ref=e329]: 数码
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e330]
+              - article [ref=e331]:
+                - generic [ref=e332]:
+                  - generic [ref=e333]: 汽
+                  - generic [ref=e334]:
+                    - strong [ref=e335]: 汽车
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e336]
+              - article [ref=e337]:
+                - generic [ref=e338]:
+                  - generic [ref=e339]: 医
+                  - generic [ref=e340]:
+                    - strong [ref=e341]: 医疗
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e342]
+              - article [ref=e343]:
+                - generic [ref=e344]:
+                  - generic [ref=e345]: 学
+                  - generic [ref=e346]:
+                    - strong [ref=e347]: 学习
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e348]
+              - article [ref=e349]:
+                - generic [ref=e350]:
+                  - generic [ref=e351]: 宠
+                  - generic [ref=e352]:
+                    - strong [ref=e353]: 宠物
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e354]
+              - article [ref=e355]:
+                - generic [ref=e356]:
+                  - generic [ref=e357]: 礼
+                  - generic [ref=e358]:
+                    - strong [ref=e359]: 礼物
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e360]
+              - article [ref=e361]:
+                - generic [ref=e362]:
+                  - generic [ref=e363]: 办
+                  - generic [ref=e364]:
+                    - strong [ref=e365]: 办公
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e366]
+              - article [ref=e367]:
+                - generic [ref=e368]:
+                  - generic [ref=e369]: 维
+                  - generic [ref=e370]:
+                    - strong [ref=e371]: 维修
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e372]
+              - article [ref=e373]:
+                - generic [ref=e374]:
+                  - generic [ref=e375]: 捐
+                  - generic [ref=e376]:
+                    - strong [ref=e377]: 捐赠
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e378]
+              - article [ref=e379]:
+                - generic [ref=e380]:
+                  - generic [ref=e381]: 彩
+                  - generic [ref=e382]:
+                    - strong [ref=e383]: 彩票
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e384]
+              - article [ref=e385]:
+                - generic [ref=e386]:
+                  - generic [ref=e387]: 亲
+                  - generic [ref=e388]:
+                    - strong [ref=e389]: 亲友
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e390]
+              - article [ref=e391]:
+                - generic [ref=e392]:
+                  - generic [ref=e393]: 快
+                  - generic [ref=e394]:
+                    - strong [ref=e395]: 快递
+                    - text: 默认分类
+                - button "删除" [disabled] [ref=e396]
+              - article [ref=e397]:
+                - generic [ref=e398]:
+                  - generic [ref=e399]: 测
+                  - generic [ref=e400]:
+                    - strong [ref=e401]: 测试
+                    - text: 自定义分类
+                - button "删除" [ref=e402] [cursor=pointer]
+  - alert [ref=e403]:
+    - img [ref=e405]
+    - paragraph [ref=e407]: 分类已新增。

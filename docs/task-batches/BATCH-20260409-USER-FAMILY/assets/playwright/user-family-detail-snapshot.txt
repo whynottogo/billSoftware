@@ -1,0 +1,149 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: playwright-user
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - heading "周末小家" [level=1] [ref=e41]
+          - paragraph [ref=e42]: 把每周的生活支出一起看清楚。
+        - generic [ref=e43]:
+          - button "返回家庭列表" [ref=e44] [cursor=pointer]
+          - button "复制邀请链接" [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: 统
+          - generic [ref=e49]: 家庭统计总览
+        - generic [ref=e50]:
+          - heading "同一个家庭里谁贡献了收入、谁拉高了支出，一眼就能看出来。" [level=2] [ref=e51]
+          - paragraph [ref=e52]: 创建人：林芷 · 成员数：3 · 家庭 ID：FAM-4821
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - text: 月份
+            - generic [ref=e56] [cursor=pointer]:
+              - generic:
+                - combobox "月份 2026年4月" [ref=e58]
+                - generic [ref=e59]: 2026年4月
+              - img [ref=e62]
+          - generic [ref=e64]:
+            - text: 年份
+            - generic [ref=e66] [cursor=pointer]:
+              - generic:
+                - combobox "年份 2026年" [ref=e68]
+                - generic [ref=e69]: 2026年
+              - img [ref=e72]
+      - generic [ref=e74]:
+        - article [ref=e75]:
+          - generic [ref=e76]:
+            - heading "2026年4月 汇总" [level=3] [ref=e77]
+            - paragraph [ref=e78]: 清明假期后恢复常规节奏。
+          - generic [ref=e79]:
+            - button "月收入 ¥41,000" [active] [ref=e80] [cursor=pointer]:
+              - generic [ref=e81]: 月收入
+              - strong [ref=e82]: ¥41,000
+            - button "月支出 ¥21,240" [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: 月支出
+              - strong [ref=e85]: ¥21,240
+            - generic [ref=e86]:
+              - generic [ref=e87]: 月结余
+              - strong [ref=e88]: ¥19,760
+        - article [ref=e89]:
+          - generic [ref=e90]:
+            - heading "2026年 汇总" [level=3] [ref=e91]
+            - paragraph [ref=e92]: 当前年度仍在持续记账中。
+          - generic [ref=e93]:
+            - button "年收入 ¥269,500" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: 年收入
+              - strong [ref=e96]: ¥269,500
+            - button "年支出 ¥144,700" [ref=e97] [cursor=pointer]:
+              - generic [ref=e98]: 年支出
+              - strong [ref=e99]: ¥144,700
+            - generic [ref=e100]:
+              - generic [ref=e101]: 年结余
+              - strong [ref=e102]: ¥124,800
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]:
+            - heading "2026-04 月度收入成员占比" [level=3] [ref=e106]
+            - paragraph [ref=e107]: 点击月收入、月支出、年收入、年支出后，这里会同步展示成员占比。
+          - strong [ref=e108]: ¥41,000
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - img [ref=e111]
+            - generic [ref=e117]:
+              - generic [ref=e118]: 总计
+              - strong [ref=e119]: ¥41,000
+          - generic [ref=e120]:
+            - article [ref=e121]:
+              - generic [ref=e124]:
+                - strong [ref=e125]: 林芷
+                - paragraph [ref=e126]: 创建人
+              - generic [ref=e127]:
+                - strong [ref=e128]: ¥18,200
+                - generic [ref=e129]: 44.4%
+            - article [ref=e130]:
+              - generic [ref=e133]:
+                - strong [ref=e134]: 许川
+                - paragraph [ref=e135]: 成员
+              - generic [ref=e136]:
+                - strong [ref=e137]: ¥13,600
+                - generic [ref=e138]: 33.2%
+            - article [ref=e139]:
+              - generic [ref=e142]:
+                - strong [ref=e143]: 周澈
+                - paragraph [ref=e144]: 成员
+              - generic [ref=e145]:
+                - strong [ref=e146]: ¥9,200
+                - generic [ref=e147]: 22.4%
+      - generic [ref=e148]:
+        - generic [ref=e149]:
+          - heading "家庭成员" [level=3] [ref=e150]
+          - paragraph [ref=e151]: 当前展示成员角色与颜色标识，便于对照占比图。
+        - generic [ref=e152]:
+          - article [ref=e153]:
+            - generic [ref=e156]:
+              - strong [ref=e157]: 林芷
+              - paragraph [ref=e158]: 创建人
+            - generic [ref=e159]: Owner
+          - article [ref=e160]:
+            - generic [ref=e163]:
+              - strong [ref=e164]: 许川
+              - paragraph [ref=e165]: 成员
+            - generic [ref=e166]: Member
+          - article [ref=e167]:
+            - generic [ref=e170]:
+              - strong [ref=e171]: 周澈
+              - paragraph [ref=e172]: 成员
+            - generic [ref=e173]: Member

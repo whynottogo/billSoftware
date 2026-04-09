@@ -1,0 +1,24 @@
+### Browser `default` opened with pid 66361.
+### Ran Playwright code
+```js
+await page.goto('http://localhost:9000/admin/login');
+```
+### Page
+- Page URL: http://localhost:9000/admin/login
+- Page Title: Bill Software
+- Console: 1 errors, 0 warnings
+### Snapshot
+- [Snapshot](.playwright-cli/page-2026-04-09T10-12-48-304Z.yml)
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T10-12-47-780Z.log#L1-L4
+### Result
+"ok"
+### Ran Playwright code
+```js
+await page.evaluate('() => (localStorage.setItem("bill_admin_token","e2e-admin-token"), location.href="/admin/users", "ok")');
+```
+### Page
+- Page URL: http://localhost:9000/admin/users
+- Page Title: Bill Software
+### Error
+SyntaxError: Unexpected identifier

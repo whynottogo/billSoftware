@@ -1,0 +1,161 @@
+### Page
+- Page URL: http://localhost:9000/admin/users
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: AD
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 管理后台
+    - navigation [ref=e10]:
+      - button "概览 数据概览" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 概览
+        - generic [ref=e13]: 数据概览
+      - button "用户 用户管理" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 用户
+        - generic [ref=e16]: 用户管理
+      - button "事项 待处理事项" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 事项
+        - generic [ref=e19]: 待处理事项
+      - button "家庭 家庭管理" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 家庭
+        - generic [ref=e22]: 家庭管理
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: 当前角色
+        - strong [ref=e26]: 唯一管理员
+        - text: 管理员与普通用户会话严格隔离
+      - button "退出后台" [ref=e27] [cursor=pointer]
+  - main [ref=e28]:
+    - generic [ref=e29]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: 管理端 / 用户管理
+        - heading "用户列表" [level=1] [ref=e33]
+        - paragraph [ref=e34]: 支持启用/禁用状态管理，并可进入用户详情查看月账单与年账单汇总。
+      - generic [ref=e35]:
+        - article [ref=e36]:
+          - generic [ref=e37]: 启用用户
+          - strong [ref=e38]: "2"
+        - article [ref=e39]:
+          - generic [ref=e40]: 禁用用户
+          - strong [ref=e41]: "3"
+        - article [ref=e42]:
+          - generic [ref=e43]: 今日新增
+          - strong [ref=e44]: "2"
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - generic [ref=e47]: 搜索用户
+          - textbox "搜索用户" [ref=e48]:
+            - /placeholder: 搜索账号、昵称、手机号或邮箱
+        - generic [ref=e49]:
+          - generic [ref=e50]: 状态筛选
+          - combobox "状态筛选" [ref=e51]:
+            - option "全部状态" [selected]
+            - option "启用"
+            - option "禁用"
+      - table [ref=e53]:
+        - rowgroup [ref=e54]:
+          - row "账号 昵称 手机号 邮箱 状态 注册时间 最近登录 操作" [ref=e55]:
+            - columnheader "账号" [ref=e56]
+            - columnheader "昵称" [ref=e57]
+            - columnheader "手机号" [ref=e58]
+            - columnheader "邮箱" [ref=e59]
+            - columnheader "状态" [ref=e60]
+            - columnheader "注册时间" [ref=e61]
+            - columnheader "最近登录" [ref=e62]
+            - columnheader "操作" [ref=e63]
+        - rowgroup [ref=e64]:
+          - row "Z zhangxiaoming 156 笔账单 张小明 13800000001 zhangxm@email.com 禁用 2026-01-15 - 详情 启用" [ref=e65]:
+            - cell "Z zhangxiaoming 156 笔账单" [ref=e66]:
+              - generic [ref=e67]:
+                - generic [ref=e68]: Z
+                - generic [ref=e69]:
+                  - strong [ref=e70]: zhangxiaoming
+                  - generic [ref=e71]: 156 笔账单
+            - cell "张小明" [ref=e72]
+            - cell "13800000001" [ref=e73]
+            - cell "zhangxm@email.com" [ref=e74]
+            - cell "禁用" [ref=e75]:
+              - generic [ref=e76]: 禁用
+            - cell "2026-01-15" [ref=e77]
+            - cell "-" [ref=e78]
+            - cell "详情 启用" [ref=e79]:
+              - generic [ref=e80]:
+                - button "详情" [ref=e81] [cursor=pointer]
+                - button "启用" [ref=e82] [cursor=pointer]
+          - row "L liming 0 笔账单 李明 13800000002 liming@email.com 禁用 2026-04-09 - 详情 启用" [ref=e83]:
+            - cell "L liming 0 笔账单" [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]: L
+                - generic [ref=e87]:
+                  - strong [ref=e88]: liming
+                  - generic [ref=e89]: 0 笔账单
+            - cell "李明" [ref=e90]
+            - cell "13800000002" [ref=e91]
+            - cell "liming@email.com" [ref=e92]
+            - cell "禁用" [ref=e93]:
+              - generic [ref=e94]: 禁用
+            - cell "2026-04-09" [ref=e95]
+            - cell "-" [ref=e96]
+            - cell "详情 启用" [ref=e97]:
+              - generic [ref=e98]:
+                - button "详情" [ref=e99] [cursor=pointer]
+                - button "启用" [ref=e100] [cursor=pointer]
+          - row "W wangfang 0 笔账单 王芳 13800000003 wangfang@email.com 禁用 2026-04-09 - 详情 启用" [ref=e101]:
+            - cell "W wangfang 0 笔账单" [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]: W
+                - generic [ref=e105]:
+                  - strong [ref=e106]: wangfang
+                  - generic [ref=e107]: 0 笔账单
+            - cell "王芳" [ref=e108]
+            - cell "13800000003" [ref=e109]
+            - cell "wangfang@email.com" [ref=e110]
+            - cell "禁用" [ref=e111]:
+              - generic [ref=e112]: 禁用
+            - cell "2026-04-09" [ref=e113]
+            - cell "-" [ref=e114]
+            - cell "详情 启用" [ref=e115]:
+              - generic [ref=e116]:
+                - button "详情" [ref=e117] [cursor=pointer]
+                - button "启用" [ref=e118] [cursor=pointer]
+          - row "C chenhao 89 笔账单 陈浩 13800000004 chenhao@email.com 启用 2026-03-20 2026-04-08 18:20 详情 禁用" [ref=e119]:
+            - cell "C chenhao 89 笔账单" [ref=e120]:
+              - generic [ref=e121]:
+                - generic [ref=e122]: C
+                - generic [ref=e123]:
+                  - strong [ref=e124]: chenhao
+                  - generic [ref=e125]: 89 笔账单
+            - cell "陈浩" [ref=e126]
+            - cell "13800000004" [ref=e127]
+            - cell "chenhao@email.com" [ref=e128]
+            - cell "启用" [ref=e129]:
+              - generic [ref=e130]: 启用
+            - cell "2026-03-20" [ref=e131]
+            - cell "2026-04-08 18:20" [ref=e132]
+            - cell "详情 禁用" [ref=e133]:
+              - generic [ref=e134]:
+                - button "详情" [ref=e135] [cursor=pointer]
+                - button "禁用" [ref=e136] [cursor=pointer]
+          - row "Z zhoumin 67 笔账单 周敏 13800000005 zhoumin@email.com 启用 2026-03-05 2026-04-07 16:30 详情 禁用" [ref=e137]:
+            - cell "Z zhoumin 67 笔账单" [ref=e138]:
+              - generic [ref=e139]:
+                - generic [ref=e140]: Z
+                - generic [ref=e141]:
+                  - strong [ref=e142]: zhoumin
+                  - generic [ref=e143]: 67 笔账单
+            - cell "周敏" [ref=e144]
+            - cell "13800000005" [ref=e145]
+            - cell "zhoumin@email.com" [ref=e146]
+            - cell "启用" [ref=e147]:
+              - generic [ref=e148]: 启用
+            - cell "2026-03-05" [ref=e149]
+            - cell "2026-04-07 16:30" [ref=e150]
+            - cell "详情 禁用" [ref=e151]:
+              - generic [ref=e152]:
+                - button "详情" [ref=e153] [cursor=pointer]
+                - button "禁用" [ref=e154] [cursor=pointer]
+```

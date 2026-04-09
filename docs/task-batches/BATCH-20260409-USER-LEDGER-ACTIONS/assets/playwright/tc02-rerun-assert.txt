@@ -1,0 +1,4 @@
+{
+  "incomeNoteVisible": true,
+  "dialogStillOpen": true
+}

@@ -1,0 +1,4 @@
+### Error
+Error: Tool "browser_console_messages" does not handle the modal state.
+### Modal state
+- ["alert" dialog with message "账号已在其他地方登录，请重新登录。"]: can be handled by dialog-accept or dialog-dismiss

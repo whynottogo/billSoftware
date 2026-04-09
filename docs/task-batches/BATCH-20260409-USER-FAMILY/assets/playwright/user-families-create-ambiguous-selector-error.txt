@@ -1,0 +1,28 @@
+### Error
+TimeoutError: locator.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for getByRole('button', { name: '创建家庭' })[22m
+[2m    - locator resolved to <button data-v-1ea9cd7d="" class="finance-button finance-button--primary">创建家庭</button>[22m
+[2m  - attempting click action[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div role="dialog" aria-modal="true" aria-label="创建家庭" class="el-overlay-dialog" aria-describedby="el-id-761-1">…</div> from <div class="el-overlay el-modal-dialog">…</div> subtree intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m    - waiting 20ms[22m
+[2m    2 × waiting for element to be visible, enabled and stable[22m
+[2m      - element is visible, enabled and stable[22m
+[2m      - scrolling into view if needed[22m
+[2m      - done scrolling[22m
+[2m      - <div role="dialog" aria-modal="true" aria-label="创建家庭" class="el-overlay-dialog" aria-describedby="el-id-761-1">…</div> from <div class="el-overlay el-modal-dialog">…</div> subtree intercepts pointer events[22m
+[2m    - retrying click action[22m
+[2m      - waiting 100ms[22m
+[2m    58 × waiting for element to be visible, enabled and stable[22m
+[2m       - element is visible, enabled and stable[22m
+[2m       - scrolling into view if needed[22m
+[2m       - done scrolling[22m
+[2m       - <div role="dialog" aria-modal="true" aria-label="创建家庭" class="el-overlay-dialog" aria-describedby="el-id-761-1">…</div> from <div class="el-overlay el-modal-dialog">…</div> subtree intercepts pointer events[22m
+[2m     - retrying click action[22m
+[2m       - waiting 500ms[22m
+

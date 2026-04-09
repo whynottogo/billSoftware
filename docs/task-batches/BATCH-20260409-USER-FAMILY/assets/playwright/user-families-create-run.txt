@@ -1,0 +1,6 @@
+### Result
+"created"
+### Ran Playwright code
+```js
+await (async (page) => { await page.getByRole('button', { name: '创建家庭' }).first().click(); const dialog = page.getByRole('dialog', { name: '创建家庭' }); await dialog.getByPlaceholder('例如：周末小家').fill('并行测试家庭'); await dialog.getByPlaceholder('补充一句家庭记账目标，例如：一起压低餐饮支出波动。').fill('用于 Worker D 的家庭模块回归测试。'); await dialog.getByRole('button', { name: '创建', exact: true }).click(); await page.waitForTimeout(500); return 'created'; })(page);
+```

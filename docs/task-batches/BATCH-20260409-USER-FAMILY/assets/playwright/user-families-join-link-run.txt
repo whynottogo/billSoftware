@@ -1,0 +1,6 @@
+### Result
+"joined-by-link"
+### Ran Playwright code
+```js
+await (async (page) => { await page.getByRole('button', { name: '加入家庭' }).first().click(); await page.evaluate(() => { const radio = document.querySelector('input.el-radio__original[value="link"]'); if (radio) { radio.click(); } }); const dialog = page.getByRole('dialog', { name: '加入家庭' }); await dialog.getByPlaceholder('例如：https://bill.local/invite/FAM-4821').fill('https://bill.local/invite/FAM-4768'); await dialog.getByPlaceholder('默认使用当前登录资料昵称').fill('LinkMemberD'); await dialog.getByRole('button', { name: '加入', exact: true }).click(); await page.waitForTimeout(500); return 'joined-by-link'; })(page);
+```

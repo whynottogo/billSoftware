@@ -1,0 +1,2 @@
+### Result
+[GET] http://localhost:9000/main.59dc643ae8404f40b332.hot-update.json => [200] OK

@@ -1,0 +1,11 @@
+### Result
+"http://localhost:9000/user/bills/month/2026-04"
+### Ran Playwright code
+```js
+await (async (page) => { await page.locator('.bill-row').first().click(); await page.waitForURL('**/user/bills/month/*'); return page.url(); })(page);
+```
+### Page
+- Page URL: http://localhost:9000/user/bills/month/2026-04
+- Page Title: Bill Software
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T13-41-34-806Z.log#L3-L26

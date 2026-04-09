@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  mode: debug
+
+database:
+  driver: mysql
+  host: 127.0.0.1
+  port: 3306
+  username: root
+  password: your_password
+  name: billSoftware
+  charset: utf8mb4
+  parse_time: true
+  loc: Asia/Shanghai
+  max_open_conns: 20
+  max_idle_conns: 5
+

@@ -1,0 +1,45 @@
+### Page
+- Page URL: http://localhost:9000/admin/login
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: AD
+      - generic [ref=e7]:
+        - heading "Bill Software" [level=1] [ref=e8]
+        - paragraph [ref=e9]: 管理员后台入口
+    - generic [ref=e10]:
+      - heading "更克制，但更清楚。" [level=2] [ref=e11]
+      - paragraph [ref=e12]: 管理端只服务唯一管理员账号，用来查看用户基础信息、确认启用状态， 并在后续批次继续承接用户详情与账单数据查看。
+    - generic [ref=e13]:
+      - article [ref=e14]:
+        - strong [ref=e15]: 用户管理
+        - text: 查看账号、昵称、手机号、邮箱与启用状态。
+      - article [ref=e16]:
+        - strong [ref=e17]: 认证独立
+        - text: 管理员登录只读取管理端认证逻辑，不回落到用户体系。
+      - article [ref=e18]:
+        - strong [ref=e19]: 入口分离
+        - text: 用户端与管理端保持不同路由前缀和不同存储 key。
+  - generic [ref=e21]:
+    - generic [ref=e22]: 管理端登录
+    - heading "管理员登录" [level=3] [ref=e23]
+    - paragraph [ref=e24]: 请使用固定管理员账号进入后台。
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: 管理员账号
+        - textbox "管理员账号" [ref=e28]:
+          - /placeholder: 请输入管理员账号
+      - generic [ref=e29]:
+        - generic [ref=e30]: 密码
+        - generic [ref=e31]:
+          - textbox "密码 显示" [ref=e32]:
+            - /placeholder: 请输入密码
+          - button "显示" [ref=e33] [cursor=pointer]
+      - button "登录后台" [ref=e34] [cursor=pointer]
+    - generic [ref=e35]:
+      - generic [ref=e36]: 需要返回普通用户入口？
+      - button "回到用户登录" [ref=e37] [cursor=pointer]
+```

@@ -1,0 +1,227 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: playwright-user
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - heading "资产管家" [level=1] [ref=e41]
+          - paragraph [ref=e42]: 把账户放在同一张资产地图里，先看全局，再处理单账户细节。
+        - generic [ref=e43]:
+          - button "重置演示数据" [ref=e44] [cursor=pointer]
+          - button "新增账户" [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: 资
+          - generic [ref=e49]: 资产总览
+        - generic [ref=e50]:
+          - heading "¥155,151.40" [level=2] [ref=e51]
+          - paragraph [ref=e52]: 净资产 = 资产 - 负债。最近一月净变化 +¥4,383.80
+        - generic [ref=e53]:
+          - article [ref=e54]:
+            - generic [ref=e55]: 总资产
+            - strong [ref=e56]: ¥164,331.40
+            - generic [ref=e57]: 9 个账户
+          - article [ref=e58]:
+            - generic [ref=e59]: 总负债
+            - strong [ref=e60]: ¥9,180.00
+            - generic [ref=e61]: 与资产分层展示
+          - article [ref=e62]:
+            - generic [ref=e63]: 更新时间
+            - strong [ref=e64]: 2026/4/9 21:57:45
+            - generic [ref=e65]: 本页为原型数据演示
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - generic [ref=e68]:
+            - heading "账户分类列表" [level=3] [ref=e69]
+            - paragraph [ref=e70]: 按账户分类展示总额和账户余额，支持新增、编辑和进入详情。
+          - generic [ref=e71]:
+            - generic [ref=e72]: 筛选分类
+            - generic [ref=e74] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e76]
+                - generic [ref=e77]: 全部分类
+              - img [ref=e80]
+        - generic [ref=e82]:
+          - article [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - generic [ref=e86]: 流
+                - generic [ref=e87]:
+                  - strong [ref=e88]: 流动资产
+                  - paragraph [ref=e89]: 5 个账户
+              - generic [ref=e90]:
+                - generic [ref=e91]: 分类总额
+                - strong [ref=e92]: ¥43,631.40
+            - generic [ref=e93]:
+              - article [ref=e94]:
+                - generic [ref=e95]:
+                  - generic [ref=e96]:
+                    - strong [ref=e97]: 回归银行卡
+                    - paragraph [ref=e98]: 卡号必填校验
+                  - generic [ref=e99]: 银行卡
+                - generic [ref=e100]:
+                  - generic [ref=e101]: 账户余额
+                  - strong [ref=e102]: ¥1,000.00
+                  - generic [ref=e103]: ↑ ¥0.00
+                - generic [ref=e104]:
+                  - button "编辑" [active] [ref=e105] [cursor=pointer]
+                  - button "详情" [ref=e106] [cursor=pointer]
+              - article [ref=e107]:
+                - generic [ref=e108]:
+                  - generic [ref=e109]:
+                    - strong [ref=e110]: 招商银行卡
+                    - paragraph [ref=e111]: 日常收支主账户
+                  - generic [ref=e112]: 银行卡
+                - generic [ref=e113]:
+                  - generic [ref=e114]: 账户余额
+                  - strong [ref=e115]: ¥36,850.30
+                  - generic [ref=e116]: ↑ ¥1,820.40
+                - generic [ref=e117]:
+                  - button "编辑" [ref=e118] [cursor=pointer]
+                  - button "详情" [ref=e119] [cursor=pointer]
+              - article [ref=e120]:
+                - generic [ref=e121]:
+                  - generic [ref=e122]:
+                    - strong [ref=e123]: 现金钱包
+                    - paragraph [ref=e124]: 零散备用金
+                  - generic [ref=e125]: 现金
+                - generic [ref=e126]:
+                  - generic [ref=e127]: 账户余额
+                  - strong [ref=e128]: ¥1,260.00
+                  - generic [ref=e129]: ↓ ¥120.00
+                - generic [ref=e130]:
+                  - button "编辑" [ref=e131] [cursor=pointer]
+                  - button "详情" [ref=e132] [cursor=pointer]
+              - article [ref=e133]:
+                - generic [ref=e134]:
+                  - generic [ref=e135]:
+                    - strong [ref=e136]: 微信零钱
+                    - paragraph [ref=e137]: 日常支付
+                  - generic [ref=e138]: 虚拟账户 · 微信
+                - generic [ref=e139]:
+                  - generic [ref=e140]: 账户余额
+                  - strong [ref=e141]: ¥2,580.90
+                  - generic [ref=e142]: ↑ ¥318.40
+                - generic [ref=e143]:
+                  - button "编辑" [ref=e144] [cursor=pointer]
+                  - button "详情" [ref=e145] [cursor=pointer]
+              - article [ref=e146]:
+                - generic [ref=e147]:
+                  - generic [ref=e148]:
+                    - strong [ref=e149]: 支付宝余额
+                    - paragraph [ref=e150]: 线上消费
+                  - generic [ref=e151]: 虚拟账户 · 支付宝
+                - generic [ref=e152]:
+                  - generic [ref=e153]: 账户余额
+                  - strong [ref=e154]: ¥1,940.20
+                  - generic [ref=e155]: ↓ ¥65.00
+                - generic [ref=e156]:
+                  - button "编辑" [ref=e157] [cursor=pointer]
+                  - button "详情" [ref=e158] [cursor=pointer]
+          - article [ref=e159]:
+            - generic [ref=e160]:
+              - generic [ref=e161]:
+                - generic [ref=e162]: 投
+                - generic [ref=e163]:
+                  - strong [ref=e164]: 投资资产
+                  - paragraph [ref=e165]: 2 个账户
+              - generic [ref=e166]:
+                - generic [ref=e167]: 分类总额
+                - strong [ref=e168]: ¥120,700.00
+            - generic [ref=e169]:
+              - article [ref=e170]:
+                - generic [ref=e171]:
+                  - generic [ref=e172]:
+                    - strong [ref=e173]: 基金定投账户
+                    - paragraph [ref=e174]: 长期定投
+                  - generic [ref=e175]: 投资账户
+                - generic [ref=e176]:
+                  - generic [ref=e177]: 账户余额
+                  - strong [ref=e178]: ¥84,200.00
+                  - generic [ref=e179]: ↑ ¥2,780.00
+                - generic [ref=e180]:
+                  - button "编辑" [ref=e181] [cursor=pointer]
+                  - button "详情" [ref=e182] [cursor=pointer]
+              - article [ref=e183]:
+                - generic [ref=e184]:
+                  - generic [ref=e185]:
+                    - strong [ref=e186]: 稳健债券账户
+                    - paragraph [ref=e187]: 低波动仓位
+                  - generic [ref=e188]: 投资账户
+                - generic [ref=e189]:
+                  - generic [ref=e190]: 账户余额
+                  - strong [ref=e191]: ¥36,500.00
+                  - generic [ref=e192]: ↑ ¥420.00
+                - generic [ref=e193]:
+                  - button "编辑" [ref=e194] [cursor=pointer]
+                  - button "详情" [ref=e195] [cursor=pointer]
+          - article [ref=e196]:
+            - generic [ref=e197]:
+              - generic [ref=e198]:
+                - generic [ref=e199]: 负
+                - generic [ref=e200]:
+                  - strong [ref=e201]: 负债账户
+                  - paragraph [ref=e202]: 2 个账户
+              - generic [ref=e203]:
+                - generic [ref=e204]: 分类总额
+                - strong [ref=e205]: ¥9,180.00
+            - generic [ref=e206]:
+              - article [ref=e207]:
+                - generic [ref=e208]:
+                  - generic [ref=e209]:
+                    - strong [ref=e210]: 招商信用卡
+                    - paragraph [ref=e211]: 每月 8 日还款
+                  - generic [ref=e212]: 信用卡
+                - generic [ref=e213]:
+                  - generic [ref=e214]: 账户余额
+                  - strong [ref=e215]: ¥6,800.00
+                  - generic [ref=e216]: ↓ ¥560.00
+                - generic [ref=e217]:
+                  - button "编辑" [ref=e218] [cursor=pointer]
+                  - button "详情" [ref=e219] [cursor=pointer]
+              - article [ref=e220]:
+                - generic [ref=e221]:
+                  - generic [ref=e222]:
+                    - strong [ref=e223]: 花呗
+                    - paragraph [ref=e224]: 次月 10 日还款
+                  - generic [ref=e225]: 负债账户
+                - generic [ref=e226]:
+                  - generic [ref=e227]: 账户余额
+                  - strong [ref=e228]: ¥2,380.00
+                  - generic [ref=e229]: ↓ ¥210.00
+                - generic [ref=e230]:
+                  - button "编辑" [ref=e231] [cursor=pointer]
+                  - button "详情" [ref=e232] [cursor=pointer]

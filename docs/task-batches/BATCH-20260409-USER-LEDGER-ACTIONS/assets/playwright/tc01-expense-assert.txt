@@ -1,0 +1,4 @@
+{
+  "noteVisible": false,
+  "amountVisible": false
+}

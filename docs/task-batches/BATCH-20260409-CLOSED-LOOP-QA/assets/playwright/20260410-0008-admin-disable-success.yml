@@ -1,0 +1,105 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: AD
+        - generic [ref=e7]:
+          - strong [ref=e8]: Bill Software
+          - paragraph [ref=e9]: 管理后台
+      - navigation [ref=e10]:
+        - button "概览 数据概览" [ref=e11] [cursor=pointer]:
+          - generic [ref=e12]: 概览
+          - generic [ref=e13]: 数据概览
+        - button "用户 用户管理" [ref=e14] [cursor=pointer]:
+          - generic [ref=e15]: 用户
+          - generic [ref=e16]: 用户管理
+        - button "审批 待审批用户" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: 审批
+          - generic [ref=e19]: 待审批用户
+        - button "家庭 家庭管理" [ref=e20] [cursor=pointer]:
+          - generic [ref=e21]: 家庭
+          - generic [ref=e22]: 家庭管理
+      - generic [ref=e23]:
+        - generic [ref=e24]:
+          - paragraph [ref=e25]: 当前角色
+          - strong [ref=e26]: 唯一管理员
+          - text: 管理员与普通用户会话严格隔离
+        - button "退出后台" [ref=e27] [cursor=pointer]
+    - main [ref=e28]:
+      - generic [ref=e29]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: 管理端 / 用户管理
+          - heading "用户列表" [level=1] [ref=e33]
+          - paragraph [ref=e34]: 支持启用/禁用状态管理；用户详情页正在联调中，将在后续批次开放。
+        - generic [ref=e35]:
+          - article [ref=e36]:
+            - generic [ref=e37]: 启用用户
+            - strong [ref=e38]: "0"
+          - article [ref=e39]:
+            - generic [ref=e40]: 禁用用户
+            - strong [ref=e41]: "2"
+          - article [ref=e42]:
+            - generic [ref=e43]: 今日新增
+            - strong [ref=e44]: "2"
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: 搜索用户
+            - textbox "搜索用户" [ref=e48]:
+              - /placeholder: 搜索账号、昵称、手机号或邮箱
+          - generic [ref=e49]:
+            - generic [ref=e50]: 状态筛选
+            - combobox "状态筛选" [ref=e51]:
+              - option "全部状态" [selected]
+              - option "启用"
+              - option "禁用"
+        - table [ref=e53]:
+          - rowgroup [ref=e54]:
+            - row "账号 昵称 手机号 邮箱 状态 注册时间 最近登录 操作" [ref=e55]:
+              - columnheader "账号" [ref=e56]
+              - columnheader "昵称" [ref=e57]
+              - columnheader "手机号" [ref=e58]
+              - columnheader "邮箱" [ref=e59]
+              - columnheader "状态" [ref=e60]
+              - columnheader "注册时间" [ref=e61]
+              - columnheader "最近登录" [ref=e62]
+              - columnheader "操作" [ref=e63]
+          - rowgroup [ref=e64]:
+            - row "E e2e0410000402 0 笔账单 E2E验证0402 13900000402 e2e0410000402@example.com 禁用 2026-04-10 00:07 - 详情联调中 启用" [ref=e101]:
+              - cell "E e2e0410000402 0 笔账单" [ref=e66]:
+                - generic [ref=e67]:
+                  - generic [ref=e68]: E
+                  - generic [ref=e69]:
+                    - strong [ref=e70]: e2e0410000402
+                    - generic [ref=e71]: 0 笔账单
+              - cell "E2E验证0402" [ref=e72]
+              - cell "13900000402" [ref=e73]
+              - cell "e2e0410000402@example.com" [ref=e74]
+              - cell "禁用" [ref=e102]:
+                - generic [ref=e76]: 禁用
+              - cell "2026-04-10 00:07" [ref=e77]
+              - cell "-" [ref=e78]
+              - cell "详情联调中 启用" [ref=e103]:
+                - generic [ref=e80]:
+                  - button "详情联调中" [ref=e81] [cursor=pointer]
+                  - button "启用" [ref=e104] [cursor=pointer]
+            - row "E e2e0410000401 0 笔账单 E2E验证0401 13900000401 e2e0410000401@example.com 禁用 2026-04-10 00:06 - 详情联调中 启用" [ref=e83]:
+              - cell "E e2e0410000401 0 笔账单" [ref=e84]:
+                - generic [ref=e85]:
+                  - generic [ref=e86]: E
+                  - generic [ref=e87]:
+                    - strong [ref=e88]: e2e0410000401
+                    - generic [ref=e89]: 0 笔账单
+              - cell "E2E验证0401" [ref=e90]
+              - cell "13900000401" [ref=e91]
+              - cell "e2e0410000401@example.com" [ref=e92]
+              - cell "禁用" [ref=e93]:
+                - generic [ref=e94]: 禁用
+              - cell "2026-04-10 00:06" [ref=e95]
+              - cell "-" [ref=e96]
+              - cell "详情联调中 启用" [ref=e97]:
+                - generic [ref=e98]:
+                  - button "详情联调中" [ref=e99] [cursor=pointer]
+                  - button "启用" [ref=e100] [cursor=pointer]
+  - alert [ref=e105]:
+    - img [ref=e107]
+    - paragraph [ref=e109]: 用户已禁用，用户端将不可登录。

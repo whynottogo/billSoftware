@@ -1,0 +1,4 @@
+{
+  "dialogOpen": false,
+  "noteVisible": true
+}

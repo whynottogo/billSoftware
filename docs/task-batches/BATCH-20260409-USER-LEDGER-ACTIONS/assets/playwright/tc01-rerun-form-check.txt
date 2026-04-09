@@ -1,0 +1,4 @@
+{
+  "defaultDate": "2026-04-09",
+  "fileMultiple": false
+}

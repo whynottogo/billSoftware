@@ -1,0 +1,4 @@
+{
+  "yearChanged": true,
+  "rankingCount": 10
+}

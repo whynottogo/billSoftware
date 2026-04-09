@@ -1,0 +1,75 @@
+### Page
+- Page URL: http://localhost:9000/admin/users/u-zhangxiaoming
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: AD
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 管理后台
+    - navigation [ref=e10]:
+      - button "概览 数据概览" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 概览
+        - generic [ref=e13]: 数据概览
+      - button "用户 用户管理" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 用户
+        - generic [ref=e16]: 用户管理
+      - button "事项 待处理事项" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 事项
+        - generic [ref=e19]: 待处理事项
+      - button "家庭 家庭管理" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 家庭
+        - generic [ref=e22]: 家庭管理
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: 当前角色
+        - strong [ref=e26]: 唯一管理员
+        - text: 管理员与普通用户会话严格隔离
+      - button "退出后台" [ref=e27] [cursor=pointer]
+  - main [ref=e28]:
+    - generic [ref=e155]:
+      - generic [ref=e156]:
+        - generic [ref=e157]:
+          - generic [ref=e158]: 管理端 / 用户管理 / 详情
+          - heading "张小明（zhangxiaoming）" [level=1] [ref=e159]
+          - paragraph [ref=e160]: 当前为只读视图，按月/按年查看单用户收入、支出与结余汇总。
+        - button "返回用户列表" [ref=e162] [cursor=pointer]
+      - generic [ref=e163]:
+        - article [ref=e164]:
+          - generic [ref=e165]: 状态
+          - strong [ref=e166]: 禁用
+        - article [ref=e167]:
+          - generic [ref=e168]: 注册时间
+          - strong [ref=e169]: 2026-01-15
+        - article [ref=e170]:
+          - generic [ref=e171]: 账单记录
+          - strong [ref=e172]: 156 笔
+      - generic [ref=e173]:
+        - generic [ref=e174]:
+          - button "月账单" [ref=e175] [cursor=pointer]
+          - button "年账单" [ref=e176] [cursor=pointer]
+        - generic [ref=e177]:
+          - generic [ref=e179]:
+            - generic [ref=e180]: 月份
+            - combobox "月份" [ref=e181]:
+              - option "2026-04" [selected]
+              - option "2026-03"
+              - option "2026-02"
+          - generic [ref=e182]:
+            - article [ref=e183]:
+              - generic [ref=e184]: 收入
+              - strong [ref=e185]: ¥18,500
+            - article [ref=e186]:
+              - generic [ref=e187]: 支出
+              - strong [ref=e188]: ¥8,932
+            - article [ref=e189]:
+              - generic [ref=e190]: 结余
+              - strong [ref=e191]: ¥9,568
+            - article [ref=e192]:
+              - generic [ref=e193]: 记录数
+              - strong [ref=e194]: 68 笔
+          - paragraph [ref=e195]: 4 月支出结构已明显收口。
+```

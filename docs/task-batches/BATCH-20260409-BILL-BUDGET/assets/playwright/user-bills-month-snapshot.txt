@@ -1,0 +1,167 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: playwright-user
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "‹" [disabled] [ref=e41]
+          - generic [ref=e42]:
+            - strong [ref=e43]: 2026 年账单
+            - paragraph [ref=e44]: 收入保持稳定，4 月开始主动压低高波动消费。
+          - button "›" [ref=e45] [cursor=pointer]
+        - generic [ref=e46]:
+          - generic [ref=e47]: 4 个月 · 607 笔记录
+          - button "查看最近账单" [ref=e48] [cursor=pointer]
+          - button "查看年账单" [ref=e49] [cursor=pointer]
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e52]: 账
+          - generic [ref=e53]: 2026 年度账单总览
+        - generic [ref=e54]:
+          - heading "把每个月的收支起伏收进同一张年度时间线里" [level=1] [ref=e55]
+          - paragraph [ref=e56]: 收入保持稳定，4 月开始主动压低高波动消费。
+        - generic [ref=e57]:
+          - article [ref=e58]:
+            - generic [ref=e59]: 本年结余
+            - strong [ref=e60]: ¥96,832
+            - generic [ref=e61]: 累计记账 99 天
+          - article [ref=e62]:
+            - generic [ref=e63]: 年收入
+            - strong [ref=e64]: ¥215,600
+            - generic [ref=e65]: 收入节奏稳定
+          - article [ref=e66]:
+            - generic [ref=e67]: 年支出
+            - strong [ref=e68]: ¥118,768
+            - generic [ref=e69]: 可直接进入月份明细查看结构
+      - generic [ref=e70]:
+        - generic [ref=e72]:
+          - heading "月度账单" [level=3] [ref=e73]
+          - paragraph [ref=e74]: 按月份查看收入、支出、结余和记账密度。
+        - generic [ref=e75]:
+          - article [ref=e76] [cursor=pointer]:
+            - generic [ref=e77]:
+              - generic [ref=e78]: "4"
+              - generic [ref=e79]:
+                - strong [ref=e80]: 2026年4月
+                - paragraph [ref=e81]: 连续 9 天保持记账，支出峰值集中在餐饮与购物。
+              - generic [ref=e82]: 本月
+            - generic [ref=e83]:
+              - generic [ref=e84]:
+                - generic [ref=e85]: 收入
+                - strong [ref=e86]: ¥18,500
+              - generic [ref=e87]:
+                - generic [ref=e88]: 支出
+                - strong [ref=e89]: ¥8,932
+              - generic [ref=e90]:
+                - generic [ref=e91]: 结余
+                - strong [ref=e92]: ¥9,568
+              - generic [ref=e93]:
+                - generic [ref=e94]: 记账情况
+                - strong [ref=e95]: 9天 · 68笔
+            - generic [ref=e96]: ›
+          - article [ref=e97] [cursor=pointer]:
+            - generic [ref=e98]:
+              - generic [ref=e99]: "3"
+              - generic [ref=e100]:
+                - strong [ref=e101]: 2026年3月
+                - paragraph [ref=e102]: 3 月有一次集中采买，购物和居家支出较高。
+            - generic [ref=e103]:
+              - generic [ref=e104]:
+                - generic [ref=e105]: 收入
+                - strong [ref=e106]: ¥24,800
+              - generic [ref=e107]:
+                - generic [ref=e108]: 支出
+                - strong [ref=e109]: ¥15,280
+              - generic [ref=e110]:
+                - generic [ref=e111]: 结余
+                - strong [ref=e112]: ¥9,520
+              - generic [ref=e113]:
+                - generic [ref=e114]: 记账情况
+                - strong [ref=e115]: 31天 · 186笔
+            - generic [ref=e116]: ›
+          - article [ref=e117] [cursor=pointer]:
+            - generic [ref=e118]:
+              - generic [ref=e119]: "2"
+              - generic [ref=e120]:
+                - strong [ref=e121]: 2026年2月
+                - paragraph [ref=e122]: 2 月节奏平稳，交通和社交活动有所下降。
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: 收入
+                - strong [ref=e126]: ¥24,800
+              - generic [ref=e127]:
+                - generic [ref=e128]: 支出
+                - strong [ref=e129]: ¥12,680
+              - generic [ref=e130]:
+                - generic [ref=e131]: 结余
+                - strong [ref=e132]: ¥12,120
+              - generic [ref=e133]:
+                - generic [ref=e134]: 记账情况
+                - strong [ref=e135]: 28天 · 158笔
+            - generic [ref=e136]: ›
+          - article [ref=e137] [cursor=pointer]:
+            - generic [ref=e138]:
+              - generic [ref=e139]: "1"
+              - generic [ref=e140]:
+                - strong [ref=e141]: 2026年1月
+                - paragraph [ref=e142]: 年初收入高，但节假日消费明显增加。
+            - generic [ref=e143]:
+              - generic [ref=e144]:
+                - generic [ref=e145]: 收入
+                - strong [ref=e146]: ¥32,500
+              - generic [ref=e147]:
+                - generic [ref=e148]: 支出
+                - strong [ref=e149]: ¥18,560
+              - generic [ref=e150]:
+                - generic [ref=e151]: 结余
+                - strong [ref=e152]: ¥13,940
+              - generic [ref=e153]:
+                - generic [ref=e154]: 记账情况
+                - strong [ref=e155]: 31天 · 195笔
+            - generic [ref=e156]: ›
+      - generic [ref=e157]:
+        - article [ref=e158]:
+          - generic [ref=e159]: 支出峰值
+          - strong [ref=e160]: ¥2,856
+          - paragraph [ref=e161]: 04-05 周末聚会
+        - article [ref=e162]:
+          - generic [ref=e163]: 最高频分类
+          - strong [ref=e164]: 餐饮
+          - paragraph [ref=e165]: 23 笔
+        - article [ref=e166]:
+          - generic [ref=e167]: 预算占用
+          - strong [ref=e168]: 59.5%
+          - paragraph [ref=e169]: 剩余空间充足

@@ -1,0 +1,18 @@
+### Result
+Total messages: 5 (Errors: 3, Warnings: 0)
+Returning 3 messages for level "error"
+
+[ERROR] [webpack-dev-server] Errors while compiling. Reload prevented. @ webpack-internal:///./node_modules/webpack-dev-server/client/modules/logger/index.js:607
+[ERROR] [webpack-dev-server] ERROR in ./src/router/index.js 22:0-54
+Module not found: Error: Can't resolve '@/pages/admin/AdminUsers.vue' in '/Users/shynin/software/billSoftware/frontend/src/router' @ webpack-internal:///./node_modules/webpack-dev-server/client/modules/logger/index.js:607
+Error: Cannot find module '@/pages/admin/AdminUsers.vue'
+    at webpackMissingModule (webpack-internal:///./src/router/index.js:25:50)
+    at eval (webpack-internal:///./src/router/index.js:25:153)
+    at ./src/router/index.js (http://localhost:9000/js/main.js:877:1)
+    at __webpack_require__ (http://localhost:9000/js/main.js:20653:32)
+    at fn (http://localhost:9000/js/main.js:20847:21)
+    at eval (webpack-internal:///./src/main.js:6:65)
+    at ./src/main.js (http://localhost:9000/js/main.js:866:1)
+    at __webpack_require__ (http://localhost:9000/js/main.js:20653:32)
+    at http://localhost:9000/js/main.js:21728:37
+    at http://localhost:9000/js/main.js:21730:12

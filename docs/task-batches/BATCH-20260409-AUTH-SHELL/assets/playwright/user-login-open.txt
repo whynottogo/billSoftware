@@ -1,0 +1,12 @@
+### Browser `default` opened with pid 70818.
+### Ran Playwright code
+```js
+await page.goto('http://localhost:9000/user/login');
+```
+### Page
+- Page URL: http://localhost:9000/user/login
+- Page Title: Bill Software
+### Snapshot
+- [Snapshot](.playwright-cli/page-2026-04-09T10-19-41-169Z.yml)
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T10-19-40-695Z.log#L1-L2

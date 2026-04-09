@@ -1,0 +1,4 @@
+{
+  "expenseCategoryAdded": false,
+  "incomeCategoryAdded": true
+}

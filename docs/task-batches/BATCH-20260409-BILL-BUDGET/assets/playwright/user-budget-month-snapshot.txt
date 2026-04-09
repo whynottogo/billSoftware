@@ -1,0 +1,211 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: playwright-user
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - heading "2026年4月预算" [level=1] [ref=e41]
+          - paragraph [ref=e42]: 仅支持设置当前月份预算，年预算请进入独立页面查看。
+        - generic [ref=e43]:
+          - button "查看年预算" [ref=e44] [cursor=pointer]
+          - button "设置预算" [ref=e45] [cursor=pointer]
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]: 预
+          - generic [ref=e49]: 本月预算总览
+        - generic [ref=e50]:
+          - heading "预算页不是另一张账单页，它应该直接告诉你哪里还能花、哪里该收手" [level=2] [ref=e51]
+          - paragraph [ref=e52]: 本月支出已进入后半程，但还有足够余量可以精细调整。
+        - generic [ref=e53]:
+          - article [ref=e54]:
+            - generic [ref=e55]: 本月预算
+            - strong [ref=e56]: ¥15,000
+            - generic [ref=e57]: 围绕支出类型分配额度
+          - article [ref=e58]:
+            - generic [ref=e59]: 本月支出
+            - strong [ref=e60]: ¥8,932
+            - generic [ref=e61]: 当前月度已发生支出
+          - article [ref=e62]:
+            - generic [ref=e63]: 剩余预算
+            - strong [ref=e64]: ¥6,068
+            - generic [ref=e65]: 仍可主动安排的空间
+        - generic [ref=e67]:
+          - generic [ref=e68]: 预算使用进度
+          - strong [ref=e69]: 59.5%
+      - generic [ref=e72]:
+        - article [ref=e73]:
+          - generic [ref=e74]: 已超支分类
+          - strong [ref=e75]: 2个
+          - paragraph [ref=e76]: 餐饮、购物
+        - article [ref=e77]:
+          - generic [ref=e78]: 可控分类
+          - strong [ref=e79]: 4个
+          - paragraph [ref=e80]: 仍有余量
+        - article [ref=e81]:
+          - generic [ref=e82]: 预算节奏
+          - strong [ref=e83]: 稳中可控
+          - paragraph [ref=e84]: 本月可继续收口
+      - generic [ref=e85]:
+        - generic [ref=e87]:
+          - heading "分类预算" [level=3] [ref=e88]
+          - paragraph [ref=e89]: 每一类预算都单独看状态，这样才能知道要不要继续压缩。
+        - generic [ref=e90]:
+          - article [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]:
+                - generic [ref=e94]: 餐
+                - generic [ref=e95]:
+                  - strong [ref=e96]: 餐饮
+                  - paragraph [ref=e97]: 午餐外食频率高于预期。
+              - button "调整" [ref=e98] [cursor=pointer]
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - generic [ref=e101]: 预算
+                - strong [ref=e102]: ¥3,000
+              - generic [ref=e103]:
+                - generic [ref=e104]: 已用
+                - strong [ref=e105]: ¥3,200
+              - generic [ref=e106]:
+                - generic [ref=e107]: 超支
+                - strong [ref=e108]: ¥200
+            - generic [ref=e110]:
+              - generic [ref=e111]: 已超支
+              - strong [ref=e112]: 106.7%
+          - article [ref=e115]:
+            - generic [ref=e116]:
+              - generic [ref=e117]:
+                - generic [ref=e118]: 购
+                - generic [ref=e119]:
+                  - strong [ref=e120]: 购物
+                  - paragraph [ref=e121]: 集中补货拉高了本月消费。
+              - button "调整" [ref=e122] [cursor=pointer]
+            - generic [ref=e123]:
+              - generic [ref=e124]:
+                - generic [ref=e125]: 预算
+                - strong [ref=e126]: ¥2,500
+              - generic [ref=e127]:
+                - generic [ref=e128]: 已用
+                - strong [ref=e129]: ¥2,800
+              - generic [ref=e130]:
+                - generic [ref=e131]: 超支
+                - strong [ref=e132]: ¥300
+            - generic [ref=e134]:
+              - generic [ref=e135]: 已超支
+              - strong [ref=e136]: 112%
+          - article [ref=e139]:
+            - generic [ref=e140]:
+              - generic [ref=e141]:
+                - generic [ref=e142]: 交
+                - generic [ref=e143]:
+                  - strong [ref=e144]: 交通
+                  - paragraph [ref=e145]: 本月已经接近上限。
+              - button "调整" [ref=e146] [cursor=pointer]
+            - generic [ref=e147]:
+              - generic [ref=e148]:
+                - generic [ref=e149]: 预算
+                - strong [ref=e150]: ¥1,500
+              - generic [ref=e151]:
+                - generic [ref=e152]: 已用
+                - strong [ref=e153]: ¥1,280
+              - generic [ref=e154]:
+                - generic [ref=e155]: 剩余
+                - strong [ref=e156]: ¥220
+            - generic [ref=e158]:
+              - generic [ref=e159]: 接近上限
+              - strong [ref=e160]: 85.3%
+          - article [ref=e163]:
+            - generic [ref=e164]:
+              - generic [ref=e165]:
+                - generic [ref=e166]: 娱
+                - generic [ref=e167]:
+                  - strong [ref=e168]: 娱乐
+                  - paragraph [ref=e169]: 再新增娱乐支出需谨慎。
+              - button "调整" [ref=e170] [cursor=pointer]
+            - generic [ref=e171]:
+              - generic [ref=e172]:
+                - generic [ref=e173]: 预算
+                - strong [ref=e174]: ¥1,200
+              - generic [ref=e175]:
+                - generic [ref=e176]: 已用
+                - strong [ref=e177]: ¥980
+              - generic [ref=e178]:
+                - generic [ref=e179]: 剩余
+                - strong [ref=e180]: ¥220
+            - generic [ref=e182]:
+              - generic [ref=e183]: 接近上限
+              - strong [ref=e184]: 81.7%
+          - article [ref=e187]:
+            - generic [ref=e188]:
+              - generic [ref=e189]:
+                - generic [ref=e190]: 运
+                - generic [ref=e191]:
+                  - strong [ref=e192]: 运动
+                  - paragraph [ref=e193]: 本月暂无该分类支出。
+              - button "调整" [ref=e194] [cursor=pointer]
+            - generic [ref=e195]:
+              - generic [ref=e196]:
+                - generic [ref=e197]: 预算
+                - strong [ref=e198]: ¥800
+              - generic [ref=e199]:
+                - generic [ref=e200]: 已用
+                - strong [ref=e201]: ¥0
+              - generic [ref=e202]:
+                - generic [ref=e203]: 剩余
+                - strong [ref=e204]: ¥800
+            - generic [ref=e206]:
+              - generic [ref=e207]: 仍有余量
+              - strong [ref=e208]: 0%
+          - article [ref=e210]:
+            - generic [ref=e211]:
+              - generic [ref=e212]:
+                - generic [ref=e213]: 讯
+                - generic [ref=e214]:
+                  - strong [ref=e215]: 通讯
+                  - paragraph [ref=e216]: 维持在正常波动范围。
+              - button "调整" [ref=e217] [cursor=pointer]
+            - generic [ref=e218]:
+              - generic [ref=e219]:
+                - generic [ref=e220]: 预算
+                - strong [ref=e221]: ¥300
+              - generic [ref=e222]:
+                - generic [ref=e223]: 已用
+                - strong [ref=e224]: ¥168
+              - generic [ref=e225]:
+                - generic [ref=e226]: 剩余
+                - strong [ref=e227]: ¥132
+            - generic [ref=e229]:
+              - generic [ref=e230]: 仍有余量
+              - strong [ref=e231]: 56%

@@ -1,0 +1,53 @@
+### Page
+- Page URL: http://localhost:9000/user/login?reason=kicked
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e14]:
+  - generic [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]: B
+      - generic [ref=e21]:
+        - heading "Bill Software" [level=1] [ref=e22]
+        - paragraph [ref=e23]: 轻松记账，明智理财
+    - generic [ref=e24]:
+      - heading "把记账这件事，做得清楚一点。" [level=2] [ref=e25]
+      - paragraph [ref=e26]: 面向个人与家庭的桌面端记账工作台，帮助你快速录入每一笔收支， 用清晰的统计卡和分类视角看懂自己的财务节奏。
+    - generic [ref=e27]:
+      - article [ref=e28]:
+        - strong [ref=e29]: 趋势看板
+        - paragraph [ref=e30]: 月度收入、支出与结余统一汇总，默认首页就是你的账本概览。
+      - article [ref=e31]:
+        - strong [ref=e32]: 分类统计
+        - paragraph [ref=e33]: 账单、预算和图表采用一致的分类体系，方便快速回看消费结构。
+      - article [ref=e34]:
+        - strong [ref=e35]: 家庭协作
+        - paragraph [ref=e36]: 支持家庭维度的汇总查看，但不干扰个人账本的独立管理。
+  - generic [ref=e38]:
+    - generic [ref=e39]: 用户端登录
+    - heading "欢迎回来" [level=3] [ref=e40]
+    - paragraph [ref=e41]: 支持“用户名或手机号 + 密码”登录。
+    - generic [ref=e42]:
+      - strong [ref=e43]: 会话已失效
+      - generic [ref=e44]: 账号已在其他地方登录，请重新登录。
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]: 用户名或手机号
+        - textbox "用户名或手机号" [ref=e48]:
+          - /placeholder: 请输入用户名或手机号
+      - generic [ref=e49]:
+        - generic [ref=e50]: 密码
+        - generic [ref=e51]:
+          - textbox "密码 显示" [ref=e52]:
+            - /placeholder: 请输入密码
+          - button "显示" [ref=e53] [cursor=pointer]
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - checkbox "记住我" [checked] [ref=e56]
+          - generic [ref=e57]: 记住我
+        - button "管理员登录入口" [ref=e58] [cursor=pointer]
+      - button "登录" [ref=e59] [cursor=pointer]
+    - generic [ref=e60]:
+      - generic [ref=e61]: 还没有账户？
+      - button "立即注册" [ref=e62] [cursor=pointer]
+```

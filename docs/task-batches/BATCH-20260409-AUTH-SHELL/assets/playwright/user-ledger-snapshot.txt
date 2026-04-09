@@ -1,0 +1,167 @@
+### Page
+- Page URL: http://localhost:9000/user/ledger
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: 用户端工作区
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "‹" [disabled] [ref=e41]
+          - strong [ref=e42]: 2026年4月
+          - button "›" [ref=e43] [cursor=pointer]
+        - generic [ref=e44]:
+          - button "记一笔支出" [ref=e45] [cursor=pointer]
+          - button "记一笔收入" [ref=e46] [cursor=pointer]
+      - generic [ref=e47]:
+        - article [ref=e48]:
+          - generic [ref=e49]: 本月收入
+          - strong [ref=e50]: ¥18,500
+        - article [ref=e51]:
+          - generic [ref=e52]: 本月支出
+          - strong [ref=e53]: ¥8,932
+        - article [ref=e54]:
+          - generic [ref=e55]: 结余
+          - strong [ref=e56]: ¥9,568
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - article [ref=e59]:
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - heading "2026-04-09" [level=2] [ref=e62]
+                - text: 星期三
+              - strong [ref=e63]: 支出 ¥458
+            - generic [ref=e64]:
+              - article [ref=e65]:
+                - generic [ref=e66]: 餐
+                - generic [ref=e67]:
+                  - generic [ref=e68]:
+                    - strong [ref=e69]: 餐饮
+                    - generic [ref=e70]: 12:30
+                  - paragraph [ref=e71]: 午餐聚会
+                - strong [ref=e72]: "-¥258"
+              - article [ref=e73]:
+                - generic [ref=e74]: 交
+                - generic [ref=e75]:
+                  - generic [ref=e76]:
+                    - strong [ref=e77]: 交通
+                    - generic [ref=e78]: 09:15
+                  - paragraph [ref=e79]: 打车
+                - strong [ref=e80]: "-¥128"
+              - article [ref=e81]:
+                - generic [ref=e82]: 茶
+                - generic [ref=e83]:
+                  - generic [ref=e84]:
+                    - strong [ref=e85]: 奶茶
+                    - generic [ref=e86]: 15:20
+                  - paragraph [ref=e87]: 下午茶
+                - strong [ref=e88]: "-¥72"
+          - article [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - heading "2026-04-08" [level=2] [ref=e92]
+                - text: 星期二
+              - strong [ref=e93]: 支出 ¥1,280
+            - generic [ref=e94]:
+              - article [ref=e95]:
+                - generic [ref=e96]: 购
+                - generic [ref=e97]:
+                  - generic [ref=e98]:
+                    - strong [ref=e99]: 购物
+                    - generic [ref=e100]: 19:30
+                  - paragraph [ref=e101]: 日用品采购
+                - strong [ref=e102]: "-¥980"
+              - article [ref=e103]:
+                - generic [ref=e104]: 娱
+                - generic [ref=e105]:
+                  - generic [ref=e106]:
+                    - strong [ref=e107]: 娱乐
+                    - generic [ref=e108]: 20:00
+                  - paragraph [ref=e109]: 看电影
+                - strong [ref=e110]: "-¥300"
+        - complementary [ref=e111]:
+          - generic [ref=e112]:
+            - generic [ref=e113]:
+              - generic [ref=e114]:
+                - heading "常用分类" [level=3] [ref=e115]
+                - paragraph [ref=e116]: 按本月使用频次展示
+              - button "管理" [ref=e117] [cursor=pointer]
+            - generic [ref=e118]:
+              - article [ref=e119]:
+                - generic [ref=e120]: 餐
+                - strong [ref=e121]: 餐饮
+                - generic [ref=e122]: 23 笔
+              - article [ref=e123]:
+                - generic [ref=e124]: 购
+                - strong [ref=e125]: 购物
+                - generic [ref=e126]: 15 笔
+              - article [ref=e127]:
+                - generic [ref=e128]: 交
+                - strong [ref=e129]: 交通
+                - generic [ref=e130]: 18 笔
+              - article [ref=e131]:
+                - generic [ref=e132]: 娱
+                - strong [ref=e133]: 娱乐
+                - generic [ref=e134]: 8 笔
+              - article [ref=e135]:
+                - generic [ref=e136]: 果
+                - strong [ref=e137]: 水果
+                - generic [ref=e138]: 12 笔
+              - article [ref=e139]:
+                - generic [ref=e140]: 茶
+                - strong [ref=e141]: 奶茶
+                - generic [ref=e142]: 7 笔
+          - generic [ref=e143]:
+            - generic [ref=e145]:
+              - heading "本月概况" [level=3] [ref=e146]
+              - paragraph [ref=e147]: 保留 Make 原型里的信息节奏
+            - article [ref=e148]:
+              - generic [ref=e149]:
+                - generic [ref=e150]: 记账天数
+                - strong [ref=e151]: 9天
+            - article [ref=e154]:
+              - generic [ref=e155]:
+                - generic [ref=e156]: 日均支出
+                - strong [ref=e157]: ¥992
+            - article [ref=e160]:
+              - generic [ref=e161]:
+                - generic [ref=e162]: 高频分类
+                - strong [ref=e163]: 餐饮
+```
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T10-12-09-186Z.log#L5-L6

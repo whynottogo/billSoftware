@@ -1,0 +1,5 @@
+{
+  "yearChanged": true,
+  "rankingCount": 10,
+  "incomeRoute": "/user/charts/income"
+}

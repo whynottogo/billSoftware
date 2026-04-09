@@ -1,0 +1,11 @@
+### Ran Playwright code
+```js
+await page.goto('http://localhost:9000/user/bills/year');
+```
+### Page
+- Page URL: http://localhost:9000/user/bills/year
+- Page Title: Bill Software
+### Snapshot
+- [Snapshot](.playwright-cli/page-2026-04-09T13-34-57-689Z.yml)
+### Events
+- New console entries: .playwright-cli/console-2026-04-09T13-34-57-385Z.log#L1-L2

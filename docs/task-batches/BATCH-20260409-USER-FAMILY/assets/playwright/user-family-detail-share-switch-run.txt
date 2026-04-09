@@ -1,0 +1,6 @@
+### Result
+"share-switched"
+### Ran Playwright code
+```js
+await (async (page) => { await page.getByRole('button', { name: '月支出' }).click(); await page.getByRole('button', { name: '年收入' }).click(); await page.getByRole('button', { name: '年支出' }).click(); await page.getByRole('button', { name: '月收入' }).click(); await page.waitForTimeout(500); return 'share-switched'; })(page);
+```

@@ -1,0 +1,9 @@
+### Result
+{"beforeStatus":"启用","afterStatus":"禁用","detailUrl":"http://localhost:9000/admin/users/u-zhangxiaoming"}
+### Ran Playwright code
+```js
+await (async (page) => { const statusCell = page.locator('.status-pill').first(); const beforeStatus = await statusCell.innerText(); await page.locator('.table-actions__toggle').first().click(); await page.waitForTimeout(200); const afterStatus = await statusCell.innerText(); await page.locator('.table-actions__detail').first().click(); await page.waitForURL('**/admin/users/*'); return { beforeStatus, afterStatus, detailUrl: page.url() }; })(page);
+```
+### Page
+- Page URL: http://localhost:9000/admin/users/u-zhangxiaoming
+- Page Title: Bill Software

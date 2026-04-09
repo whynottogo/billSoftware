@@ -1,0 +1,4 @@
+{
+  "noteVisible": true,
+  "dialogStillOpen": true
+}

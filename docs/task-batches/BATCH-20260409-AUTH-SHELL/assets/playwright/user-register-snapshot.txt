@@ -1,0 +1,54 @@
+### Page
+- Page URL: http://localhost:9000/user/register
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: 用户注册
+    - heading "创建你的记账账号" [level=1] [ref=e6]
+    - paragraph [ref=e7]: 完成基础信息后，账号会先进入“等待管理员启用”的状态。 首批版本不自动登录，启用后请回到用户端登录页进入系统。
+    - generic [ref=e8]:
+      - article [ref=e9]:
+        - strong [ref=e10]: 账号体系独立
+        - text: 普通用户账号与管理员账号完全分离，避免串端登录。
+      - article [ref=e11]:
+        - strong [ref=e12]: 字段一次填全
+        - text: 用户名、昵称、手机号、邮箱、密码五项信息均为首批必填。
+      - article [ref=e13]:
+        - strong [ref=e14]: 启用后再登录
+        - text: 注册成功后需管理员启用，启用前无法进入用户端首页。
+  - generic [ref=e16]:
+    - heading "填写注册信息" [level=2] [ref=e17]
+    - paragraph [ref=e18]: 所有字段均与需求文档保持一致。
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: 用户名
+        - textbox "用户名" [ref=e22]:
+          - /placeholder: 请输入用户名
+      - generic [ref=e23]:
+        - generic [ref=e24]: 昵称
+        - textbox "昵称" [ref=e25]:
+          - /placeholder: 请输入昵称
+      - generic [ref=e26]:
+        - generic [ref=e27]: 手机号
+        - textbox "手机号" [ref=e28]:
+          - /placeholder: 请输入手机号
+      - generic [ref=e29]:
+        - generic [ref=e30]: 邮箱
+        - textbox "邮箱" [ref=e31]:
+          - /placeholder: 请输入邮箱
+      - generic [ref=e32]:
+        - generic [ref=e33]: 密码
+        - generic [ref=e34]:
+          - textbox "密码 显示" [ref=e35]:
+            - /placeholder: 请输入密码
+          - button "显示" [ref=e36] [cursor=pointer]
+      - generic [ref=e37]:
+        - strong [ref=e38]: 注册规则
+        - generic [ref=e39]: 注册成功后不自动登录，管理员启用前无法进入用户端。
+      - button "提交注册" [ref=e40] [cursor=pointer]
+    - generic [ref=e41]:
+      - generic [ref=e42]: 已经有账户？
+      - button "返回登录" [ref=e43] [cursor=pointer]
+```

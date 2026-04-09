@@ -1,0 +1,1 @@
+Error response from daemon: unknown: failed to resolve reference "docker.io/library/golang:1.22": unexpected status from HEAD request to http://registry-1.docker.io/v2/library/golang/manifests/1.22: 403 connecting to registry-1.docker.io:80: connecting to registry-1.docker.io:80: dial tcp 108.160.163.108:80: connect: operation timed out
