@@ -1,12 +1,17 @@
 <template>
   <div class="finance-page asset-page">
+    <div v-if="errorMessage" class="finance-inline-notice">
+      <span>{{ errorMessage }}</span>
+      <button type="button" @click="loadOverview">重新加载</button>
+    </div>
+
     <section class="finance-toolbar">
       <div class="finance-toolbar__meta">
         <h1>资产管家</h1>
         <p>把账户放在同一张资产地图里，先看全局，再处理单账户细节。</p>
       </div>
       <div class="finance-toolbar__actions">
-        <button class="finance-button finance-button--ghost" @click="reloadFromSeed">重置演示数据</button>
+        <button class="finance-button finance-button--ghost" @click="loadOverview">刷新资产</button>
         <button class="finance-button finance-button--primary" @click="openAddDialog">新增账户</button>
       </div>
     </section>
@@ -34,8 +39,8 @@
         </article>
         <article class="finance-stat-card">
           <span>更新时间</span>
-          <strong>{{ summary.updatedAt }}</strong>
-          <small>本页为原型数据演示</small>
+          <strong>{{ summary.updatedAt || "--" }}</strong>
+          <small>本页已切到真实接口数据</small>
         </article>
       </div>
     </section>
@@ -66,7 +71,7 @@
             </div>
             <div class="asset-page__category-total">
               <span>分类总额</span>
-              <strong :class="category.id === 'category-liability' ? 'finance-tone-expense' : 'finance-tone-income'">
+              <strong :class="isLiabilityCategory(category) ? 'finance-tone-expense' : 'finance-tone-income'">
                 {{ formatCurrency(category.total) }}
               </strong>
             </div>
@@ -163,8 +168,8 @@
           <span v-if="formMode === 'edit'" class="finance-note">账户类型创建后不可修改。</span>
           <div class="asset-page__dialog-actions">
             <button class="finance-button finance-button--ghost" @click="closeFormDialog">取消</button>
-            <button class="finance-button finance-button--primary" @click="submitForm">
-              {{ formMode === "create" ? "创建账户" : "保存修改" }}
+            <button class="finance-button finance-button--primary" :disabled="isSubmitting" @click="submitForm">
+              {{ isSubmitting ? "提交中..." : (formMode === "create" ? "创建账户" : "保存修改") }}
             </button>
           </div>
         </div>
@@ -175,15 +180,16 @@
 
 <script>
 import {
-  formatCurrency,
-  getAssetOverview,
+  buildAssetPayload,
+  buildUserAssetsError,
+  createUserAsset,
+  formatAssetCurrency,
   getAssetTypeOptions,
-  getVirtualProviderOptions
-} from "@/utils/userAssetMock";
-
-function toNumber(value) {
-  return Number(value || 0);
-}
+  getUserAssets,
+  getVirtualProviderOptions,
+  normalizeAssetOverviewPayload,
+  updateUserAsset
+} from "@/api/userAssets";
 
 export default {
   name: "UserAssets",
@@ -199,6 +205,9 @@ export default {
       },
       categories: [],
       activeCategoryId: "all",
+      isLoading: false,
+      isSubmitting: false,
+      errorMessage: "",
       formDialogVisible: false,
       formMode: "create",
       editingAccountId: "",
@@ -220,7 +229,7 @@ export default {
     monthChangeLabel() {
       var value = Number(this.summary.monthlyChange || 0);
       var symbol = value >= 0 ? "+" : "-";
-      return symbol + formatCurrency(Math.abs(value));
+      return symbol + this.formatCurrency(Math.abs(value));
     },
     visibleCategories() {
       if (this.activeCategoryId === "all") {
@@ -259,10 +268,10 @@ export default {
     }
   },
   created() {
-    this.reloadFromSeed();
+    this.loadOverview();
   },
   methods: {
-    formatCurrency: formatCurrency,
+    formatCurrency: formatAssetCurrency,
     createEmptyForm() {
       return {
         type: "cash",
@@ -275,18 +284,34 @@ export default {
       };
     },
     categoryMark(category) {
-      var marks = {
-        "category-liquid": "流",
-        "category-investment": "投",
-        "category-liability": "负"
-      };
+      var name = String(category.name || "");
+      var hasLiability = (category.accounts || []).some(function(account) {
+        return account.direction === "liability";
+      });
 
-      return marks[category.id] || "资";
+      if (String(category.id || "") === "category-liability" || name.indexOf("负债") >= 0 || hasLiability) {
+        return "负";
+      }
+
+      if (String(category.id || "") === "category-investment" || name.indexOf("投资") >= 0) {
+        return "投";
+      }
+
+      if (String(category.id || "") === "category-liquid" || name.indexOf("流动") >= 0) {
+        return "流";
+      }
+
+      return name.slice(0, 1) || "资";
     },
     providerLabel(value) {
       if (value === "wechat") return "微信";
       if (value === "alipay") return "支付宝";
       return "";
+    },
+    isLiabilityCategory(category) {
+      return (category.accounts || []).some(function(account) {
+        return account.direction === "liability";
+      });
     },
     typeLabel(type) {
       var target = this.typeOptions.find(function(item) {
@@ -294,60 +319,36 @@ export default {
       });
       return target ? target.label : "账户";
     },
-    ensureCategory(categoryId) {
-      var target = this.categories.find(function(item) {
-        return item.id === categoryId;
-      });
+    loadOverview() {
+      this.isLoading = true;
+      this.errorMessage = "";
 
-      if (!target) {
-        return this.categories[0];
-      }
+      return getUserAssets()
+        .then(
+          function(result) {
+            var overview = normalizeAssetOverviewPayload(result);
+            this.summary = overview.summary;
+            this.categories = overview.categories;
 
-      return target;
-    },
-    recalculateSummary() {
-      var totalAsset = 0;
-      var totalLiability = 0;
-      var monthlyChange = 0;
-      var accountCount = 0;
+            var hasActiveCategory = this.categories.some(function(category) {
+              return category.id === this.activeCategoryId;
+            }, this);
 
-      this.categories = this.categories.map(function(category) {
-        var categoryTotal = 0;
-
-        category.accounts.forEach(function(account) {
-          var balance = toNumber(account.balance);
-          var change = toNumber(account.monthlyChange);
-
-          categoryTotal += balance;
-          monthlyChange += change;
-          accountCount += 1;
-
-          if (account.direction === "liability") {
-            totalLiability += balance;
-          } else {
-            totalAsset += balance;
-          }
-        });
-
-        return Object.assign({}, category, {
-          total: categoryTotal
-        });
-      });
-
-      this.summary = Object.assign({}, this.summary, {
-        totalAsset: totalAsset,
-        totalLiability: totalLiability,
-        netAsset: totalAsset - totalLiability,
-        monthlyChange: monthlyChange,
-        accountCount: accountCount,
-        updatedAt: new Date().toLocaleString("zh-CN", { hour12: false })
-      });
-    },
-    reloadFromSeed() {
-      var overview = getAssetOverview();
-      this.summary = overview.summary;
-      this.categories = overview.categories;
-      this.activeCategoryId = "all";
+            if (!hasActiveCategory) {
+              this.activeCategoryId = "all";
+            }
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.errorMessage = buildUserAssetsError(error, "资产数据加载失败，请稍后重试");
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isLoading = false;
+          }.bind(this)
+        );
     },
     openDetail(accountId) {
       this.$router.push("/user/assets/" + accountId);
@@ -377,7 +378,7 @@ export default {
         type: account.type,
         name: account.name,
         remark: account.remark,
-        balance: toNumber(account.balance),
+        balance: Number(account.balance || 0),
         categoryId: category.id,
         cardNo: account.cardNo || "",
         provider: account.provider || ""
@@ -431,53 +432,61 @@ export default {
       );
     },
     createAccount() {
-      var category = this.ensureCategory(this.formModel.categoryId);
-      var now = Date.now();
-      var newAccount = {
-        id: "acc-local-" + now,
-        name: this.formModel.name.trim(),
-        type: this.formModel.type,
-        typeLabel: this.typeLabel(this.formModel.type),
-        remark: this.formModel.remark.trim(),
-        balance: toNumber(this.formModel.balance),
-        cardNo: this.formModel.cardNo.trim(),
-        provider: this.formModel.provider,
-        direction: this.formModel.type === "liability" ? "liability" : "asset",
-        monthlyChange: 0
-      };
+      this.isSubmitting = true;
 
-      category.accounts.unshift(newAccount);
-      this.recalculateSummary();
-      this.formDialogVisible = false;
-      this.$message.success("账户已创建（原型本地数据）");
+      return createUserAsset(buildAssetPayload(this.formModel))
+        .then(
+          function() {
+            return this.loadOverview();
+          }.bind(this)
+        )
+        .then(
+          function() {
+            this.formDialogVisible = false;
+            this.$message.success("账户已创建");
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.error(buildUserAssetsError(error, "创建账户失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isSubmitting = false;
+          }.bind(this)
+        );
     },
     updateAccount() {
-      var targetAccount = null;
-
-      this.categories.forEach(function(category) {
-        category.accounts.forEach(function(account) {
-          if (account.id === this.editingAccountId) {
-            targetAccount = account;
-          }
-        }, this);
-      }, this);
-
-      if (!targetAccount) {
+      if (!this.editingAccountId) {
         this.$message.error("未找到要编辑的账户");
         return;
       }
 
-      targetAccount.name = this.formModel.name.trim();
-      targetAccount.remark = this.formModel.remark.trim();
-      targetAccount.balance = toNumber(this.formModel.balance);
-      targetAccount.cardNo = this.formModel.cardNo.trim();
-      targetAccount.provider = this.formModel.provider;
-      targetAccount.typeLabel = this.typeLabel(targetAccount.type);
-      targetAccount.direction = targetAccount.type === "liability" ? "liability" : "asset";
+      this.isSubmitting = true;
 
-      this.recalculateSummary();
-      this.formDialogVisible = false;
-      this.$message.success("账户信息已更新（原型本地数据）");
+      return updateUserAsset(this.editingAccountId, buildAssetPayload(this.formModel))
+        .then(
+          function() {
+            return this.loadOverview();
+          }.bind(this)
+        )
+        .then(
+          function() {
+            this.formDialogVisible = false;
+            this.$message.success("账户信息已更新");
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.error(buildUserAssetsError(error, "更新账户失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isSubmitting = false;
+          }.bind(this)
+        );
     }
   }
 };

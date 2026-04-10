@@ -565,7 +565,7 @@ Notes:
 req_id: SYS-DATA-001
 side: system
 module: 系统规则与鉴权
-status: 联调中
+status: 已完成
 owner_ai: Codex
 dependencies: ["SYS-AUTH-001", "SYS-AUTH-003"]
 ```
@@ -842,8 +842,8 @@ Notes:
 req_id: USER-BUDGET-001
 side: user
 module: 预算
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-LEDGER-004", "USER-LEDGER-001"]
 ```
 
@@ -867,8 +867,8 @@ Notes:
 req_id: USER-BUDGET-002
 side: user
 module: 预算
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-LEDGER-004", "USER-LEDGER-001"]
 ```
 
@@ -892,8 +892,8 @@ Notes:
 req_id: USER-ASSET-001
 side: user
 module: 资产管家
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["SYS-DATA-001", "USER-AUTH-002"]
 ```
 
@@ -917,8 +917,8 @@ Notes:
 req_id: USER-ASSET-002
 side: user
 module: 资产管家
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-ASSET-001"]
 ```
 
@@ -942,8 +942,8 @@ Notes:
 req_id: USER-ASSET-003
 side: user
 module: 资产管家
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-ASSET-001", "USER-ASSET-002"]
 ```
 
@@ -967,8 +967,8 @@ Notes:
 req_id: USER-CHART-001
 side: user
 module: 图表
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-LEDGER-001", "USER-LEDGER-004"]
 ```
 
@@ -992,8 +992,8 @@ Notes:
 req_id: USER-CHART-002
 side: user
 module: 图表
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-LEDGER-001", "USER-LEDGER-004"]
 ```
 
@@ -1017,8 +1017,8 @@ V1 不要求收入月视图折线图。
 req_id: USER-PROFILE-001
 side: user
 module: 个人信息
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["SYS-DATA-001", "USER-AUTH-002"]
 ```
 
@@ -1042,8 +1042,8 @@ Notes:
 req_id: USER-PROFILE-002
 side: user
 module: 个人信息
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-PROFILE-001"]
 ```
 

@@ -1,0 +1,100 @@
+### Page
+- Page URL: http://localhost:9000/user/profile
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]: 资料中心
+          - strong [ref=e42]: USER PROFILE
+        - heading "把你的账号信息维护清楚" [level=1] [ref=e43]
+        - paragraph [ref=e44]: 账户与手机号用于身份识别，保持只读。昵称、邮箱和头像可随时更新，当前版本已接入真实接口并 与当前登录账号同步。
+        - generic [ref=e45]:
+          - button "修改密码" [ref=e46] [cursor=pointer]
+          - button "更新头像" [ref=e47] [cursor=pointer]
+      - generic [ref=e48]:
+        - article [ref=e49]:
+          - generic [ref=e50]:
+            - heading "头像与基础信息" [level=2] [ref=e51]
+            - generic [ref=e52]: 支持头像占位上传和资料编辑
+          - generic [ref=e53]:
+            - img "用户头像" [ref=e92]
+            - generic [ref=e56]:
+              - strong [ref=e93]: E2E验证0402-资料页二次验证
+              - paragraph [ref=e57]: 账号：e2e0410000402
+              - generic [ref=e58]:
+                - button "上传头像" [ref=e59] [cursor=pointer]
+                - button "恢复默认" [ref=e60] [cursor=pointer]
+              - generic [ref=e61]: 资料已从真实接口读取，可继续编辑昵称、邮箱和头像。
+          - generic [ref=e62]:
+            - generic [ref=e63]:
+              - generic [ref=e64]: 账号
+              - textbox "账号 账号仅展示，不可修改" [ref=e65]: e2e0410000402
+              - generic [ref=e66]: 账号仅展示，不可修改
+            - generic [ref=e67]:
+              - generic [ref=e68]: 手机号
+              - textbox "手机号 手机号用于登录识别，不支持修改" [ref=e69]: "13900000402"
+              - generic [ref=e70]: 手机号用于登录识别，不支持修改
+            - generic [ref=e71]:
+              - generic [ref=e72]: 昵称
+              - textbox "昵称 昵称会同步展示在页面欢迎区" [ref=e73]:
+                - /placeholder: 请输入昵称
+                - text: E2E验证0402-资料页二次验证
+              - generic [ref=e74]: 昵称会同步展示在页面欢迎区
+            - generic [ref=e75]:
+              - generic [ref=e76]: 邮箱
+              - textbox "邮箱 用于消息触达和账号找回" [ref=e77]:
+                - /placeholder: 请输入邮箱
+                - text: e2e0410000402+verify@example.com
+              - generic [ref=e78]: 用于消息触达和账号找回
+          - generic [ref=e79]:
+            - button "保存资料" [active] [ref=e80] [cursor=pointer]
+            - button "还原本次修改" [ref=e81] [cursor=pointer]
+        - article [ref=e82]:
+          - generic [ref=e83]:
+            - heading "会话安全" [level=3] [ref=e84]
+            - paragraph [ref=e85]: 统一管理主动退出与会话失效提示文案。
+          - generic [ref=e86]:
+            - strong [ref=e87]: 统一提示文案
+            - generic [ref=e88]: 账号已在其他地方登录，请重新登录。
+          - generic [ref=e89]:
+            - button "主动退出登录" [ref=e90] [cursor=pointer]
+            - button "模拟被挤下线提示" [ref=e91] [cursor=pointer]
+```

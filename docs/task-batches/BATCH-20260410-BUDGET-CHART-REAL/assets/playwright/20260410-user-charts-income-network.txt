@@ -1,0 +1,4 @@
+### Result
+[GET] http://localhost:9000/api/user/charts/years => [200] OK
+[GET] http://localhost:9000/api/user/charts/expense/2026 => [200] OK
+[GET] http://localhost:9000/api/user/charts/income/2026 => [200] OK

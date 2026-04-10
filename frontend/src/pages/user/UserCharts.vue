@@ -28,6 +28,11 @@
       </div>
     </section>
 
+    <div v-if="errorMessage" class="finance-inline-notice">
+      <span>{{ errorMessage }}</span>
+      <button type="button" @click="retryCurrentYear">重试</button>
+    </div>
+
     <section class="finance-hero finance-hero--soft">
       <div class="finance-hero__eyebrow">
         <span class="finance-hero__eyebrow-mark">{{ isExpenseMode ? "支" : "收" }}</span>
@@ -56,7 +61,13 @@
             <p>按天查看支出波动，快速定位本月异常高点。</p>
           </div>
         </header>
-        <SimpleLineChart :labels="expenseMonthLabels" :series="expenseMonthSeries" :height="290" />
+        <div v-if="isLoading && !expenseMonthLabels.length" class="user-chart-page__placeholder">
+          正在加载月统计（日趋势）...
+        </div>
+        <div v-else-if="!expenseMonthLabels.length" class="user-chart-page__placeholder">
+          当前年份暂无月统计（日趋势）数据。
+        </div>
+        <SimpleLineChart v-else :labels="expenseMonthLabels" :series="expenseMonthSeries" :height="290" />
       </article>
 
       <article class="page-card finance-panel">
@@ -66,7 +77,13 @@
             <p>把全年每个月支出拉成一条曲线，观察年度消费节奏。</p>
           </div>
         </header>
-        <SimpleLineChart :labels="expenseYearLabels" :series="expenseYearSeries" :height="290" />
+        <div v-if="isLoading && !expenseYearLabels.length" class="user-chart-page__placeholder">
+          正在加载年统计（月趋势）...
+        </div>
+        <div v-else-if="!expenseYearLabels.length" class="user-chart-page__placeholder">
+          当前年份暂无年统计（月趋势）数据。
+        </div>
+        <SimpleLineChart v-else :labels="expenseYearLabels" :series="expenseYearSeries" :height="290" />
       </article>
     </section>
 
@@ -77,7 +94,13 @@
           <p>V1 聚焦年视角，按月查看收入变化。</p>
         </div>
       </header>
-      <SimpleLineChart :labels="incomeYearLabels" :series="incomeYearSeries" :height="320" />
+      <div v-if="isLoading && !incomeYearLabels.length" class="user-chart-page__placeholder">
+        正在加载年度收入趋势...
+      </div>
+      <div v-else-if="!incomeYearLabels.length" class="user-chart-page__placeholder">
+        当前年份暂无收入趋势数据。
+      </div>
+      <SimpleLineChart v-else :labels="incomeYearLabels" :series="incomeYearSeries" :height="320" />
     </article>
 
     <section class="page-card finance-panel">
@@ -88,8 +111,14 @@
         </div>
       </header>
 
-      <div class="user-chart-page__ranking">
-        <article v-for="(item, index) in currentRanking" :key="item.name" class="chart-rank-row">
+      <div v-if="isLoading && !currentRanking.length" class="user-chart-page__placeholder user-chart-page__placeholder--ranking">
+        正在加载类型排行榜...
+      </div>
+      <div v-else-if="!currentRanking.length" class="user-chart-page__placeholder user-chart-page__placeholder--ranking">
+        当前年份暂无类型排行榜数据。
+      </div>
+      <div v-else class="user-chart-page__ranking">
+        <article v-for="(item, index) in currentRanking" :key="item.name + '-' + index" class="chart-rank-row">
           <div class="chart-rank-row__index">{{ index + 1 }}</div>
           <div class="chart-rank-row__body">
             <div class="chart-rank-row__topline">
@@ -117,11 +146,17 @@
 <script>
 import SimpleLineChart from "@/components/SimpleLineChart.vue";
 import {
+  buildUserChartsError,
+  createEmptyExpenseChartData,
+  createEmptyIncomeChartData,
   formatChartCurrency,
-  getChartYears,
-  getExpenseChartYear,
-  getIncomeChartYear
-} from "@/utils/userChartMock";
+  getUserChartYears,
+  getUserExpenseChartYear,
+  getUserIncomeChartYear,
+  normalizeChartYearsPayload,
+  normalizeExpenseChartPayload,
+  normalizeIncomeChartPayload
+} from "@/api/userCharts";
 
 export default {
   name: "UserCharts",
@@ -130,27 +165,35 @@ export default {
   },
   data() {
     return {
-      selectedYear: getChartYears()[0]
+      selectedYear: new Date().getFullYear(),
+      years: [],
+      expenseData: createEmptyExpenseChartData(),
+      incomeData: createEmptyIncomeChartData(),
+      isLoading: false,
+      errorMessage: "",
+      activeChartRequestKey: 0
     };
   },
+  created() {
+    this.bootstrap();
+  },
+  watch: {
+    "$route.path": function() {
+      this.loadCurrentModeData(this.selectedYear, true);
+    }
+  },
   computed: {
-    years() {
-      return getChartYears();
-    },
     isExpenseMode() {
       return this.$route.path.indexOf("/user/charts/income") !== 0;
     },
-    expenseData() {
-      return getExpenseChartYear(this.selectedYear);
-    },
-    incomeData() {
-      return getIncomeChartYear(this.selectedYear);
+    currentData() {
+      return this.isExpenseMode ? this.expenseData : this.incomeData;
     },
     hasPreviousYear() {
-      return this.years.indexOf(this.selectedYear) > 0;
+      return this.years.length > 1 && this.years.indexOf(this.selectedYear) < this.years.length - 1;
     },
     hasNextYear() {
-      return this.years.indexOf(this.selectedYear) < this.years.length - 1;
+      return this.years.length > 1 && this.years.indexOf(this.selectedYear) > 0;
     },
     heroTitle() {
       if (this.isExpenseMode) {
@@ -167,6 +210,11 @@ export default {
       return "收入页按需求保留年视角，配合前十类型排行，先建立稳定增长的观察框架。";
     },
     heroCards() {
+      var rankingTop = this.currentRanking[0] || {
+        name: "暂无数据",
+        percent: 0
+      };
+
       if (this.isExpenseMode) {
         return [
           {
@@ -183,8 +231,8 @@ export default {
           },
           {
             label: "高频分类",
-            value: this.expenseData.ranking[0].name,
-            note: "占比 " + this.expenseData.ranking[0].percent + "%",
+            value: rankingTop.name,
+            note: "占比 " + rankingTop.percent + "%",
             tone: ""
           }
         ];
@@ -205,15 +253,15 @@ export default {
         },
         {
           label: "主要收入来源",
-          value: this.incomeData.ranking[0].name,
-          note: "占比 " + this.incomeData.ranking[0].percent + "%",
+          value: rankingTop.name,
+          note: "占比 " + rankingTop.percent + "%",
           tone: ""
         }
       ];
     },
     expenseMonthLabels() {
-      return this.expenseData.monthTrend.map(function(_, index) {
-        return index + 1 + "日";
+      return this.expenseData.monthTrend.map(function(item) {
+        return item.label;
       });
     },
     expenseMonthSeries() {
@@ -221,13 +269,15 @@ export default {
         {
           name: "当月支出",
           color: "#ef4444",
-          values: this.expenseData.monthTrend
+          values: this.expenseData.monthTrend.map(function(item) {
+            return item.value;
+          })
         }
       ];
     },
     expenseYearLabels() {
-      return this.expenseData.yearTrend.map(function(_, index) {
-        return index + 1 + "月";
+      return this.expenseData.yearTrend.map(function(item) {
+        return item.label;
       });
     },
     expenseYearSeries() {
@@ -235,13 +285,15 @@ export default {
         {
           name: "年度支出",
           color: "#f97316",
-          values: this.expenseData.yearTrend
+          values: this.expenseData.yearTrend.map(function(item) {
+            return item.value;
+          })
         }
       ];
     },
     incomeYearLabels() {
-      return this.incomeData.yearTrend.map(function(_, index) {
-        return index + 1 + "月";
+      return this.incomeData.yearTrend.map(function(item) {
+        return item.label;
       });
     },
     incomeYearSeries() {
@@ -249,46 +301,180 @@ export default {
         {
           name: "年度收入",
           color: "#22c55e",
-          values: this.incomeData.yearTrend
+          values: this.incomeData.yearTrend.map(function(item) {
+            return item.value;
+          })
         }
       ];
     },
     currentRanking() {
-      return this.isExpenseMode ? this.expenseData.ranking : this.incomeData.ranking;
+      return this.currentData.ranking || [];
     }
   },
   methods: {
     formatCurrency: formatChartCurrency,
+    bootstrap() {
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return getUserChartYears()
+        .then(
+          function(result) {
+            var normalizedYears = normalizeChartYearsPayload(result);
+            var fallbackYear = normalizedYears[0] || new Date().getFullYear();
+
+            this.years = normalizedYears;
+            this.selectedYear = fallbackYear;
+
+            return this.loadCurrentModeData(fallbackYear, true);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.years = [];
+            this.expenseData = createEmptyExpenseChartData(this.selectedYear);
+            this.incomeData = createEmptyIncomeChartData(this.selectedYear);
+            this.errorMessage = buildUserChartsError(error, "图表年份加载失败，请稍后重试。");
+            this.$message.error(this.errorMessage);
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isLoading = false;
+          }.bind(this)
+        );
+    },
+    loadCurrentModeData(year, silent) {
+      var targetYear = Number(year || this.selectedYear || new Date().getFullYear());
+      var requestKey = Date.now();
+      var currentRequest = this.isExpenseMode ? getUserExpenseChartYear(targetYear) : getUserIncomeChartYear(targetYear);
+
+      this.activeChartRequestKey = requestKey;
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return currentRequest
+        .then(
+          function(result) {
+            if (this.activeChartRequestKey !== requestKey) {
+              return;
+            }
+
+            if (this.isExpenseMode) {
+              this.expenseData = normalizeExpenseChartPayload(result, targetYear);
+            } else {
+              this.incomeData = normalizeIncomeChartPayload(result, targetYear);
+            }
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            if (this.activeChartRequestKey !== requestKey) {
+              return;
+            }
+
+            if (this.isExpenseMode) {
+              this.expenseData = createEmptyExpenseChartData(targetYear);
+            } else {
+              this.incomeData = createEmptyIncomeChartData(targetYear);
+            }
+
+            this.errorMessage = buildUserChartsError(
+              error,
+              targetYear + " 年" + (this.isExpenseMode ? "支出图表" : "收入图表") + "加载失败，请稍后重试。"
+            );
+
+            if (!silent) {
+              this.$message.error(this.errorMessage);
+            }
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            if (this.activeChartRequestKey === requestKey) {
+              this.isLoading = false;
+            }
+          }.bind(this)
+        );
+    },
     prevYear() {
       var index = this.years.indexOf(this.selectedYear);
 
-      if (index > 0) {
-        this.selectedYear = this.years[index - 1];
+      if (index > -1 && index < this.years.length - 1) {
+        this.selectedYear = this.years[index + 1];
+        this.loadCurrentModeData(this.selectedYear);
       }
     },
     nextYear() {
       var index = this.years.indexOf(this.selectedYear);
 
-      if (index < this.years.length - 1) {
-        this.selectedYear = this.years[index + 1];
+      if (index > 0) {
+        this.selectedYear = this.years[index - 1];
+        this.loadCurrentModeData(this.selectedYear);
       }
+    },
+    retryCurrentYear() {
+      if (!this.years.length) {
+        this.bootstrap();
+        return;
+      }
+
+      this.loadCurrentModeData(this.selectedYear);
     },
     switchMode(mode) {
       var targetPath = mode === "income" ? "/user/charts/income" : "/user/charts/expense";
 
       if (this.$route.path !== targetPath) {
         this.$router.push(targetPath);
+        return;
       }
+
+      this.loadCurrentModeData(this.selectedYear, true);
     }
   }
 };
 </script>
 
 <style scoped>
+.finance-inline-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  background: rgba(255, 255, 255, 0.88);
+  color: #b91c1c;
+}
+
+.finance-inline-notice button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .user-chart-page__switcher-note {
   margin: 8px 0 0;
   color: var(--text-subtle);
   font-size: 13px;
+}
+
+.user-chart-page__placeholder {
+  min-height: 290px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-subtle);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.user-chart-page__placeholder--ranking {
+  min-height: 180px;
 }
 
 .user-chart-page__ranking {

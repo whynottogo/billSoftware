@@ -3,13 +3,13 @@
     <section class="password-hero page-card">
       <span class="password-hero__tag">PASSWORD SECURITY</span>
       <h1>修改登录密码</h1>
-      <p>本页提供前端 mock 校验：原密码校验、新密码一致性校验和成功后的重新登录承接。</p>
+      <p>本页已接入真实接口，提交后会执行原密码校验并在成功后清理登录态，重新回到登录页承接。</p>
     </section>
 
     <section class="password-panel page-card">
       <header class="password-panel__header">
         <h2>密码表单</h2>
-        <p>示例初始原密码为 `123456`，修改成功后将覆盖本地 mock 密码。</p>
+        <p>请输入当前密码和新密码，修改成功后需要重新登录。</p>
       </header>
 
       <form class="password-form" @submit.prevent="submit">
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { updateUserPasswordMock, clearUserSession } from "@/utils/userProfileMock";
+import { buildUserProfileError, clearUserSession, updateUserPassword } from "@/api/userProfile";
 
 export default {
   name: "UserProfilePassword",
@@ -78,7 +78,8 @@ export default {
         currentPassword: "",
         nextPassword: "",
         confirmPassword: ""
-      }
+      },
+      submitting: false
     };
   },
   methods: {
@@ -86,21 +87,57 @@ export default {
       this.$router.push("/user/profile");
     },
     submit() {
-      const result = updateUserPasswordMock(this.form);
-
-      if (!result.ok) {
-        this.$message.warning(result.message);
+      if (!this.form.currentPassword || !this.form.nextPassword || !this.form.confirmPassword) {
+        this.$message.warning("请完整填写原密码、新密码和确认密码");
         return;
       }
 
-      clearUserSession("password_reset");
-      this.$message.success(result.message);
-      this.$router.push({
-        path: "/user/login",
-        query: {
-          reason: "password_reset"
-        }
-      });
+      if (this.form.nextPassword.length < 6) {
+        this.$message.warning("新密码长度至少为 6 位");
+        return;
+      }
+
+      if (this.form.nextPassword !== this.form.confirmPassword) {
+        this.$message.warning("两次输入的新密码不一致");
+        return;
+      }
+
+      if (this.submitting) {
+        return;
+      }
+
+      this.submitting = true;
+
+      updateUserPassword({
+        current_password: this.form.currentPassword,
+        new_password: this.form.nextPassword,
+        confirm_password: this.form.confirmPassword,
+        currentPassword: this.form.currentPassword,
+        newPassword: this.form.nextPassword,
+        confirmPassword: this.form.confirmPassword
+      })
+        .then(
+          function() {
+            clearUserSession("password_reset");
+            this.$message.success("密码修改成功，请重新登录");
+            this.$router.push({
+              path: "/user/login",
+              query: {
+                reason: "password_reset"
+              }
+            });
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.warning(buildUserProfileError(error, "密码修改失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.submitting = false;
+          }.bind(this)
+        );
     }
   }
 };

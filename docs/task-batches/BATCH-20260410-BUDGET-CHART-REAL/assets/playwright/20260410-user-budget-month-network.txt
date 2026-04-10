@@ -1,0 +1,4 @@
+### Result
+[GET] http://localhost:9000/api/user/budgets/month/current => [200] OK
+[PUT] http://localhost:9000/api/user/budgets/month/current => [200] OK
+[GET] http://localhost:9000/api/user/budgets/month/current => [200] OK

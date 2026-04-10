@@ -1,0 +1,127 @@
+### Page
+- Page URL: http://localhost:9000/user/assets
+- Page Title: Bill Software
+- Console: 0 errors, 3 warnings
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e324]:
+      - generic [ref=e325]:
+        - generic [ref=e326]:
+          - heading "资产管家" [level=1] [ref=e327]
+          - paragraph [ref=e328]: 把账户放在同一张资产地图里，先看全局，再处理单账户细节。
+        - generic [ref=e329]:
+          - button "刷新资产" [ref=e330] [cursor=pointer]
+          - button "新增账户" [ref=e331] [cursor=pointer]
+      - generic [ref=e332]:
+        - generic [ref=e333]:
+          - generic [ref=e334]: 资
+          - generic [ref=e335]: 资产总览
+        - generic [ref=e336]:
+          - heading "¥635.50" [level=2] [ref=e337]
+          - paragraph [ref=e338]: 净资产 = 资产 - 负债。最近一月净变化 +¥635.50
+        - generic [ref=e339]:
+          - article [ref=e340]:
+            - generic [ref=e341]: 总资产
+            - strong [ref=e342]: ¥635.50
+            - generic [ref=e343]: 1 个账户
+          - article [ref=e344]:
+            - generic [ref=e345]: 总负债
+            - strong [ref=e346]: ¥0.00
+            - generic [ref=e347]: 与资产分层展示
+          - article [ref=e348]:
+            - generic [ref=e349]: 更新时间
+            - strong [ref=e350]: 2026-04-10 15:52
+            - generic [ref=e351]: 本页已切到真实接口数据
+      - generic [ref=e352]:
+        - generic [ref=e353]:
+          - generic [ref=e354]:
+            - heading "账户分类列表" [level=3] [ref=e355]
+            - paragraph [ref=e356]: 按账户分类展示总额和账户余额，支持新增、编辑和进入详情。
+          - generic [ref=e357]:
+            - generic [ref=e358]: 筛选分类
+            - generic [ref=e360] [cursor=pointer]:
+              - generic:
+                - combobox [ref=e362]
+                - generic [ref=e363]: 全部分类
+              - img [ref=e366]
+        - generic [ref=e368]:
+          - article [ref=e369]:
+            - generic [ref=e370]:
+              - generic [ref=e371]:
+                - generic [ref=e372]: 流
+                - generic [ref=e373]:
+                  - strong [ref=e374]: 流动资产
+                  - paragraph [ref=e375]: 1 个账户
+              - generic [ref=e376]:
+                - generic [ref=e377]: 分类总额
+                - strong [ref=e378]: ¥635.50
+            - article [ref=e380]:
+              - generic [ref=e381]:
+                - generic [ref=e382]:
+                  - strong [ref=e383]: 联调现金账户
+                  - paragraph [ref=e384]: 资产联调测试账户-UI编辑
+                - generic [ref=e385]: 现金
+              - generic [ref=e386]:
+                - generic [ref=e387]: 账户余额
+                - strong [ref=e388]: ¥635.50
+                - generic [ref=e389]: ↑ ¥635.50
+              - generic [ref=e390]:
+                - button "编辑" [ref=e391] [cursor=pointer]
+                - button "详情" [ref=e392] [cursor=pointer]
+          - article [ref=e393]:
+            - generic [ref=e394]:
+              - generic [ref=e395]:
+                - generic [ref=e396]: 投
+                - generic [ref=e397]:
+                  - strong [ref=e398]: 投资资产
+                  - paragraph [ref=e399]: 0 个账户
+              - generic [ref=e400]:
+                - generic [ref=e401]: 分类总额
+                - strong [ref=e402]: ¥0.00
+          - article [ref=e403]:
+            - generic [ref=e404]:
+              - generic [ref=e405]:
+                - generic [ref=e406]: 负
+                - generic [ref=e407]:
+                  - strong [ref=e408]: 负债账户
+                  - paragraph [ref=e409]: 0 个账户
+              - generic [ref=e410]:
+                - generic [ref=e411]: 分类总额
+                - strong [ref=e412]: ¥0.00
+```
