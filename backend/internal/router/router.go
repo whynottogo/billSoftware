@@ -22,6 +22,10 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	userHandler := handler.NewUserHandler(engine)
 	userLedgerHandler := handler.NewUserLedgerHandler(engine)
 	userBillHandler := handler.NewUserBillHandler(engine)
+	userBudgetHandler := handler.NewUserBudgetHandler(engine)
+	userChartHandler := handler.NewUserChartHandler(engine)
+	userAssetHandler := handler.NewUserAssetHandler(engine)
+	userProfileHandler := handler.NewUserProfileHandler(engine)
 	adminUserBillHandler := handler.NewAdminUserBillHandler(engine)
 
 	httpRouter.GET("/api/health", healthHandler.Ping)
@@ -56,11 +60,22 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	protectedUserGroup.GET("/bills/years", userBillHandler.ListYears)
 	protectedUserGroup.GET("/bills/year/:year", userBillHandler.GetYearDetail)
 	protectedUserGroup.GET("/bills/month/:month", userBillHandler.GetMonthDetail)
-	protectedUserGroup.GET("/profile/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "user auth middleware ready",
-		})
-	})
+	protectedUserGroup.GET("/budgets/month/current", userBudgetHandler.GetCurrentMonth)
+	protectedUserGroup.PUT("/budgets/month/current", userBudgetHandler.UpdateCurrentMonth)
+	protectedUserGroup.GET("/budgets/year/options", userBudgetHandler.ListYearOptions)
+	protectedUserGroup.GET("/budgets/year/:year", userBudgetHandler.GetYear)
+	protectedUserGroup.PUT("/budgets/year/current", userBudgetHandler.UpdateCurrentYear)
+	protectedUserGroup.GET("/charts/years", userChartHandler.ListYears)
+	protectedUserGroup.GET("/charts/expense/:year", userChartHandler.GetExpenseYear)
+	protectedUserGroup.GET("/charts/income/:year", userChartHandler.GetIncomeYear)
+	protectedUserGroup.GET("/assets", userAssetHandler.List)
+	protectedUserGroup.POST("/assets", userAssetHandler.Create)
+	protectedUserGroup.PUT("/assets/:id", userAssetHandler.Update)
+	protectedUserGroup.GET("/assets/:id", userAssetHandler.Detail)
+	protectedUserGroup.POST("/assets/:id/operations", userAssetHandler.CreateOperation)
+	protectedUserGroup.GET("/profile", userProfileHandler.GetProfile)
+	protectedUserGroup.PUT("/profile", userProfileHandler.UpdateProfile)
+	protectedUserGroup.PUT("/profile/password", userProfileHandler.UpdatePassword)
 
 	return httpRouter
 }

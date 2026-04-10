@@ -7,8 +7,8 @@
       </div>
       <h1>把你的账号信息维护清楚</h1>
       <p>
-        账户与手机号用于身份识别，保持只读。昵称、邮箱和头像可随时更新，当前版本使用本地 mock
-        状态保存，后续可直接替换为真实接口。
+        账户与手机号用于身份识别，保持只读。昵称、邮箱和头像可随时更新，当前版本已接入真实接口并
+        与当前登录账号同步。
       </p>
       <div class="profile-hero__actions">
         <button class="finance-button finance-button--primary" @click="goPasswordPage">修改密码</button>
@@ -99,14 +99,122 @@
 
 <script>
 import {
-  getUserProfileMock,
-  saveUserProfileMock,
+  buildUserProfileError,
   clearUserSession,
-  createAvatarPlaceholder
-} from "@/utils/userProfileMock";
+  getUserProfile,
+  normalizeUserProfilePayload,
+  persistUserSessionProfile,
+  updateUserProfile
+} from "@/api/userProfile";
 
-const FALLBACK_AVATAR =
-  "https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=240&q=80";
+function cloneProfile(profile) {
+  return Object.assign({}, profile || {});
+}
+
+function createAvatarPlaceholder(fileName) {
+  if (!fileName) {
+    return "未命名头像";
+  }
+
+  return fileName.replace(/\.[^.]+$/, "");
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+
+    reader.onload = function(loadEvent) {
+      const result = loadEvent && loadEvent.target ? loadEvent.target.result : "";
+
+      if (!result) {
+        reject(new Error("头像读取失败"));
+        return;
+      }
+
+      resolve(String(result));
+    };
+    reader.onerror = function() {
+      reject(new Error("头像读取失败"));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadImage(source) {
+  return new Promise(function(resolve, reject) {
+    const image = new Image();
+
+    image.onload = function() {
+      resolve(image);
+    };
+    image.onerror = function() {
+      reject(new Error("头像解析失败"));
+    };
+    image.src = source;
+  });
+}
+
+function estimateDataUrlBytes(dataUrl) {
+  const base64Body = String(dataUrl || "").split(",")[1] || "";
+  return Math.ceil((base64Body.length * 3) / 4);
+}
+
+function canvasToDataUrl(canvas, quality) {
+  return canvas.toDataURL("image/jpeg", quality);
+}
+
+function buildAvatarPayload(file) {
+  return readFileAsDataUrl(file).then(function(originalDataUrl) {
+    if (file.size <= 2 * 1024 * 1024) {
+      return {
+        previewUrl: originalDataUrl,
+        originalDataUrl: originalDataUrl,
+        compressedDataUrl: "",
+        compressed: false
+      };
+    }
+
+    return loadImage(originalDataUrl).then(function(image) {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+
+      if (!context) {
+        return {
+          previewUrl: originalDataUrl,
+          originalDataUrl: originalDataUrl,
+          compressedDataUrl: originalDataUrl,
+          compressed: true
+        };
+      }
+
+      let scale = 1;
+      let quality = 0.88;
+      let compressedDataUrl = originalDataUrl;
+
+      for (let index = 0; index < 7; index += 1) {
+        canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        compressedDataUrl = canvasToDataUrl(canvas, quality);
+
+        if (estimateDataUrlBytes(compressedDataUrl) <= 2 * 1024 * 1024) {
+          break;
+        }
+
+        scale *= 0.86;
+        quality = Math.max(0.46, quality - 0.08);
+      }
+
+      return {
+        previewUrl: compressedDataUrl,
+        originalDataUrl: originalDataUrl,
+        compressedDataUrl: compressedDataUrl,
+        compressed: true
+      };
+    });
+  });
+}
 
 export default {
   name: "UserProfile",
@@ -119,11 +227,14 @@ export default {
         phone: "",
         email: "",
         avatar: "",
+        avatarOriginal: "",
         avatarCompressed: "",
         avatarUpdatedAt: ""
       },
       initialSnapshot: null,
-      avatarHint: "头像大于 2M 时会显示“已模拟压缩处理”的占位提示。"
+      avatarHint: "头像大于 2M 时会自动压缩后再保存。",
+      loadingProfile: false,
+      savingProfile: false
     };
   },
   computed: {
@@ -135,16 +246,47 @@ export default {
     }
   },
   created() {
-    this.restoreFromStorage();
+    this.fetchProfile();
   },
   methods: {
-    restoreFromStorage() {
-      const saved = getUserProfileMock();
-      this.profile = Object.assign({}, saved);
-      this.initialSnapshot = Object.assign({}, saved);
+    syncSessionProfile(profile) {
+      persistUserSessionProfile(profile);
+    },
+    applyProfile(profile) {
+      const normalizedProfile = cloneProfile(profile);
+
+      this.profile = normalizedProfile;
+      this.initialSnapshot = cloneProfile(normalizedProfile);
+      this.syncSessionProfile(normalizedProfile);
+      this.avatarHint = normalizedProfile.avatarCompressed
+        ? "当前头像已包含压缩版本，保存后会同步更新。"
+        : "资料已从真实接口读取，可继续编辑昵称、邮箱和头像。";
+    },
+    fetchProfile() {
+      this.loadingProfile = true;
+
+      getUserProfile()
+        .then(
+          function(result) {
+            const normalizedProfile = normalizeUserProfilePayload(result, this.profile);
+            this.applyProfile(normalizedProfile);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.error(buildUserProfileError(error, "个人信息加载失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.loadingProfile = false;
+          }.bind(this)
+        );
     },
     triggerAvatarUpload() {
-      this.$refs.avatarInput.click();
+      if (this.$refs.avatarInput) {
+        this.$refs.avatarInput.click();
+      }
     },
     onAvatarChange(event) {
       const file = event.target.files && event.target.files[0];
@@ -153,32 +295,37 @@ export default {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        const previewUrl = loadEvent.target && loadEvent.target.result ? String(loadEvent.target.result) : "";
-
-        if (!previewUrl) {
-          this.$message.error("头像读取失败，请重试");
-          return;
-        }
-
-        const isLargeFile = file.size > 2 * 1024 * 1024;
-        this.profile.avatar = previewUrl;
-        this.profile.avatarCompressed = isLargeFile ? previewUrl : "";
-        this.profile.avatarUpdatedAt = new Date().toISOString();
-        this.avatarHint = isLargeFile
-          ? `已为 ${createAvatarPlaceholder(file.name)} 执行模拟压缩处理（前端占位）`
-          : `已更新头像：${createAvatarPlaceholder(file.name)}`;
-        this.$message.success("头像占位已更新");
-      };
-      reader.readAsDataURL(file);
+      buildAvatarPayload(file)
+        .then(
+          function(avatarPayload) {
+            this.profile.avatar = avatarPayload.previewUrl;
+            this.profile.avatarOriginal = avatarPayload.originalDataUrl;
+            this.profile.avatarCompressed = avatarPayload.compressedDataUrl;
+            this.profile.avatarUpdatedAt = new Date().toISOString();
+            this.avatarHint = avatarPayload.compressed
+              ? `已为 ${createAvatarPlaceholder(file.name)} 生成压缩头像，保存后将同步到真实接口`
+              : `已更新头像：${createAvatarPlaceholder(file.name)}`;
+            this.$message.success("头像占位已更新");
+          }.bind(this)
+        )
+        .catch(
+          function() {
+            this.$message.error("头像读取失败，请重试");
+          }.bind(this)
+        )
+        .finally(function() {
+          if (event.target) {
+            event.target.value = "";
+          }
+        });
     },
     resetAvatar() {
-      this.profile.avatar = FALLBACK_AVATAR;
+      this.profile.avatar = "";
+      this.profile.avatarOriginal = "";
       this.profile.avatarCompressed = "";
-      this.profile.avatarUpdatedAt = "";
-      this.avatarHint = "已恢复默认头像，可重新上传。";
-      this.$message.success("头像已恢复默认");
+      this.profile.avatarUpdatedAt = new Date().toISOString();
+      this.avatarHint = "已恢复为默认头像状态，保存后生效。";
+      this.$message.success("头像已恢复默认状态");
     },
     saveProfile() {
       if (!this.profile.nickname || !this.profile.email) {
@@ -186,18 +333,46 @@ export default {
         return;
       }
 
-      const saved = saveUserProfileMock(this.profile);
-      this.profile = Object.assign({}, saved);
-      this.initialSnapshot = Object.assign({}, saved);
-      this.$message.success("资料已保存（mock）");
-    },
-    restoreProfile() {
-      if (!this.initialSnapshot) {
-        this.restoreFromStorage();
+      if (this.savingProfile) {
         return;
       }
 
-      this.profile = Object.assign({}, this.initialSnapshot);
+      this.savingProfile = true;
+
+      updateUserProfile({
+        nickname: this.profile.nickname,
+        email: this.profile.email,
+        avatar: this.profile.avatar || "",
+        avatar_original: this.profile.avatarOriginal || this.profile.avatar || "",
+        avatar_compressed: this.profile.avatarCompressed || "",
+        avatarOriginal: this.profile.avatarOriginal || this.profile.avatar || "",
+        avatarCompressed: this.profile.avatarCompressed || ""
+      })
+        .then(
+          function(result) {
+            const normalizedProfile = normalizeUserProfilePayload(result, this.profile);
+            this.applyProfile(normalizedProfile);
+            this.$message.success("资料已保存");
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.error(buildUserProfileError(error, "资料保存失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.savingProfile = false;
+          }.bind(this)
+        );
+    },
+    restoreProfile() {
+      if (!this.initialSnapshot) {
+        this.fetchProfile();
+        return;
+      }
+
+      this.profile = cloneProfile(this.initialSnapshot);
       this.avatarHint = "已还原为最近一次保存的资料。";
       this.$message.success("已还原本次修改");
     },

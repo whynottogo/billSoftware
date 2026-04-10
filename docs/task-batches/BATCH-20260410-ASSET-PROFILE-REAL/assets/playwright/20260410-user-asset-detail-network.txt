@@ -1,0 +1,3 @@
+### Result
+[GET] http://localhost:9000/api/user/assets => [200] OK
+[GET] http://localhost:9000/api/user/assets/1 => [200] OK

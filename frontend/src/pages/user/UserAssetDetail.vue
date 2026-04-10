@@ -1,5 +1,10 @@
 <template>
   <div class="finance-page asset-detail-page">
+    <div v-if="errorMessage" class="finance-inline-notice">
+      <span>{{ errorMessage }}</span>
+      <button type="button" @click="loadDetail">重新加载</button>
+    </div>
+
     <section class="finance-toolbar">
       <div class="finance-toolbar__actions">
         <button class="finance-button finance-button--ghost" @click="goBack">返回资产总览</button>
@@ -81,7 +86,9 @@
 
         <div class="asset-detail-page__op-actions">
           <button class="finance-button finance-button--ghost" @click="resetOperationForm">重置</button>
-          <button class="finance-button finance-button--primary" @click="submitOperation">确认写入记录</button>
+          <button class="finance-button finance-button--primary" :disabled="isSubmitting" @click="submitOperation">
+            {{ isSubmitting ? "写入中..." : "确认写入记录" }}
+          </button>
         </div>
       </article>
 
@@ -136,7 +143,9 @@
       <template #footer>
         <div class="asset-detail-page__op-actions">
           <button class="finance-button finance-button--ghost" @click="settingsDialogVisible = false">取消</button>
-          <button class="finance-button finance-button--primary" @click="submitSettings">保存设置</button>
+          <button class="finance-button finance-button--primary" :disabled="isSubmitting" @click="submitSettings">
+            {{ isSubmitting ? "保存中..." : "保存设置" }}
+          </button>
         </div>
       </template>
     </el-dialog>
@@ -145,21 +154,17 @@
 
 <script>
 import {
-  formatCurrency,
-  getAssetAccountDetail,
+  buildAssetOperationPayload,
+  buildAssetUpdatePayload,
+  buildUserAssetsError,
+  createUserAssetOperation,
+  formatAssetCurrency,
   getMonthLabel,
-  monthKeysFromRecords
-} from "@/utils/userAssetMock";
-
-function nowLabel() {
-  var now = new Date();
-  var MM = String(now.getMonth() + 1).padStart(2, "0");
-  var DD = String(now.getDate()).padStart(2, "0");
-  var HH = String(now.getHours()).padStart(2, "0");
-  var mm = String(now.getMinutes()).padStart(2, "0");
-
-  return MM + "-" + DD + " " + HH + ":" + mm;
-}
+  getUserAssetDetail,
+  monthKeysFromRecords,
+  normalizeAssetDetailPayload,
+  updateUserAsset
+} from "@/api/userAssets";
 
 function currentMonthKey() {
   var now = new Date();
@@ -168,17 +173,28 @@ function currentMonthKey() {
   return yyyy + "-" + MM;
 }
 
-function nextRecordId() {
-  return "record-local-" + Date.now() + "-" + Math.round(Math.random() * 1000);
-}
-
 export default {
   name: "UserAssetDetail",
   data() {
     return {
-      account: {},
+      account: {
+        id: "",
+        name: "",
+        type: "cash",
+        typeLabel: "账户",
+        remark: "",
+        balance: 0,
+        cardNo: "",
+        provider: "",
+        direction: "asset",
+        categoryId: "",
+        categoryName: ""
+      },
       categoryName: "",
       records: [],
+      isLoading: false,
+      isSubmitting: false,
+      errorMessage: "",
       selectedMonthKey: "all",
       operationForm: {
         actionType: "adjust",
@@ -248,20 +264,43 @@ export default {
     this.loadDetail();
   },
   methods: {
-    formatCurrency: formatCurrency,
+    formatCurrency: formatAssetCurrency,
     getMonthLabel: getMonthLabel,
-    loadDetail() {
-      var detail = getAssetAccountDetail(this.$route.params.accountId);
+    loadDetail(options) {
+      var preserveSelectedMonth = options && options.preserveSelectedMonth;
+      var nextMonthKey = options && options.nextMonthKey;
 
-      this.account = detail.account;
-      this.categoryName = detail.category.name;
-      this.records = detail.records;
-      this.selectedMonthKey = "all";
-      this.resetOperationForm();
-      this.settingsForm = {
-        remark: this.account.remark,
-        targetBalance: Number(this.account.balance || 0)
-      };
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return getUserAssetDetail(this.$route.params.accountId)
+        .then(
+          function(result) {
+            var detail = normalizeAssetDetailPayload(result);
+
+            this.account = detail.account;
+            this.categoryName = detail.category.name;
+            this.records = detail.records;
+            this.selectedMonthKey = preserveSelectedMonth
+              ? (nextMonthKey || this.selectedMonthKey)
+              : "all";
+            this.resetOperationForm();
+            this.settingsForm = {
+              remark: this.account.remark,
+              targetBalance: Number(this.account.balance || 0)
+            };
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.errorMessage = buildUserAssetsError(error, "账户详情加载失败，请稍后重试");
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isLoading = false;
+          }.bind(this)
+        );
     },
     goBack() {
       this.$router.push("/user/assets");
@@ -277,22 +316,6 @@ export default {
         this.$refs.operationFormRef.clearValidate();
       }
     },
-    prependRecord(action, change, balanceAfter, note, source) {
-      var record = {
-        id: nextRecordId(),
-        monthKey: currentMonthKey(),
-        dateLabel: nowLabel(),
-        action: action,
-        change: change,
-        balanceAfter: balanceAfter,
-        note: note,
-        source: source
-      };
-
-      this.records.unshift(record);
-      this.account.balance = balanceAfter;
-      return record;
-    },
     submitOperation() {
       this.$refs.operationFormRef.validate(
         function(valid) {
@@ -306,30 +329,36 @@ export default {
             return;
           }
 
-          var currentBalance = Number(this.account.balance || 0);
-          var actionType = this.operationForm.actionType;
-          var change = 0;
-          var balanceAfter = currentBalance;
-          var actionLabel = "调整";
+          this.isSubmitting = true;
 
-          if (actionType === "adjust") {
-            balanceAfter = amount;
-            change = amount - currentBalance;
-            actionLabel = "调整";
-          } else if (actionType === "increase") {
-            change = amount;
-            balanceAfter = currentBalance + amount;
-            actionLabel = "增加";
-          } else {
-            change = -amount;
-            balanceAfter = currentBalance - amount;
-            actionLabel = "减少";
-          }
-
-          this.prependRecord(actionLabel, change, balanceAfter, this.operationForm.note.trim(), "手动操作");
-          this.selectedMonthKey = currentMonthKey();
-          this.$message.success("余额操作已记录");
-          this.resetOperationForm();
+          createUserAssetOperation(this.account.id, buildAssetOperationPayload({
+            actionType: this.operationForm.actionType,
+            amount: amount,
+            note: this.operationForm.note.trim()
+          }))
+            .then(
+              function() {
+                return this.loadDetail({
+                  preserveSelectedMonth: true,
+                  nextMonthKey: currentMonthKey()
+                });
+              }.bind(this)
+            )
+            .then(
+              function() {
+                this.$message.success("余额操作已记录");
+              }.bind(this)
+            )
+            .catch(
+              function(error) {
+                this.$message.error(buildUserAssetsError(error, "余额操作失败，请稍后重试"));
+              }.bind(this)
+            )
+            .finally(
+              function() {
+                this.isSubmitting = false;
+              }.bind(this)
+            );
         }.bind(this)
       );
     },
@@ -354,15 +383,70 @@ export default {
             return;
           }
 
+          var remark = this.settingsForm.remark.trim();
           var newBalance = Number(this.settingsForm.targetBalance || 0);
           var currentBalance = Number(this.account.balance || 0);
-          var change = newBalance - currentBalance;
+          var hasRemarkChange = remark !== String(this.account.remark || "");
+          var hasBalanceChange = newBalance !== currentBalance;
 
-          this.account.remark = this.settingsForm.remark.trim();
-          this.prependRecord("调整", change, newBalance, "通过账户设置修改余额", "账户设置");
-          this.selectedMonthKey = currentMonthKey();
-          this.settingsDialogVisible = false;
-          this.$message.success("账户设置已保存，并生成调整记录");
+          if (!hasRemarkChange && !hasBalanceChange) {
+            this.settingsDialogVisible = false;
+            this.$message.success("没有需要保存的修改");
+            return;
+          }
+
+          this.isSubmitting = true;
+
+          var chain = Promise.resolve();
+
+          if (hasRemarkChange) {
+            chain = chain.then(
+              function() {
+                return updateUserAsset(this.account.id, buildAssetUpdatePayload(this.account, {
+                  remark: remark,
+                  balance: currentBalance
+                }));
+              }.bind(this)
+            );
+          }
+
+          if (hasBalanceChange) {
+            chain = chain.then(
+              function() {
+                return createUserAssetOperation(this.account.id, buildAssetOperationPayload({
+                  actionType: "adjust",
+                  amount: newBalance,
+                  note: "通过账户设置修改余额"
+                }));
+              }.bind(this)
+            );
+          }
+
+          chain
+            .then(
+              function() {
+                return this.loadDetail({
+                  preserveSelectedMonth: true,
+                  nextMonthKey: hasBalanceChange ? currentMonthKey() : this.selectedMonthKey
+                });
+              }.bind(this)
+            )
+            .then(
+              function() {
+                this.settingsDialogVisible = false;
+                this.$message.success("账户设置已保存");
+              }.bind(this)
+            )
+            .catch(
+              function(error) {
+                this.$message.error(buildUserAssetsError(error, "保存账户设置失败，请稍后重试"));
+              }.bind(this)
+            )
+            .finally(
+              function() {
+                this.isSubmitting = false;
+              }.bind(this)
+            );
         }.bind(this)
       );
     }

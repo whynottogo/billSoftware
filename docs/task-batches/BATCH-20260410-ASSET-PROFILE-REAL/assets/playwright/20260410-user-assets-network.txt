@@ -1,0 +1,2 @@
+### Result
+[GET] http://localhost:9000/api/user/assets => [200] OK

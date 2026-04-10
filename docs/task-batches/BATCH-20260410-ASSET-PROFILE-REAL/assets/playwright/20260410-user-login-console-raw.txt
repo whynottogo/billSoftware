@@ -1,0 +1,13 @@
+[     412ms] [INFO] [webpack-dev-server] Server started: Hot Module Replacement enabled, Live Reloading enabled, Progress disabled, Overlay enabled. @ webpack-internal:///./node_modules/webpack-dev-server/client/modules/logger/index.js:599
+[     413ms] [LOG] [HMR] Waiting for update signal from WDS... @ webpack-internal:///./node_modules/webpack/hot/log.js:38
+[     609ms] ReferenceError: regeneratorRuntime is not defined
+    at eval (webpack-internal:///./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/pages/user/UserAssets.vue?vue&type=script&lang=js:141:50)
+    at eval (webpack-internal:///./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/pages/user/UserAssets.vue?vue&type=script&lang=js:198:6)
+    at ./node_modules/babel-loader/lib/index.js!./node_modules/vue-loader/dist/index.js??ruleSet[1].rules[6].use[0]!./src/pages/user/UserAssets.vue?vue&type=script&lang=js (http://localhost:9000/js/main.js:382:1)
+    at __webpack_require__ (http://localhost:9000/js/main.js:20849:32)
+    at fn (http://localhost:9000/js/main.js:21043:21)
+    at eval (webpack-internal:///./src/pages/user/UserAssets.vue?vue&type=script&lang=js:5:198)
+    at ./src/pages/user/UserAssets.vue?vue&type=script&lang=js (http://localhost:9000/js/main.js:2452:1)
+    at __webpack_require__ (http://localhost:9000/js/main.js:20849:32)
+    at fn (http://localhost:9000/js/main.js:21043:21)
+    at eval (webpack-internal:///./src/pages/user/UserAssets.vue:6:97)

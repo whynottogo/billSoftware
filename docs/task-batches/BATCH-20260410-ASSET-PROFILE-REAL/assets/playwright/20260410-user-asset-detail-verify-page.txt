@@ -1,0 +1,140 @@
+### Page
+- Page URL: http://localhost:9000/user/assets/1
+- Page Title: Bill Software
+- Console: 0 errors, 3 warnings
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e203]:
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - button "返回资产总览" [ref=e206] [cursor=pointer]
+          - button "账户设置" [ref=e207] [cursor=pointer]
+        - generic [ref=e209]: 流动资产 · 现金
+      - generic [ref=e210]:
+        - generic [ref=e211]:
+          - generic [ref=e212]: 户
+          - generic [ref=e213]: 联调现金账户
+        - generic [ref=e214]:
+          - heading "¥635.50" [level=1] [ref=e309]
+          - paragraph [ref=e216]: 资产联调测试账户-UI编辑
+        - generic [ref=e217]:
+          - article [ref=e218]:
+            - generic [ref=e219]: 本月净变动
+            - strong [ref=e220]: +¥635.50
+            - generic [ref=e221]: 2026 年 04 月
+          - article [ref=e222]:
+            - generic [ref=e223]: 记录条数
+            - strong [ref=e224]: 3 条
+            - generic [ref=e225]: 按月筛选可回溯历史
+          - article [ref=e226]:
+            - generic [ref=e227]: 账户标识
+            - strong [ref=e228]: 无卡号
+            - generic [ref=e229]: 详情页支持调整、增加、减少余额
+      - generic [ref=e230]:
+        - article [ref=e231]:
+          - generic [ref=e233]:
+            - heading "余额操作" [level=3] [ref=e234]
+            - paragraph [ref=e235]: 支持调整、增加、减少。所有操作都会生成余额变动记录。
+          - generic [ref=e236]:
+            - generic [ref=e237]:
+              - generic [ref=e238]: "* 操作类型"
+              - radiogroup "* 操作类型" [ref=e240]:
+                - generic [ref=e241]:
+                  - radio "调整余额" [checked] [ref=e242]
+                  - generic [ref=e243] [cursor=pointer]: 调整余额
+                - generic [ref=e244]:
+                  - radio "增加余额" [ref=e245]
+                  - generic [ref=e246] [cursor=pointer]: 增加余额
+                - generic [ref=e247]:
+                  - radio "减少余额" [ref=e248]
+                  - generic [ref=e249] [cursor=pointer]: 减少余额
+            - generic [ref=e250]:
+              - generic [ref=e251]: "* 调整后余额"
+              - generic [ref=e253]:
+                - button "decrease number" [ref=e254] [cursor=pointer]:
+                  - img [ref=e256]
+                - button "increase number" [ref=e258] [cursor=pointer]:
+                  - img [ref=e260]
+                - spinbutton "* 调整后余额" [ref=e310]
+            - generic [ref=e265]:
+              - generic [ref=e266]: "* 操作备注"
+              - generic [ref=e268]:
+                - textbox "* 操作备注" [ref=e269]
+                - generic [ref=e270]: 0 / 40
+          - generic [ref=e271]:
+            - button "重置" [ref=e272] [cursor=pointer]
+            - button "确认写入记录" [ref=e273] [cursor=pointer]
+        - article [ref=e274]:
+          - generic [ref=e275]:
+            - generic [ref=e276]:
+              - heading "余额变动记录" [level=3] [ref=e277]
+              - paragraph [ref=e278]: 记录只属于资产模块，不与收支流水共享。
+            - generic [ref=e279]:
+              - generic [ref=e280]: 筛选月份
+              - generic [ref=e282] [cursor=pointer]:
+                - generic:
+                  - combobox [ref=e284]
+                  - generic [ref=e285]: 2026 年 04 月
+                - img [ref=e288]
+          - generic [ref=e290]:
+            - article [ref=e311]:
+              - generic [ref=e312]:
+                - strong [ref=e313]: 增加
+                - paragraph [ref=e314]: UI回归增加15
+                - generic [ref=e315]: 04-10 15:52 · 2026 年 04 月 · 手动操作
+              - generic [ref=e316]:
+                - strong [ref=e317]: +¥15.00
+                - generic [ref=e318]: 余额 ¥635.50
+            - article [ref=e291]:
+              - generic [ref=e292]:
+                - strong [ref=e293]: 增加
+                - paragraph [ref=e294]: 联调增加余额
+                - generic [ref=e295]: 04-10 14:11 · 2026 年 04 月 · 手动操作
+              - generic [ref=e296]:
+                - strong [ref=e297]: +¥100.00
+                - generic [ref=e298]: 余额 ¥620.50
+            - article [ref=e299]:
+              - generic [ref=e300]:
+                - strong [ref=e301]: 调整
+                - paragraph [ref=e302]: 创建账户
+                - generic [ref=e303]: 04-10 14:11 · 2026 年 04 月 · 手动操作
+              - generic [ref=e304]:
+                - strong [ref=e305]: +¥520.50
+                - generic [ref=e306]: 余额 ¥520.50
+```

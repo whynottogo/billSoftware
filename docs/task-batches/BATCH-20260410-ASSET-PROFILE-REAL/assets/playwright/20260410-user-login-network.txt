@@ -1,0 +1,8 @@
+### Result
+
+### Open tabs
+- 0: (current) [](about:blank)
+- 1: [](about:blank)
+- 2: [](about:blank)
+### Page
+- Page URL: about:blank

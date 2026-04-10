@@ -1,0 +1,60 @@
+
+> bill-software-frontend@0.1.0 build
+> webpack --config webpack.config.js --mode production
+
+assets by status 2.45 MiB [cached] 2 assets
+orphan modules 4.47 MiB [orphan] 1836 modules
+runtime modules 1.61 KiB 7 modules
+cacheable modules 5.23 MiB
+  modules by path ./src/ 4.42 MiB 30 modules
+  modules by path ./node_modules/ 831 KiB
+    modules by path ./node_modules/dayjs/ 16.1 KiB 9 modules
+    modules by path ./node_modules/style-loader/dist/runtime/*.js 5.84 KiB 6 modules
+    modules by path ./node_modules/css-loader/dist/runtime/*.js 3.33 KiB 3 modules
+    + 2 modules
+  asset modules 530 bytes
+    data:image/png;base64,iVBORw0KGgoAAAAN.. 146 bytes [built] [code generated]
+    data:image/svg+xml;utf8,%3Csvg class=%27.. 384 bytes [built] [code generated]
+
+ERROR in ./src/router/index.js 11:0-63
+Module not found: Error: Can't resolve '@/pages/user/UserBudgetMonth.vue' in '/Users/shynin/software/billSoftware/frontend/src/router'
+resolve '@/pages/user/UserBudgetMonth.vue' in '/Users/shynin/software/billSoftware/frontend/src/router'
+  Parsed request is a module
+  using description file: /Users/shynin/software/billSoftware/frontend/package.json (relative path: ./src/router)
+    aliased with mapping '@': '/Users/shynin/software/billSoftware/frontend/src' to '/Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue'
+      using description file: /Users/shynin/software/billSoftware/frontend/package.json (relative path: ./src/router)
+        Field 'browser' doesn't contain a valid alias configuration
+        root path /Users/shynin/software/billSoftware/frontend
+          using description file: /Users/shynin/software/billSoftware/frontend/package.json (relative path: ./Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue)
+            no extension
+              Field 'browser' doesn't contain a valid alias configuration
+              /Users/shynin/software/billSoftware/frontend/Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue doesn't exist
+            .js
+              Field 'browser' doesn't contain a valid alias configuration
+              /Users/shynin/software/billSoftware/frontend/Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue.js doesn't exist
+            .vue
+              Field 'browser' doesn't contain a valid alias configuration
+              /Users/shynin/software/billSoftware/frontend/Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue.vue doesn't exist
+            .json
+              Field 'browser' doesn't contain a valid alias configuration
+              /Users/shynin/software/billSoftware/frontend/Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue.json doesn't exist
+            as directory
+              /Users/shynin/software/billSoftware/frontend/Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue doesn't exist
+        using description file: /Users/shynin/software/billSoftware/frontend/package.json (relative path: ./src/pages/user/UserBudgetMonth.vue)
+          no extension
+            Field 'browser' doesn't contain a valid alias configuration
+            /Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue doesn't exist
+          .js
+            Field 'browser' doesn't contain a valid alias configuration
+            /Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue.js doesn't exist
+          .vue
+            Field 'browser' doesn't contain a valid alias configuration
+            /Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue.vue doesn't exist
+          .json
+            Field 'browser' doesn't contain a valid alias configuration
+            /Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue.json doesn't exist
+          as directory
+            /Users/shynin/software/billSoftware/frontend/src/pages/user/UserBudgetMonth.vue doesn't exist
+ @ ./src/main.js 6:0-30 9:19-25
+
+webpack 5.106.0 compiled with 1 error in 7209 ms

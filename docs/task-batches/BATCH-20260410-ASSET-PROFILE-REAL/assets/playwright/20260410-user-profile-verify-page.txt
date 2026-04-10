@@ -1,0 +1,100 @@
+### Page
+- Page URL: http://localhost:9000/user/profile
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e49]:
+  - complementary [ref=e50]:
+    - generic [ref=e51]:
+      - generic [ref=e52]: B
+      - generic [ref=e53]:
+        - strong [ref=e54]: Bill Software
+        - paragraph [ref=e55]: 轻松记账
+    - navigation [ref=e56]:
+      - button "收支 当月收支" [ref=e57] [cursor=pointer]:
+        - generic [ref=e58]: 收支
+        - generic [ref=e59]: 当月收支
+      - button "账单 账单" [ref=e60] [cursor=pointer]:
+        - generic [ref=e61]: 账单
+        - generic [ref=e62]: 账单
+      - button "预算 预算" [ref=e63] [cursor=pointer]:
+        - generic [ref=e64]: 预算
+        - generic [ref=e65]: 预算
+      - button "资产 资产管家" [ref=e66] [cursor=pointer]:
+        - generic [ref=e67]: 资产
+        - generic [ref=e68]: 资产管家
+      - button "图表 图表" [ref=e69] [cursor=pointer]:
+        - generic [ref=e70]: 图表
+        - generic [ref=e71]: 图表
+      - button "资料 个人信息" [ref=e72] [cursor=pointer]:
+        - generic [ref=e73]: 资料
+        - generic [ref=e74]: 个人信息
+      - button "家庭 家庭功能" [ref=e75] [cursor=pointer]:
+        - generic [ref=e76]: 家庭
+        - generic [ref=e77]: 家庭功能
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: 当前会话
+        - strong [ref=e81]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e82] [cursor=pointer]
+  - main [ref=e83]:
+    - generic [ref=e238]:
+      - generic [ref=e239]:
+        - generic [ref=e240]:
+          - generic [ref=e241]: 资料中心
+          - strong [ref=e242]: USER PROFILE
+        - heading "把你的账号信息维护清楚" [level=1] [ref=e243]
+        - paragraph [ref=e244]: 账户与手机号用于身份识别，保持只读。昵称、邮箱和头像可随时更新，当前版本已接入真实接口并 与当前登录账号同步。
+        - generic [ref=e245]:
+          - button "修改密码" [ref=e246] [cursor=pointer]
+          - button "更新头像" [ref=e247] [cursor=pointer]
+      - generic [ref=e248]:
+        - article [ref=e249]:
+          - generic [ref=e250]:
+            - heading "头像与基础信息" [level=2] [ref=e251]
+            - generic [ref=e252]: 支持头像占位上传和资料编辑
+          - generic [ref=e253]:
+            - generic [ref=e255]: E
+            - generic [ref=e256]:
+              - strong [ref=e257]: E2E验证0402-资料页二次验证
+              - paragraph [ref=e258]: 账号：e2e0410000402
+              - generic [ref=e259]:
+                - button "上传头像" [ref=e260] [cursor=pointer]
+                - button "恢复默认" [ref=e261] [cursor=pointer]
+              - generic [ref=e262]: 资料已从真实接口读取，可继续编辑昵称、邮箱和头像。
+          - generic [ref=e263]:
+            - generic [ref=e264]:
+              - generic [ref=e265]: 账号
+              - textbox "账号 账号仅展示，不可修改" [ref=e266]: e2e0410000402
+              - generic [ref=e267]: 账号仅展示，不可修改
+            - generic [ref=e268]:
+              - generic [ref=e269]: 手机号
+              - textbox "手机号 手机号用于登录识别，不支持修改" [ref=e270]: "13900000402"
+              - generic [ref=e271]: 手机号用于登录识别，不支持修改
+            - generic [ref=e272]:
+              - generic [ref=e273]: 昵称
+              - textbox "昵称 昵称会同步展示在页面欢迎区" [ref=e274]:
+                - /placeholder: 请输入昵称
+                - text: E2E验证0402-资料页二次验证
+              - generic [ref=e275]: 昵称会同步展示在页面欢迎区
+            - generic [ref=e276]:
+              - generic [ref=e277]: 邮箱
+              - textbox "邮箱 用于消息触达和账号找回" [ref=e278]:
+                - /placeholder: 请输入邮箱
+                - text: e2e0410000402+verify@example.com
+              - generic [ref=e279]: 用于消息触达和账号找回
+          - generic [ref=e280]:
+            - button "保存资料" [active] [ref=e281] [cursor=pointer]
+            - button "还原本次修改" [ref=e282] [cursor=pointer]
+        - article [ref=e283]:
+          - generic [ref=e284]:
+            - heading "会话安全" [level=3] [ref=e285]
+            - paragraph [ref=e286]: 统一管理主动退出与会话失效提示文案。
+          - generic [ref=e287]:
+            - strong [ref=e288]: 统一提示文案
+            - generic [ref=e289]: 账号已在其他地方登录，请重新登录。
+          - generic [ref=e290]:
+            - button "主动退出登录" [ref=e291] [cursor=pointer]
+            - button "模拟被挤下线提示" [ref=e292] [cursor=pointer]
+```
