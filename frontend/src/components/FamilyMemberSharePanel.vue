@@ -34,7 +34,7 @@
 
 <script>
 import SimpleDonutChart from "@/components/SimpleDonutChart.vue";
-import { formatCurrency, formatPercent } from "@/utils/userFamilyMock";
+import { formatFamilyCurrency, formatFamilyPercent } from "@/api/userFamily";
 
 export default {
   name: "FamilyMemberSharePanel",
@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     totalLabel() {
-      return formatCurrency(this.total);
+      return formatFamilyCurrency(this.total);
     },
     segments() {
       return this.rows.map(function(item) {
@@ -72,8 +72,8 @@ export default {
     }
   },
   methods: {
-    formatCurrency: formatCurrency,
-    formatPercent: formatPercent
+    formatCurrency: formatFamilyCurrency,
+    formatPercent: formatFamilyPercent
   }
 };
 </script>

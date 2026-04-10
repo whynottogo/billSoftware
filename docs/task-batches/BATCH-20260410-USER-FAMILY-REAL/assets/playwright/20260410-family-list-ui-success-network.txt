@@ -1,0 +1,7 @@
+### Result
+[GET] http://localhost:9000/api/user/families/FAM-18A4FBF2C4ADE858-2 => [200] OK
+[GET] http://localhost:9000/api/user/families/FAM-18A4FBF2C4ADE858-2/member-share?periodType=month&period_type=month&metricType=income&metric_type=income&periodKey=2026-04&period_key=2026-04&month=2026-04&year= => [200] OK
+[GET] http://localhost:9000/api/user/families/FAM-18A4FBF2C4ADE858-2/member-share?periodType=month&period_type=month&metricType=expense&metric_type=expense&periodKey=2026-04&period_key=2026-04&month=2026-04&year= => [200] OK
+[GET] http://localhost:9000/api/user/families/FAM-18A4FBF2C4ADE858-2/member-share?periodType=year&period_type=year&metricType=income&metric_type=income&periodKey=2026&period_key=2026&month=&year=2026 => [200] OK
+[GET] http://localhost:9000/api/user/families/FAM-18A4FBF2C4ADE858-2/member-share?periodType=year&period_type=year&metricType=expense&metric_type=expense&periodKey=2026&period_key=2026&month=&year=2026 => [200] OK
+[GET] http://localhost:9000/api/user/families => [200] OK

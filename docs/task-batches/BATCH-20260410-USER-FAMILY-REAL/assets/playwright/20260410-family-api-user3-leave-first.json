@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/user/families/FAM-18A4FBF2C4ADE858-2/leave",
+    "body": null
+  },
+  "status": 200,
+  "body": {
+    "code": 0,
+    "data": {
+      "deleted": false,
+      "familyId": "FAM-18A4FBF2C4ADE858-2",
+      "left": true
+    },
+    "message": "success"
+  }
+}

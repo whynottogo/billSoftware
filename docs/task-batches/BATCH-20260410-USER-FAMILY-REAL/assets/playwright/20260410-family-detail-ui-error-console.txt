@@ -1,0 +1,5 @@
+### Result
+Total messages: 2 (Errors: 0, Warnings: 0)
+
+[INFO] [webpack-dev-server] Server started: Hot Module Replacement enabled, Live Reloading enabled, Progress disabled, Overlay enabled. @ webpack-internal:///./node_modules/webpack-dev-server/client/modules/logger/index.js:599
+[LOG] [HMR] Waiting for update signal from WDS... @ webpack-internal:///./node_modules/webpack/hot/log.js:38

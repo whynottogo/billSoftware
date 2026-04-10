@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/user/auth/login",
+    "body": {
+      "username": "e2e0410000402",
+      "password": "123456"
+    }
+  },
+  "status": 401,
+  "body": {
+    "code": 401,
+    "message": "username or phone is incorrect"
+  }
+}

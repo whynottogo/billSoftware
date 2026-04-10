@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/user/families/FAM-18A4FBF2C4ADE858-2",
+    "body": null
+  },
+  "status": 404,
+  "body": {
+    "code": 404,
+    "message": "family not found"
+  }
+}

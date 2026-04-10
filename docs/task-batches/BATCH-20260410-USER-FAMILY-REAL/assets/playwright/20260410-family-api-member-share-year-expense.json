@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/user/families/FAM-18A4FBF2C4ADE858-2/member-share?periodType=year&metricType=expense&periodKey=2026",
+    "body": null
+  },
+  "status": 200,
+  "body": {
+    "code": 0,
+    "data": {
+      "rows": [
+        {
+          "name": "E2E验证0402-资料页二次验证",
+          "role": "创建人",
+          "color": "#4d96ff",
+          "value": 1450,
+          "percent": 100
+        },
+        {
+          "name": "Family验证用户",
+          "role": "成员",
+          "color": "#ff8b8b",
+          "value": 0,
+          "percent": 0
+        }
+      ],
+      "title": "2026 年度支出成员占比",
+      "total": 1450
+    },
+    "message": "success"
+  }
+}

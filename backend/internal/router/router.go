@@ -26,6 +26,7 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	userChartHandler := handler.NewUserChartHandler(engine)
 	userAssetHandler := handler.NewUserAssetHandler(engine)
 	userProfileHandler := handler.NewUserProfileHandler(engine)
+	userFamilyHandler := handler.NewUserFamilyHandler(engine)
 	adminUserBillHandler := handler.NewAdminUserBillHandler(engine)
 
 	httpRouter.GET("/api/health", healthHandler.Ping)
@@ -76,6 +77,13 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	protectedUserGroup.GET("/profile", userProfileHandler.GetProfile)
 	protectedUserGroup.PUT("/profile", userProfileHandler.UpdateProfile)
 	protectedUserGroup.PUT("/profile/password", userProfileHandler.UpdatePassword)
+	protectedUserGroup.GET("/families", userFamilyHandler.List)
+	protectedUserGroup.POST("/families", userFamilyHandler.Create)
+	protectedUserGroup.POST("/families/join", userFamilyHandler.Join)
+	protectedUserGroup.POST("/families/join-by-link", userFamilyHandler.JoinByLink)
+	protectedUserGroup.POST("/families/:familyId/leave", userFamilyHandler.Leave)
+	protectedUserGroup.GET("/families/:familyId", userFamilyHandler.GetDetail)
+	protectedUserGroup.GET("/families/:familyId/member-share", userFamilyHandler.GetMemberShare)
 
 	return httpRouter
 }

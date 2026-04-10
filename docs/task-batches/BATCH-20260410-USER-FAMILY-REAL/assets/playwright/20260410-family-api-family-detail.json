@@ -1,0 +1,105 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/user/families/FAM-18A4FBF2C4ADE858-2",
+    "body": null
+  },
+  "status": 200,
+  "body": {
+    "code": 0,
+    "data": {
+      "createdAt": "2026-04-10",
+      "creator": "E2E验证0402-资料页二次验证",
+      "id": "FAM-18A4FBF2C4ADE858-2",
+      "inviteCode": "FAM-18A4FBF2C4ADE858-2",
+      "inviteLink": "http://localhost:9000/user/families?invite=FAM-18A4FBF2C4ADE858-2",
+      "members": [
+        {
+          "userId": 2,
+          "name": "E2E验证0402-资料页二次验证",
+          "role": "创建人",
+          "color": "#4d96ff",
+          "joinedAt": "2026-04-10"
+        },
+        {
+          "userId": 3,
+          "name": "Family验证用户",
+          "role": "成员",
+          "color": "#ff8b8b",
+          "joinedAt": "2026-04-10"
+        }
+      ],
+      "monthOptions": [
+        {
+          "key": "2026-04",
+          "label": "2026年4月",
+          "note": "2026-04 家庭成员真实流水汇总。",
+          "income": 3500,
+          "expense": 350,
+          "balance": 3150
+        },
+        {
+          "key": "2026-03",
+          "label": "2026年3月",
+          "note": "2026-03 家庭成员真实流水汇总。",
+          "income": 3200,
+          "expense": 520,
+          "balance": 2680
+        },
+        {
+          "key": "2026-02",
+          "label": "2026年2月",
+          "note": "2026-02 家庭成员真实流水汇总。",
+          "income": 1500,
+          "expense": 360,
+          "balance": 1140
+        },
+        {
+          "key": "2026-01",
+          "label": "2026年1月",
+          "note": "2026-01 家庭成员真实流水汇总。",
+          "income": 3000,
+          "expense": 220,
+          "balance": 2780
+        },
+        {
+          "key": "2025-12",
+          "label": "2025年12月",
+          "note": "2025-12 家庭成员真实流水汇总。",
+          "income": 2800,
+          "expense": 450,
+          "balance": 2350
+        },
+        {
+          "key": "2025-11",
+          "label": "2025年11月",
+          "note": "2025-11 家庭成员真实流水汇总。",
+          "income": 3200,
+          "expense": 680,
+          "balance": 2520
+        }
+      ],
+      "name": "家庭联调0410-173111",
+      "slogan": "家庭联调0410-173111 创建于 2026-04-10，当前展示家庭成员真实记账汇总。",
+      "yearOptions": [
+        {
+          "key": "2026",
+          "label": "2026年",
+          "note": "2026 年家庭成员真实流水汇总。",
+          "income": 11200,
+          "expense": 1450,
+          "balance": 9750
+        },
+        {
+          "key": "2025",
+          "label": "2025年",
+          "note": "2025 年家庭成员真实流水汇总。",
+          "income": 6000,
+          "expense": 1130,
+          "balance": 4870
+        }
+      ]
+    },
+    "message": "success"
+  }
+}

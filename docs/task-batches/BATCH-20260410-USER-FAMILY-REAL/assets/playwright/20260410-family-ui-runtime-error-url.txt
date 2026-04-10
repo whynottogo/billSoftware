@@ -1,0 +1,6 @@
+### Result
+"http://localhost:9000/user/login"
+### Ran Playwright code
+```js
+await page.evaluate('() => location.href');
+```

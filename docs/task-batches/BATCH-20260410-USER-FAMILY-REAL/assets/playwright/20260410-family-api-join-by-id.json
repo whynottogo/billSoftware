@@ -1,0 +1,48 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/user/families/join",
+    "body": {
+      "family_id": "FAM-18A4FBF2C4ADE858-2"
+    }
+  },
+  "status": 200,
+  "body": {
+    "code": 0,
+    "data": {
+      "family": {
+        "createdAt": "2026-04-10",
+        "creator": "E2E验证0402-资料页二次验证",
+        "id": "FAM-18A4FBF2C4ADE858-2",
+        "inviteCode": "FAM-18A4FBF2C4ADE858-2",
+        "inviteLink": "http://localhost:9000/user/families?invite=FAM-18A4FBF2C4ADE858-2",
+        "memberCount": 2,
+        "members": [
+          {
+            "userId": 2,
+            "name": "E2E验证0402-资料页二次验证",
+            "role": "创建人",
+            "color": "#4d96ff",
+            "joinedAt": "2026-04-10"
+          },
+          {
+            "userId": 3,
+            "name": "Family验证用户",
+            "role": "成员",
+            "color": "#ff8b8b",
+            "joinedAt": "2026-04-10"
+          }
+        ],
+        "monthBalance": 3150,
+        "monthExpense": 350,
+        "monthIncome": 3500,
+        "name": "家庭联调0410-173111",
+        "slogan": "家庭联调0410-173111 创建于 2026-04-10，当前展示家庭成员真实记账汇总。",
+        "yearBalance": 9750,
+        "yearExpense": 1450,
+        "yearIncome": 11200
+      }
+    },
+    "message": "success"
+  }
+}

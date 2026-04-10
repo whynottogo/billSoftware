@@ -1067,8 +1067,8 @@ Notes:
 req_id: USER-FAMILY-001
 side: user
 module: 家庭功能
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["SYS-DATA-001", "USER-AUTH-002"]
 ```
 
@@ -1092,8 +1092,8 @@ V1 不设计审批加入和移除成员。
 req_id: USER-FAMILY-002
 side: user
 module: 家庭功能
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-FAMILY-001", "USER-LEDGER-001"]
 ```
 

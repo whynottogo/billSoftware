@@ -1,0 +1,12 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/user/families/FAM-18A4FBF2C4ADE858-2/leave",
+    "body": null
+  },
+  "status": 401,
+  "body": {
+    "code": 401,
+    "message": "user session is invalid"
+  }
+}
