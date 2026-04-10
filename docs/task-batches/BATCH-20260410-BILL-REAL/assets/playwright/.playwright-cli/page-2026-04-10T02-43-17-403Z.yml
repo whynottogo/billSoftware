@@ -1,0 +1,123 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e378]:
+      - generic [ref=e379]:
+        - generic [ref=e380]:
+          - button "‹" [disabled] [ref=e381]
+          - generic [ref=e382]:
+            - strong [ref=e383]: 2025 年度账单
+            - paragraph [ref=e384]: 可直接切换年份查看全年节奏。
+          - button "›" [ref=e385] [cursor=pointer]
+        - generic [ref=e386]:
+          - generic [ref=e387]: 2 个月 · 4 天
+          - button "查看月账单" [ref=e388] [cursor=pointer]
+      - generic [ref=e389]:
+        - generic [ref=e390]:
+          - generic [ref=e391]: 年
+          - generic [ref=e392]: 2025 年账单总览
+        - generic [ref=e393]:
+          - heading "年度视角不是汇总页，而是你消费节奏的总控制台" [level=1] [ref=e394]
+          - paragraph [ref=e395]: 当前年度收入覆盖支出，整体保持结余。
+        - generic [ref=e396]:
+          - article [ref=e397]:
+            - generic [ref=e398]: 总结余
+            - strong [ref=e399]: ¥4,870
+            - generic [ref=e400]: 共 4 笔账单
+          - article [ref=e401]:
+            - generic [ref=e402]: 总收入
+            - strong [ref=e403]: ¥6,000
+            - generic [ref=e404]: 收入曲线整体平稳
+          - article [ref=e405]:
+            - generic [ref=e406]: 总支出
+            - strong [ref=e407]: ¥1,130
+            - generic [ref=e408]: 年度节奏一眼可见
+      - article [ref=e409]:
+        - generic [ref=e411]:
+          - heading "2025 年月度趋势" [level=3] [ref=e492]
+          - paragraph [ref=e413]: 收入、支出和结余放到一张图里，最适合判断全年高低点。
+        - generic [ref=e414]:
+          - img [ref=e415]:
+            - generic [ref=e417]: ¥0k
+            - generic [ref=e419]: ¥1k
+            - generic [ref=e421]: ¥2k
+            - generic [ref=e423]: ¥3k
+            - generic [ref=e425]: ¥4k
+            - generic [ref=e493]: 11月
+            - generic [ref=e494]: 12月
+          - generic [ref=e445]:
+            - generic [ref=e446]: 收入
+            - generic [ref=e448]: 支出
+            - generic [ref=e450]: 结余
+      - generic [ref=e452]:
+        - generic [ref=e454]:
+          - heading "历年账单" [level=3] [ref=e455]
+          - paragraph [ref=e456]: 年度之间的差别不是数字多少，而是哪一年开始形成更好的消费结构。
+        - generic [ref=e457]:
+          - article [ref=e458] [cursor=pointer]:
+            - generic [ref=e459]:
+              - strong [ref=e460]: "2026"
+              - generic [ref=e461]: 点击切换
+            - generic [ref=e462]:
+              - generic [ref=e463]:
+                - generic [ref=e464]: 总结余
+                - strong [ref=e465]: ¥9,750
+              - generic [ref=e466]:
+                - generic [ref=e467]: 总收入
+                - strong [ref=e468]: ¥11,200
+              - generic [ref=e469]:
+                - generic [ref=e470]: 总支出
+                - strong [ref=e471]: ¥1,450
+              - generic [ref=e472]:
+                - generic [ref=e473]: 记账情况
+                - strong [ref=e474]: 4个月 · 10天
+          - article [ref=e475] [cursor=pointer]:
+            - generic [ref=e476]:
+              - strong [ref=e477]: "2025"
+              - generic [ref=e478]: 当前查看
+            - generic [ref=e479]:
+              - generic [ref=e480]:
+                - generic [ref=e481]: 总结余
+                - strong [ref=e482]: ¥4,870
+              - generic [ref=e483]:
+                - generic [ref=e484]: 总收入
+                - strong [ref=e485]: ¥6,000
+              - generic [ref=e486]:
+                - generic [ref=e487]: 总支出
+                - strong [ref=e488]: ¥1,130
+              - generic [ref=e489]:
+                - generic [ref=e490]: 记账情况
+                - strong [ref=e491]: 2个月 · 4天

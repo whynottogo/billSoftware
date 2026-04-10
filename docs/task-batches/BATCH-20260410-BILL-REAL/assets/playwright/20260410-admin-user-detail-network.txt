@@ -1,0 +1,2 @@
+### Result
+[GET] http://localhost:9000/api/admin/users/2/bills/overview => [200] OK

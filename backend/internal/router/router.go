@@ -21,6 +21,8 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	adminAuthHandler := handler.NewAdminAuthHandler()
 	userHandler := handler.NewUserHandler(engine)
 	userLedgerHandler := handler.NewUserLedgerHandler(engine)
+	userBillHandler := handler.NewUserBillHandler(engine)
+	adminUserBillHandler := handler.NewAdminUserBillHandler(engine)
 
 	httpRouter.GET("/api/health", healthHandler.Ping)
 
@@ -41,6 +43,7 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 		protectedGroup.GET("/users", userHandler.List)
 		protectedGroup.PUT("/users/:id/status", userHandler.ChangeStatus)
 		protectedGroup.GET("/users/:id/summary", userHandler.Summary)
+		protectedGroup.GET("/users/:id/bills/overview", adminUserBillHandler.GetOverview)
 	}
 
 	protectedUserGroup := userGroup.Group("")
@@ -50,6 +53,9 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	protectedUserGroup.GET("/categories", userLedgerHandler.ListCategories)
 	protectedUserGroup.POST("/categories", userLedgerHandler.CreateCategory)
 	protectedUserGroup.DELETE("/categories/:id", userLedgerHandler.DeleteCategory)
+	protectedUserGroup.GET("/bills/years", userBillHandler.ListYears)
+	protectedUserGroup.GET("/bills/year/:year", userBillHandler.GetYearDetail)
+	protectedUserGroup.GET("/bills/month/:month", userBillHandler.GetMonthDetail)
 	protectedUserGroup.GET("/profile/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "user auth middleware ready",

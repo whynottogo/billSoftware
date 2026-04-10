@@ -767,8 +767,8 @@ Notes:
 req_id: USER-BILL-001
 side: user
 module: 账单
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-LEDGER-001"]
 ```
 
@@ -792,8 +792,8 @@ Notes:
 req_id: USER-BILL-002
 side: user
 module: 账单
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-BILL-001"]
 ```
 
@@ -817,8 +817,8 @@ Notes:
 req_id: USER-BILL-003
 side: user
 module: 账单
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["USER-BILL-001"]
 ```
 
@@ -1269,8 +1269,8 @@ Notes:
 req_id: ADMIN-USER-003
 side: admin
 module: 用户管理
-status: 开发中
-owner_ai: 待分配
+status: 已完成
+owner_ai: Codex
 dependencies: ["ADMIN-USER-001", "USER-BILL-001", "USER-BILL-002", "USER-BILL-003"]
 ```
 

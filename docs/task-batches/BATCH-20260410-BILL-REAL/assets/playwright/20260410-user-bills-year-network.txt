@@ -1,0 +1,7 @@
+### Result
+[GET] http://localhost:9000/api/user/bills/years => [200] OK
+[GET] http://localhost:9000/api/user/bills/year/2026 => [200] OK
+[GET] http://localhost:9000/api/user/bills/year/2025 => [200] OK
+[GET] http://localhost:9000/api/user/bills/month/2025-12 => [200] OK
+[GET] http://localhost:9000/api/user/bills/years => [200] OK
+[GET] http://localhost:9000/api/user/bills/year/2026 => [200] OK

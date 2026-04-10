@@ -1,0 +1,68 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: AD
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 管理后台
+    - navigation [ref=e10]:
+      - button "概览 数据概览" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 概览
+        - generic [ref=e13]: 数据概览
+      - button "用户 用户管理" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 用户
+        - generic [ref=e16]: 用户管理
+      - button "审批 待审批用户" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 审批
+        - generic [ref=e19]: 待审批用户
+      - button "家庭 家庭管理" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 家庭
+        - generic [ref=e22]: 家庭管理
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: 当前角色
+        - strong [ref=e26]: 唯一管理员
+        - text: 管理员与普通用户会话严格隔离
+      - button "退出后台" [ref=e27] [cursor=pointer]
+  - main [ref=e28]:
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: 管理端 / 用户管理 / 详情
+          - heading "E2E验证0402（e2e0410000402）" [level=1] [ref=e33]
+          - paragraph [ref=e34]: 当前为只读视图，按月/按年查看单用户收入、支出与结余汇总。
+        - button "返回用户列表" [ref=e36] [cursor=pointer]
+      - generic [ref=e37]:
+        - article [ref=e38]:
+          - generic [ref=e39]: 状态
+          - strong [ref=e40]: 启用
+        - article [ref=e41]:
+          - generic [ref=e42]: 注册时间
+          - strong [ref=e43]: 2026-04-10 00:07
+        - article [ref=e44]:
+          - generic [ref=e45]: 账单记录
+          - strong [ref=e46]: 15 笔
+      - generic [ref=e47]:
+        - generic [ref=e48]:
+          - button "月账单" [ref=e49] [cursor=pointer]
+          - button "年账单" [active] [ref=e50] [cursor=pointer]
+        - generic [ref=e70]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: 年份
+            - combobox "年份" [ref=e74]:
+              - option "2026" [selected]
+              - option "2025"
+          - generic [ref=e75]:
+            - article [ref=e76]:
+              - generic [ref=e77]: 收入
+              - strong [ref=e78]: ¥11,200
+            - article [ref=e79]:
+              - generic [ref=e80]: 支出
+              - strong [ref=e81]: ¥1,450
+            - article [ref=e82]:
+              - generic [ref=e83]: 结余
+              - strong [ref=e84]: ¥9,750
+            - article [ref=e85]:
+              - generic [ref=e86]: 覆盖月份
+              - strong [ref=e87]: 4 个月
+          - paragraph [ref=e88]: 当前年度收入覆盖支出，整体保持结余。

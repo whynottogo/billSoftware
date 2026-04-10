@@ -1,0 +1,172 @@
+### Page
+- Page URL: http://localhost:9000/user/bills/month/2025-12
+- Page Title: Bill Software
+### Snapshot
+```yaml
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e210]:
+      - generic [ref=e211]:
+        - generic [ref=e212]:
+          - button "返回月账单列表" [ref=e213] [cursor=pointer]
+          - button "上一月" [ref=e214] [cursor=pointer]
+          - button "下一月" [ref=e215] [cursor=pointer]
+        - generic [ref=e216]:
+          - generic [ref=e217]: 2 天 · 2 笔记录
+          - button "查看年账单" [ref=e218] [cursor=pointer]
+      - generic [ref=e219]:
+        - generic [ref=e220]:
+          - generic [ref=e221]: 明
+          - generic [ref=e222]: 2025年12月
+        - generic [ref=e223]:
+          - heading "2025年12月账单详情" [level=1] [ref=e224]
+          - paragraph [ref=e225]: 本月整体保持结余，可继续观察高频支出分类。
+        - generic [ref=e226]:
+          - article [ref=e227]:
+            - generic [ref=e228]: 本月结余
+            - strong [ref=e229]: ¥2,350
+            - generic [ref=e230]: 本月记账 2 天，共 2 笔，收入覆盖支出。
+          - article [ref=e231]:
+            - generic [ref=e232]: 上月结余
+            - strong [ref=e233]: ¥2,520
+            - generic [ref=e234]: 2025年11月
+          - article [ref=e235]:
+            - generic [ref=e236]: 本月收入
+            - strong [ref=e237]: ¥2,800
+            - generic [ref=e238]: 收入维持在稳定区间
+          - article [ref=e239]:
+            - generic [ref=e240]: 本月支出
+            - strong [ref=e241]: ¥450
+            - generic [ref=e242]: 可继续按分类收口
+      - generic [ref=e243]:
+        - article [ref=e244]:
+          - generic [ref=e245]: 支出峰值
+          - strong [ref=e246]: ¥450
+          - paragraph [ref=e247]: 12-18
+        - article [ref=e248]:
+          - generic [ref=e249]: 高频分类
+          - strong [ref=e250]: 旅行
+          - paragraph [ref=e251]: 1 笔 · ¥450
+        - article [ref=e252]:
+          - generic [ref=e253]: 结余率
+          - strong [ref=e254]: 84%
+          - paragraph [ref=e255]: 以收入为基准计算当前结余占比
+      - generic [ref=e256]:
+        - article [ref=e257]:
+          - generic [ref=e259]:
+            - heading "支出分类分布" [level=3] [ref=e260]
+            - paragraph [ref=e261]: 先看结构，再决定接下来优先收口哪一类支出。
+          - generic [ref=e262]:
+            - img [ref=e263]
+            - generic [ref=e267]:
+              - generic [ref=e268]: 总支出
+              - strong [ref=e269]: ¥450
+          - generic [ref=e271]:
+            - generic [ref=e273]: 旅行
+            - strong [ref=e274]: 100%
+        - article [ref=e275]:
+          - generic [ref=e277]:
+            - heading "支出排行" [level=3] [ref=e278]
+            - paragraph [ref=e279]: 从金额和笔数双维度看最值得优先关注的分类。
+          - article [ref=e281]:
+            - generic [ref=e282]: "1"
+            - generic [ref=e284]:
+              - generic [ref=e285]:
+                - generic [ref=e286]: 旅
+                - generic [ref=e287]:
+                  - strong [ref=e288]: 旅行
+                  - generic [ref=e289]: 1 笔
+              - generic [ref=e290]:
+                - strong [ref=e291]: ¥450
+                - generic [ref=e292]: 较上月上升
+      - article [ref=e295]:
+        - generic [ref=e297]:
+          - heading "本月支出趋势" [level=3] [ref=e298]
+          - paragraph [ref=e299]: 用一条线看出本月什么时候开始偏离正常节奏。
+        - img [ref=e301]:
+          - generic [ref=e303]: ¥0k
+          - generic [ref=e305]: ¥1k
+          - generic [ref=e307]: ¥2k
+          - generic [ref=e309]: ¥3k
+          - generic [ref=e311]: ¥4k
+          - generic [ref=e313]: 12-18
+      - article [ref=e314]:
+        - generic [ref=e316]:
+          - heading "近 6 个月收支对比" [level=3] [ref=e317]
+          - paragraph [ref=e318]: 当前月份与前 5 个月放在一起，更容易看清收入和支出的变化惯性。
+        - generic [ref=e319]:
+          - img [ref=e320]:
+            - generic [ref=e322]: ¥0k
+            - generic [ref=e324]: ¥1k
+            - generic [ref=e326]: ¥2k
+            - generic [ref=e328]: ¥3k
+            - generic [ref=e330]: ¥4k
+            - generic [ref=e332]: 7月
+            - generic [ref=e334]: 8月
+            - generic [ref=e336]: 9月
+            - generic [ref=e338]: 10月
+            - generic [ref=e342]: 11月
+            - generic [ref=e346]: 12月
+          - generic [ref=e347]:
+            - generic [ref=e348]: 收入
+            - generic [ref=e350]: 支出
+      - generic [ref=e352]:
+        - generic [ref=e354]:
+          - heading "记账成就" [level=3] [ref=e355]
+          - paragraph [ref=e356]: 这不是装饰信息，它帮助你看见自己已经建立起来的习惯。
+        - generic [ref=e357]:
+          - article [ref=e358]:
+            - generic [ref=e359]: 稳
+            - strong [ref=e360]: 2天
+            - paragraph [ref=e361]: 连续记账
+            - generic [ref=e362]: 按本月连续记账天数估算
+          - article [ref=e363]:
+            - generic [ref=e364]: 账
+            - strong [ref=e365]: 2笔
+            - paragraph [ref=e366]: 本月记账
+            - generic [ref=e367]: 本月全部收支记录总数
+          - article [ref=e368]:
+            - generic [ref=e369]: 进
+            - strong [ref=e370]: 2/31天
+            - paragraph [ref=e371]: 记账天数
+            - generic [ref=e372]: 本月有记录的实际天数
+          - article [ref=e373]:
+            - generic [ref=e374]: 警
+            - strong [ref=e375]: 旅行
+            - paragraph [ref=e376]: 高频分类
+            - generic [ref=e377]: 占比 100.0%
+```

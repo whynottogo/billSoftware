@@ -16,6 +16,11 @@
       </div>
     </section>
 
+    <div v-if="errorMessage" class="finance-inline-notice">
+      <span>{{ errorMessage }}</span>
+      <button type="button" @click="retryCurrentYear">重试</button>
+    </div>
+
     <section class="finance-hero finance-hero--soft">
       <div class="finance-hero__eyebrow">
         <span class="finance-hero__eyebrow-mark">年</span>
@@ -53,6 +58,12 @@
           <p>收入、支出和结余放到一张图里，最适合判断全年高低点。</p>
         </div>
       </header>
+      <div v-if="isLoading && !yearData.months.length" class="bills-year-page__placeholder">
+        正在加载年度趋势...
+      </div>
+      <div v-else-if="!yearData.months.length" class="bills-year-page__placeholder">
+        当前年份暂无月度数据，记账后会自动生成趋势。
+      </div>
       <SimpleLineChart
         :labels="lineLabels"
         :series="lineSeries"
@@ -69,6 +80,20 @@
       </header>
 
       <div class="bills-year-page__history">
+        <article v-if="isLoading && !history.length" class="year-card year-card--placeholder">
+          <div class="year-card__year">
+            <strong>--</strong>
+            <span>正在加载历年账单</span>
+          </div>
+        </article>
+
+        <article v-else-if="!history.length" class="year-card year-card--placeholder">
+          <div class="year-card__year">
+            <strong>--</strong>
+            <span>暂无历年账单</span>
+          </div>
+        </article>
+
         <article
           v-for="item in history"
           :key="item.year"
@@ -106,7 +131,15 @@
 
 <script>
 import SimpleLineChart from "@/components/SimpleLineChart.vue";
-import { formatCurrency, getBillYear, getBillYearHistory, getBillYears } from "@/utils/userFinanceMock";
+import {
+  buildBillSummaryError,
+  createEmptyBillYearData,
+  formatBillCurrency,
+  getUserBillYear,
+  getUserBillYears,
+  normalizeBillYearPayload,
+  normalizeBillYearsPayload
+} from "@/api/userBillSummary";
 
 export default {
   name: "UserBillsYear",
@@ -115,24 +148,24 @@ export default {
   },
   data() {
     return {
-      selectedYear: getBillYears()[0]
+      selectedYear: new Date().getFullYear(),
+      years: [],
+      history: [],
+      yearData: createEmptyBillYearData(),
+      isLoading: false,
+      errorMessage: "",
+      activeYearRequestKey: 0
     };
   },
+  created() {
+    this.bootstrap();
+  },
   computed: {
-    years() {
-      return getBillYears();
-    },
-    history() {
-      return getBillYearHistory();
-    },
-    yearData() {
-      return getBillYear(this.selectedYear);
-    },
     hasPreviousYear() {
-      return this.years.indexOf(this.selectedYear) > 0;
+      return this.years.indexOf(this.selectedYear) < this.years.length - 1;
     },
     hasNextYear() {
-      return this.years.indexOf(this.selectedYear) < this.years.length - 1;
+      return this.years.indexOf(this.selectedYear) > 0;
     },
     lineLabels() {
       return this.yearData.months.slice().sort(function(a, b) {
@@ -172,42 +205,161 @@ export default {
     }
   },
   methods: {
-    formatCurrency: formatCurrency,
+    formatCurrency: formatBillCurrency,
+    bootstrap() {
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return getUserBillYears()
+        .then(
+          function(result) {
+            var normalized = normalizeBillYearsPayload(result);
+            var fallbackYear = normalized.years[0] || new Date().getFullYear();
+
+            this.years = normalized.years;
+            this.history = normalized.history;
+            this.selectedYear = fallbackYear;
+
+            if (!normalized.years.length) {
+              this.yearData = createEmptyBillYearData(fallbackYear);
+              return null;
+            }
+
+            return this.loadYearData(fallbackYear, true);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.years = [];
+            this.history = [];
+            this.yearData = createEmptyBillYearData(this.selectedYear);
+            this.errorMessage = buildBillSummaryError(error, "年度账单列表加载失败，请稍后重试。");
+            this.$message.error(this.errorMessage);
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isLoading = false;
+          }.bind(this)
+        );
+    },
+    loadYearData(year, silent) {
+      var requestKey = Date.now();
+
+      this.activeYearRequestKey = requestKey;
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return getUserBillYear(year)
+        .then(
+          function(result) {
+            if (this.activeYearRequestKey !== requestKey) {
+              return;
+            }
+
+            this.yearData = normalizeBillYearPayload(result, year);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            if (this.activeYearRequestKey !== requestKey) {
+              return;
+            }
+
+            this.yearData = createEmptyBillYearData(year);
+            this.errorMessage = buildBillSummaryError(error, year + " 年年度账单加载失败，请稍后重试。");
+
+            if (!silent) {
+              this.$message.error(this.errorMessage);
+            }
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            if (this.activeYearRequestKey === requestKey) {
+              this.isLoading = false;
+            }
+          }.bind(this)
+        );
+    },
     prevYear() {
       var index = this.years.indexOf(this.selectedYear);
 
-      if (index > 0) {
-        this.selectedYear = this.years[index - 1];
+      if (index < this.years.length - 1) {
+        this.selectedYear = this.years[index + 1];
+        this.loadYearData(this.selectedYear);
       }
     },
     nextYear() {
       var index = this.years.indexOf(this.selectedYear);
 
-      if (index < this.years.length - 1) {
-        this.selectedYear = this.years[index + 1];
+      if (index > 0) {
+        this.selectedYear = this.years[index - 1];
+        this.loadYearData(this.selectedYear);
       }
     },
     selectYear(year) {
       this.selectedYear = year;
+      this.loadYearData(year);
     },
     goMonthList() {
       this.$router.push("/user/bills/month");
+    },
+    retryCurrentYear() {
+      if (!this.years.length) {
+        this.bootstrap();
+        return;
+      }
+
+      this.loadYearData(this.selectedYear);
     }
   }
 };
 </script>
 
 <style scoped>
+.finance-inline-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  background: rgba(255, 244, 244, 0.92);
+  color: #9f2f2f;
+}
+
+.finance-inline-notice button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .bills-year-page__switcher-note {
   margin: 8px 0 0;
   color: var(--text-subtle);
   font-size: 13px;
 }
 
+.bills-year-page__placeholder {
+  margin: 0 0 18px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: rgba(255, 248, 228, 0.68);
+  color: var(--text-subtle);
+}
+
 .bills-year-page__history {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.year-card--placeholder {
+  cursor: default;
 }
 
 .year-card {

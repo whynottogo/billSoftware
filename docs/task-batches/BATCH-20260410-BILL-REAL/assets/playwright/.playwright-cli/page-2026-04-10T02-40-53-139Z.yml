@@ -1,0 +1,126 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: B
+      - generic [ref=e7]:
+        - strong [ref=e8]: Bill Software
+        - paragraph [ref=e9]: 轻松记账
+    - navigation [ref=e10]:
+      - button "收支 当月收支" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: 收支
+        - generic [ref=e13]: 当月收支
+      - button "账单 账单" [ref=e14] [cursor=pointer]:
+        - generic [ref=e15]: 账单
+        - generic [ref=e16]: 账单
+      - button "预算 预算" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: 预算
+        - generic [ref=e19]: 预算
+      - button "资产 资产管家" [ref=e20] [cursor=pointer]:
+        - generic [ref=e21]: 资产
+        - generic [ref=e22]: 资产管家
+      - button "图表 图表" [ref=e23] [cursor=pointer]:
+        - generic [ref=e24]: 图表
+        - generic [ref=e25]: 图表
+      - button "资料 个人信息" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 资料
+        - generic [ref=e28]: 个人信息
+      - button "家庭 家庭功能" [ref=e29] [cursor=pointer]:
+        - generic [ref=e30]: 家庭
+        - generic [ref=e31]: 家庭功能
+    - generic [ref=e32]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: 当前会话
+        - strong [ref=e35]: e2e0410000402
+        - text: 用户端与管理端登录态相互隔离
+      - button "退出登录" [ref=e36] [cursor=pointer]
+  - main [ref=e37]:
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - button "‹" [disabled] [ref=e41]
+          - generic [ref=e42]:
+            - strong [ref=e43]: 2025 年账单
+            - paragraph [ref=e44]: 当前年度收入覆盖支出，整体保持结余。
+          - button "›" [ref=e45] [cursor=pointer]
+        - generic [ref=e46]:
+          - generic [ref=e47]: 2 个月 · 4 笔记录
+          - button "查看最近账单" [ref=e48] [cursor=pointer]
+          - button "查看年账单" [ref=e49] [cursor=pointer]
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - generic [ref=e52]: 账
+          - generic [ref=e53]: 2025 年度账单总览
+        - generic [ref=e54]:
+          - heading "把每个月的收支起伏收进同一张年度时间线里" [level=1] [ref=e55]
+          - paragraph [ref=e56]: 当前年度收入覆盖支出，整体保持结余。
+        - generic [ref=e57]:
+          - article [ref=e58]:
+            - generic [ref=e59]: 本年结余
+            - strong [ref=e60]: ¥4,870
+            - generic [ref=e61]: 累计记账 4 天
+          - article [ref=e62]:
+            - generic [ref=e63]: 年收入
+            - strong [ref=e64]: ¥6,000
+            - generic [ref=e65]: 收入节奏稳定
+          - article [ref=e66]:
+            - generic [ref=e67]: 年支出
+            - strong [ref=e68]: ¥1,130
+            - generic [ref=e69]: 可直接进入月份明细查看结构
+      - generic [ref=e70]:
+        - generic [ref=e72]:
+          - heading "月度账单" [level=3] [ref=e73]
+          - paragraph [ref=e74]: 按月份查看收入、支出、结余和记账密度。
+        - generic [ref=e75]:
+          - article [ref=e170] [cursor=pointer]:
+            - generic [ref=e171]:
+              - generic [ref=e172]: "12"
+              - generic [ref=e173]:
+                - strong [ref=e174]: 2025年12月
+                - paragraph [ref=e175]: 本月记账 2 天，共 2 笔，收入覆盖支出。
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - generic [ref=e178]: 收入
+                - strong [ref=e179]: ¥2,800
+              - generic [ref=e180]:
+                - generic [ref=e181]: 支出
+                - strong [ref=e182]: ¥450
+              - generic [ref=e183]:
+                - generic [ref=e184]: 结余
+                - strong [ref=e185]: ¥2,350
+              - generic [ref=e186]:
+                - generic [ref=e187]: 记账情况
+                - strong [ref=e188]: 2天 · 2笔
+            - generic [ref=e189]: ›
+          - article [ref=e190] [cursor=pointer]:
+            - generic [ref=e191]:
+              - generic [ref=e192]: "11"
+              - generic [ref=e193]:
+                - strong [ref=e194]: 2025年11月
+                - paragraph [ref=e195]: 本月记账 2 天，共 2 笔，收入覆盖支出。
+            - generic [ref=e196]:
+              - generic [ref=e197]:
+                - generic [ref=e198]: 收入
+                - strong [ref=e199]: ¥3,200
+              - generic [ref=e200]:
+                - generic [ref=e201]: 支出
+                - strong [ref=e202]: ¥680
+              - generic [ref=e203]:
+                - generic [ref=e204]: 结余
+                - strong [ref=e205]: ¥2,520
+              - generic [ref=e206]:
+                - generic [ref=e207]: 记账情况
+                - strong [ref=e208]: 2天 · 2笔
+            - generic [ref=e209]: ›
+      - generic [ref=e157]:
+        - article [ref=e158]:
+          - generic [ref=e159]: 月结余
+          - strong [ref=e160]: ¥2350
+          - paragraph [ref=e161]: 收入减去支出后的结果
+        - article [ref=e162]:
+          - generic [ref=e163]: 记账密度
+          - strong [ref=e164]: 2天 · 2笔
+          - paragraph [ref=e165]: 当月实际发生的记录情况
+        - article [ref=e166]:
+          - generic [ref=e167]: 收入覆盖
+          - strong [ref=e168]: 622%
+          - paragraph [ref=e169]: 收入对支出的覆盖比例

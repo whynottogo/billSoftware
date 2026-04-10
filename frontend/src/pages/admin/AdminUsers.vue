@@ -4,7 +4,7 @@
       <div>
         <span class="admin-users-page__eyebrow">管理端 / 用户管理</span>
         <h1>用户列表</h1>
-        <p>支持启用/禁用状态管理；用户详情页正在联调中，将在后续批次开放。</p>
+        <p>支持启用/禁用状态管理，并可进入只读账单详情查看单用户月度与年度汇总。</p>
       </div>
     </section>
 
@@ -76,7 +76,7 @@
             <td>{{ row.lastLogin }}</td>
             <td>
               <div class="table-actions">
-                <button class="table-actions__detail" @click="openDetail">详情联调中</button>
+                <button class="table-actions__detail" @click="openDetail(row.userId)">查看详情</button>
                 <button
                   class="table-actions__toggle"
                   :class="[row.status === '启用' ? 'is-danger' : 'is-success', isStatusUpdating(row.userId) ? 'is-pending' : '']"
@@ -251,8 +251,8 @@ export default {
           }.bind(this)
         );
     },
-    openDetail() {
-      this.$message.info("详情联调中，当前批次暂不开放。");
+    openDetail(userId) {
+      this.$router.push(`/admin/users/${userId}`);
     },
     isStatusUpdating(userId) {
       return Boolean(this.statusUpdatingMap[userId]);

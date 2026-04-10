@@ -170,10 +170,196 @@
 </template>
 
 <script>
+import { getUserBillMonthDetail } from "@/api/userBillDetail";
 import SimpleDonutChart from "@/components/SimpleDonutChart.vue";
 import SimpleGroupedBarChart from "@/components/SimpleGroupedBarChart.vue";
 import SimpleLineChart from "@/components/SimpleLineChart.vue";
-import { formatCurrency, getBillMonth } from "@/utils/userFinanceMock";
+
+const CATEGORY_COLORS = ["#f6d34a", "#6bcf7c", "#4d96ff", "#ff8b8b", "#9b8cff", "#fb7185"];
+
+function pad(value) {
+  return String(value).padStart(2, "0");
+}
+
+function getCurrentMonthKey() {
+  var now = new Date();
+  return now.getFullYear() + "-" + pad(now.getMonth() + 1);
+}
+
+function shiftMonthKey(monthKey, offset) {
+  var parts = String(monthKey || "").split("-");
+  var year = Number(parts[0]);
+  var month = Number(parts[1]);
+  var date = new Date(year, month - 1 + offset, 1);
+
+  return date.getFullYear() + "-" + pad(date.getMonth() + 1);
+}
+
+function monthLabel(monthKey) {
+  var parts = String(monthKey || "").split("-");
+  if (parts.length !== 2) {
+    return monthKey || "暂无数据";
+  }
+
+  return parts[0] + "年" + Number(parts[1]) + "月";
+}
+
+function formatCurrency(value) {
+  return "¥" + Number(value || 0).toLocaleString("zh-CN");
+}
+
+function normalizeAmount(value) {
+  var amount = Number(value || 0);
+  return Number.isFinite(amount) ? amount : 0;
+}
+
+function normalizePercent(value) {
+  var percent = Number(value || 0);
+  return Number.isFinite(percent) ? percent : 0;
+}
+
+function resolveMonthKey(monthKey) {
+  return /^\d{4}-\d{2}$/.test(String(monthKey || "")) ? String(monthKey) : getCurrentMonthKey();
+}
+
+function extractPayload(result) {
+  if (result && result.data) {
+    return result.data;
+  }
+
+  return result || {};
+}
+
+function buildDailyTrendPlaceholder(monthKey) {
+  return [
+    {
+      label: monthKey.slice(5) || "-",
+      amount: 0
+    }
+  ];
+}
+
+function buildComparisonPlaceholder(monthKey) {
+  var list = [];
+  var index;
+
+  for (index = 5; index >= 0; index -= 1) {
+    list.push({
+      label: shiftMonthKey(monthKey, -index).slice(5),
+      income: 0,
+      expense: 0,
+      balance: 0
+    });
+  }
+
+  return list;
+}
+
+function buildMonthDetailPlaceholder(monthKey) {
+  return {
+    key: monthKey,
+    label: monthLabel(monthKey),
+    previousKey: null,
+    nextKey: null,
+    previousLabel: "",
+    previousBalance: 0,
+    income: 0,
+    expense: 0,
+    balance: 0,
+    days: 0,
+    records: 0,
+    note: "本月暂无详细账单数据",
+    highlight: "当前月份还没有形成可分析的账单特征。",
+    categorySplit: [],
+    ranking: [],
+    dailyTrend: buildDailyTrendPlaceholder(monthKey),
+    comparison: buildComparisonPlaceholder(monthKey),
+    highlightCards: [],
+    achievements: []
+  };
+}
+
+function normalizeMonthDetail(result, fallbackMonthKey) {
+  var payload = extractPayload(result);
+  var monthKey = resolveMonthKey(payload.key || fallbackMonthKey);
+  var categorySplit = Array.isArray(payload.categorySplit) ? payload.categorySplit : [];
+  var ranking = Array.isArray(payload.ranking) ? payload.ranking : [];
+  var dailyTrend = Array.isArray(payload.dailyTrend) ? payload.dailyTrend : [];
+  var comparison = Array.isArray(payload.comparison) ? payload.comparison : [];
+  var highlightCards = Array.isArray(payload.highlightCards) ? payload.highlightCards : [];
+  var achievements = Array.isArray(payload.achievements) ? payload.achievements : [];
+
+  return {
+    key: monthKey,
+    label: payload.label || monthLabel(monthKey),
+    previousKey: payload.previousKey || null,
+    nextKey: payload.nextKey || null,
+    previousLabel: payload.previousLabel || (payload.previousKey ? monthLabel(payload.previousKey) : ""),
+    previousBalance: normalizeAmount(payload.previousBalance),
+    income: normalizeAmount(payload.income),
+    expense: normalizeAmount(payload.expense),
+    balance: normalizeAmount(payload.balance),
+    days: Number(payload.days || 0),
+    records: Number(payload.records || 0),
+    note: payload.note || "本月暂无额外说明",
+    highlight: payload.highlight || "当前月份账单详情已同步到真实数据。",
+    categorySplit: categorySplit.map(function(item, index) {
+      return {
+        name: item.name || "未分类",
+        value: normalizeAmount(item.value),
+        percent: normalizePercent(item.percent),
+        color: item.color || CATEGORY_COLORS[index % CATEGORY_COLORS.length]
+      };
+    }),
+    ranking: ranking.map(function(item) {
+      return {
+        name: item.name || "未分类",
+        value: normalizeAmount(item.value),
+        percent: normalizePercent(item.percent),
+        count: Number(item.count || 0),
+        trend: item.trend === "up" ? "up" : "down",
+        badge: item.badge || String(item.name || "未").slice(0, 1)
+      };
+    }),
+    dailyTrend: (dailyTrend.length ? dailyTrend : buildDailyTrendPlaceholder(monthKey)).map(function(item) {
+      return {
+        label: item.label || "-",
+        amount: normalizeAmount(item.amount)
+      };
+    }),
+    comparison: (comparison.length ? comparison : buildComparisonPlaceholder(monthKey)).map(function(item) {
+      return {
+        label: item.label || "-",
+        income: normalizeAmount(item.income),
+        expense: normalizeAmount(item.expense),
+        balance: normalizeAmount(item.balance)
+      };
+    }),
+    highlightCards: highlightCards.map(function(item) {
+      return {
+        label: item.label || "-",
+        value: item.value || "-",
+        hint: item.hint || ""
+      };
+    }),
+    achievements: achievements.map(function(item) {
+      return {
+        title: item.title || "-",
+        value: item.value || "-",
+        tone: item.tone || "info",
+        hint: item.hint || ""
+      };
+    })
+  };
+}
+
+function buildErrorMessage(error, fallback) {
+  if (error && error.response && error.response.data && error.response.data.message) {
+    return error.response.data.message;
+  }
+
+  return fallback;
+}
 
 export default {
   name: "UserBillDetail",
@@ -182,10 +368,14 @@ export default {
     SimpleGroupedBarChart,
     SimpleLineChart
   },
+  data() {
+    return {
+      monthData: buildMonthDetailPlaceholder(resolveMonthKey(this.$route.params.month)),
+      detailLoading: false,
+      lastRequestId: 0
+    };
+  },
   computed: {
-    monthData() {
-      return getBillMonth(this.$route.params.month);
-    },
     trendSeries() {
       return [
         {
@@ -216,8 +406,52 @@ export default {
       ];
     }
   },
+  watch: {
+    "$route.params.month": {
+      immediate: true,
+      handler(nextMonth) {
+        this.loadMonthDetail(nextMonth);
+      }
+    }
+  },
   methods: {
     formatCurrency: formatCurrency,
+    loadMonthDetail(routeMonth) {
+      var monthKey = resolveMonthKey(routeMonth);
+      var requestId = this.lastRequestId + 1;
+
+      this.lastRequestId = requestId;
+      this.detailLoading = true;
+      this.monthData = buildMonthDetailPlaceholder(monthKey);
+
+      return getUserBillMonthDetail(monthKey)
+        .then(
+          function(result) {
+            if (requestId !== this.lastRequestId) {
+              return;
+            }
+
+            this.monthData = normalizeMonthDetail(result, monthKey);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            if (requestId !== this.lastRequestId) {
+              return;
+            }
+
+            this.monthData = buildMonthDetailPlaceholder(monthKey);
+            this.$message.error(buildErrorMessage(error, "月账单详情加载失败，请稍后重试。"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            if (requestId === this.lastRequestId) {
+              this.detailLoading = false;
+            }
+          }.bind(this)
+        );
+    },
     goBack() {
       this.$router.push("/user/bills/month");
     },

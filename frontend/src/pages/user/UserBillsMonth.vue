@@ -12,10 +12,17 @@
 
       <div class="finance-toolbar__actions">
         <span class="finance-pill">{{ yearData.summary.months }} 个月 · {{ yearData.summary.records }} 笔记录</span>
-        <button class="finance-button finance-button--ghost" @click="openLatestMonth">查看最近账单</button>
+        <button class="finance-button finance-button--ghost" :disabled="!latestMonth.key" @click="openLatestMonth">
+          查看最近账单
+        </button>
         <button class="finance-button finance-button--primary" @click="openYearlyBill">查看年账单</button>
       </div>
     </section>
+
+    <div v-if="errorMessage" class="finance-inline-notice">
+      <span>{{ errorMessage }}</span>
+      <button type="button" @click="retryCurrentYear">重试</button>
+    </div>
 
     <section class="finance-hero">
       <div class="finance-hero__eyebrow">
@@ -56,6 +63,16 @@
       </header>
 
       <div class="bills-list-page__list">
+        <article v-if="isLoading && !yearData.months.length" class="bills-empty">
+          <strong>正在加载月账单数据</strong>
+          <p>请稍候，当前年度的真实账单正在同步。</p>
+        </article>
+
+        <article v-else-if="!yearData.months.length" class="bills-empty">
+          <strong>当前年份还没有月账单</strong>
+          <p>可先去首页记录收支，生成第一张月账单。</p>
+        </article>
+
         <article
           v-for="month in yearData.months"
           :key="month.key"
@@ -110,62 +127,184 @@
 </template>
 
 <script>
-import { formatCurrency, getBillYear, getBillYears } from "@/utils/userFinanceMock";
+import {
+  buildBillSummaryError,
+  createEmptyBillYearData,
+  formatBillCurrency,
+  getUserBillYear,
+  getUserBillYears,
+  normalizeBillYearPayload,
+  normalizeBillYearsPayload
+} from "@/api/userBillSummary";
 
 export default {
   name: "UserBillsMonth",
   data() {
     return {
-      selectedYear: getBillYears()[0]
+      selectedYear: new Date().getFullYear(),
+      years: [],
+      yearData: createEmptyBillYearData(),
+      isLoading: false,
+      errorMessage: "",
+      activeYearRequestKey: 0
     };
   },
+  created() {
+    this.bootstrap();
+  },
   computed: {
-    years() {
-      return getBillYears();
-    },
-    yearData() {
-      return getBillYear(this.selectedYear);
-    },
     latestMonth() {
-      return this.yearData.months[0];
+      return this.yearData.months[0] || {
+        key: "",
+        highlightCards: []
+      };
     },
     hasPreviousYear() {
-      return this.years.indexOf(this.selectedYear) > 0;
+      return this.years.indexOf(this.selectedYear) < this.years.length - 1;
     },
     hasNextYear() {
-      return this.years.indexOf(this.selectedYear) < this.years.length - 1;
+      return this.years.indexOf(this.selectedYear) > 0;
     }
   },
   methods: {
-    formatCurrency: formatCurrency,
+    formatCurrency: formatBillCurrency,
+    bootstrap() {
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return getUserBillYears()
+        .then(
+          function(result) {
+            var normalized = normalizeBillYearsPayload(result);
+            var fallbackYear = normalized.years[0] || new Date().getFullYear();
+
+            this.years = normalized.years;
+            this.selectedYear = fallbackYear;
+
+            if (!normalized.years.length) {
+              this.yearData = createEmptyBillYearData(fallbackYear);
+              return null;
+            }
+
+            return this.loadYearData(fallbackYear, true);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.years = [];
+            this.yearData = createEmptyBillYearData(this.selectedYear);
+            this.errorMessage = buildBillSummaryError(error, "月账单年份加载失败，请稍后重试。");
+            this.$message.error(this.errorMessage);
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.isLoading = false;
+          }.bind(this)
+        );
+    },
+    loadYearData(year, silent) {
+      var requestKey = Date.now();
+
+      this.activeYearRequestKey = requestKey;
+      this.isLoading = true;
+      this.errorMessage = "";
+
+      return getUserBillYear(year)
+        .then(
+          function(result) {
+            if (this.activeYearRequestKey !== requestKey) {
+              return;
+            }
+
+            this.yearData = normalizeBillYearPayload(result, year);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            if (this.activeYearRequestKey !== requestKey) {
+              return;
+            }
+
+            this.yearData = createEmptyBillYearData(year);
+            this.errorMessage = buildBillSummaryError(error, year + " 年账单加载失败，请稍后重试。");
+
+            if (!silent) {
+              this.$message.error(this.errorMessage);
+            }
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            if (this.activeYearRequestKey === requestKey) {
+              this.isLoading = false;
+            }
+          }.bind(this)
+        );
+    },
     prevYear() {
       var index = this.years.indexOf(this.selectedYear);
 
-      if (index > 0) {
-        this.selectedYear = this.years[index - 1];
+      if (index < this.years.length - 1) {
+        this.selectedYear = this.years[index + 1];
+        this.loadYearData(this.selectedYear);
       }
     },
     nextYear() {
       var index = this.years.indexOf(this.selectedYear);
 
-      if (index < this.years.length - 1) {
-        this.selectedYear = this.years[index + 1];
+      if (index > 0) {
+        this.selectedYear = this.years[index - 1];
+        this.loadYearData(this.selectedYear);
       }
     },
     openMonth(monthKey) {
       this.$router.push("/user/bills/month/" + monthKey);
     },
     openLatestMonth() {
+      if (!this.latestMonth.key) {
+        this.$message.info("当前年份暂无可进入的月账单。");
+        return;
+      }
+
       this.openMonth(this.latestMonth.key);
     },
     openYearlyBill() {
       this.$router.push("/user/bills/year");
+    },
+    retryCurrentYear() {
+      if (!this.years.length) {
+        this.bootstrap();
+        return;
+      }
+
+      this.loadYearData(this.selectedYear);
     }
   }
 };
 </script>
 
 <style scoped>
+.finance-inline-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(239, 68, 68, 0.18);
+  background: rgba(255, 244, 244, 0.92);
+  color: #9f2f2f;
+}
+
+.finance-inline-notice button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .bills-list-page__switcher-note {
   margin: 8px 0 0;
   color: var(--text-subtle);
@@ -176,6 +315,23 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.bills-empty {
+  padding: 28px 24px;
+  border-radius: 24px;
+  border: 1px dashed var(--border-color);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.bills-empty strong {
+  display: block;
+  font-size: 18px;
+}
+
+.bills-empty p {
+  margin: 10px 0 0;
+  color: var(--text-subtle);
 }
 
 .bill-row {
