@@ -5,6 +5,8 @@ const { VueLoaderPlugin } = require("vue-loader");
 
 module.exports = (_, argv) => {
   const isProduction = argv.mode === "production";
+  const rawPublicBase = process.env.BILL_PUBLIC_BASE || "/";
+  const normalizedPublicBase = rawPublicBase.endsWith("/") ? rawPublicBase : `${rawPublicBase}/`;
 
   return {
     entry: path.resolve(__dirname, "src/main.js"),
@@ -13,7 +15,7 @@ module.exports = (_, argv) => {
       filename: isProduction ? "js/[name].[contenthash:8].js" : "js/[name].js",
       chunkFilename: isProduction ? "js/[name].[contenthash:8].chunk.js" : "js/[name].chunk.js",
       clean: true,
-      publicPath: "/"
+      publicPath: normalizedPublicBase
     },
     resolve: {
       extensions: [".js", ".vue", ".json"],
@@ -56,6 +58,7 @@ module.exports = (_, argv) => {
     },
     plugins: [
       new webpack.DefinePlugin({
+        __APP_BASE_PATH__: JSON.stringify(normalizedPublicBase),
         __VUE_OPTIONS_API__: JSON.stringify(true),
         __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false)

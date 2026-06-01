@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	_ "time/tzdata"
 
 	"billsoftware/backend/internal/config"
 	"billsoftware/backend/internal/database"
@@ -9,7 +11,12 @@ import (
 )
 
 func main() {
-	cfg, err := config.LoadConfig("configs/app.yaml")
+	configPath := os.Getenv("BILL_CONFIG_PATH")
+	if configPath == "" {
+		configPath = "configs/app.yaml"
+	}
+
+	cfg, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatalf("load config failed: %v", err)
 	}
@@ -30,4 +37,3 @@ func main() {
 		log.Fatalf("start http server failed: %v", err)
 	}
 }
-

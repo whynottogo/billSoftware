@@ -1,0 +1,51 @@
+services:
+  bill-gateway:
+    image: nginx:1.29.1
+    container_name: bill-gateway
+    depends_on:
+      - bill-frontend
+      - bill-backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    networks:
+      - bill-app-net
+    restart: unless-stopped
+
+  bill-frontend:
+    image: nginx:1.29.1
+    container_name: bill-frontend
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./frontend/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - bill-app-net
+    restart: unless-stopped
+
+  bill-backend:
+    build:
+      context: ./backend/app
+      dockerfile: Dockerfile
+    container_name: bill-backend
+    env_file:
+      - path: ./backend/.env.example
+        required: true
+      - path: ./backend/.env
+        required: false
+    environment:
+      BILL_CONFIG_PATH: /app/configs/app.yaml
+    volumes:
+      - ./backend/configs/app.yaml:/app/configs/app.yaml:ro
+    networks:
+      - bill-app-net
+      - docker-net
+    restart: unless-stopped
+
+networks:
+  bill-app-net:
+    name: bill-app-net
+  docker-net:
+    external: true

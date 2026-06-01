@@ -1,4 +1,5 @@
 import axios from "axios";
+import { stripAppBase, withAppBase } from "@/utils/appBase";
 
 const request = axios.create({
   baseURL: "/api",
@@ -22,16 +23,16 @@ request.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error && error.response && error.response.status === 401) {
-      const currentPath = window.location.pathname;
+      const currentPath = stripAppBase(window.location.pathname);
 
       if (currentPath.startsWith("/admin")) {
         localStorage.removeItem("bill_admin_token");
-        window.location.href = "/admin/login";
+        window.location.href = withAppBase("/admin/login");
       } else {
         localStorage.removeItem("bill_user_token");
         localStorage.removeItem("bill_user_profile");
         window.alert("账号已在其他地方登录，请重新登录。");
-        window.location.href = "/user/login";
+        window.location.href = withAppBase("/user/login");
       }
     }
 
@@ -40,4 +41,3 @@ request.interceptors.response.use(
 );
 
 export default request;
-
