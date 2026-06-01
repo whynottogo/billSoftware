@@ -761,6 +761,36 @@ Notes:
 
 默认收入分类和默认支出分类必须按本文件口径写入，不能继续沿用原始写反版本。
 
+### USER-LEDGER-005 收支图片上传与预览
+
+```yaml
+req_id: USER-LEDGER-005
+side: user
+module: 当月收支
+status: 已完成
+owner_ai: Codex
+dependencies: ["USER-LEDGER-002", "USER-LEDGER-003", "SYS-DATA-001"]
+```
+
+Detail:
+
+实现收支记录图片上传、缩略图生成、MinIO 存储、列表缩略图展示与原图预览。
+
+Acceptance Criteria:
+
+1. 只允许上传 jpeg、png、webp 图片，不允许上传 GIF 或非图片文件。
+2. 单张图片大小不超过 5MB。
+3. 后端生成原图和 160x160 缩略图，并上传到 MinIO 私有桶。
+4. 数据库保存文件元信息和 MinIO object key，不保存永久公开 URL。
+5. 收支列表接口返回 5 分钟有效期的缩略图预签名 URL。
+6. 前端列表展示缩略图，点击缩略图可预览 5 分钟有效期的原图预签名 URL。
+7. 每条收入或支出记录最多关联 1 张图片，图片为可选字段。
+8. 删除收支记录时，物理删除关联 MinIO 对象并删除文件记录。
+
+Notes:
+
+使用独立文件上传表保存文件元信息，收支记录表仅保存文件上传表 id。
+
 ### USER-BILL-001 月账单列表
 
 ```yaml

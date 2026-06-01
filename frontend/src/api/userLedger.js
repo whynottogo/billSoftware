@@ -12,6 +12,17 @@ export function createUserLedger(payload) {
   return request.post("/user/ledger", payload);
 }
 
+export function uploadUserLedgerImage(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return request.post("/user/files", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+}
+
 export function listUserCategories(type) {
   return request.get("/user/categories", {
     params: {

@@ -63,7 +63,13 @@
                   <span>{{ item.time }}</span>
                 </div>
                 <p>{{ item.note }}</p>
-                <small v-if="item.imageName" class="ledger-item__media">图片：{{ item.imageName }}</small>
+                <div v-if="item.image && item.image.thumbnailUrl" class="ledger-item__image">
+                  <button type="button" class="ledger-item__thumb-button" @click.stop="previewLedgerImage(item)">
+                    <img :src="item.image.thumbnailUrl" :alt="item.image.originalName || '收支凭证'" />
+                  </button>
+                  <small>{{ item.image.originalName }}</small>
+                </div>
+                <small v-else-if="item.imageName" class="ledger-item__media">图片：{{ item.imageName }}</small>
               </div>
               <strong :class="['ledger-item__amount', item.type === 'income' ? 'is-income' : 'is-expense']">
                 {{ signedMoney(item.amount, item.type) }}
@@ -152,10 +158,25 @@
 
       <label class="ledger-entry-form__field">
         <span>图片（可选，最多 1 张）</span>
-        <input class="ledger-entry-form__file" type="file" accept="image/*" @change="onImageChange" />
+        <div v-if="!entryForm.imagePreviewUrl" class="ledger-entry-form__upload" @click="triggerImageSelect">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="ledger-entry-form__upload-icon">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <span class="ledger-entry-form__upload-text">点击选择图片</span>
+          <span class="ledger-entry-form__upload-hint">支持 JPG、PNG、WEBP，不超过 5MB</span>
+        </div>
+        <div v-else class="ledger-entry-form__preview">
+          <img :src="entryForm.imagePreviewUrl" :alt="entryForm.imageName" />
+          <div class="ledger-entry-form__preview-meta">
+            <strong>{{ entryForm.imageName }}</strong>
+            <span>{{ entryForm.imageUploaded ? '图片已上传' : '保存时将自动上传' }}</span>
+          </div>
+          <button type="button" class="ledger-entry-form__preview-remove" @click="clearEntryImage">移除</button>
+        </div>
+        <input ref="imageFileInput" class="ledger-entry-form__file-input" type="file" accept="image/jpeg,image/png,image/webp" @change="onImageChange" />
       </label>
-
-      <p v-if="entryForm.imageName" class="ledger-entry-form__image-name">已选择：{{ entryForm.imageName }}</p>
 
       <footer class="ledger-entry-form__footer">
         <button class="ledger-entry-form__button ledger-entry-form__button--ghost" type="button" @click="entryDialogVisible = false">
@@ -164,6 +185,13 @@
         <button class="ledger-entry-form__button ledger-entry-form__button--primary" type="submit">保存</button>
       </footer>
     </form>
+  </el-dialog>
+
+  <el-dialog v-model="imagePreviewVisible" title="图片预览" width="720px" destroy-on-close>
+    <div class="ledger-image-preview">
+      <img v-if="previewImage.url" :src="previewImage.url" :alt="previewImage.name || '收支凭证'" />
+      <p>{{ previewImage.name }}</p>
+    </div>
   </el-dialog>
 
   <el-dialog v-model="categoryDialogVisible" title="分类管理" width="640px" destroy-on-close>
@@ -214,8 +242,12 @@ import {
   createUserLedger,
   deleteUserCategory,
   getUserLedger,
-  listUserCategories
+  listUserCategories,
+  uploadUserLedgerImage
 } from "@/api/userLedger";
+
+const ALLOWED_LEDGER_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_LEDGER_IMAGE_SIZE = 5 * 1024 * 1024;
 
 function pad(value) {
   return String(value).padStart(2, "0");
@@ -330,7 +362,8 @@ function normalizeLedgerMonth(result, fallbackMonthKey) {
             note: item.note || "",
             amount: normalizeAmount(item.amount),
             type: item.type === "income" ? "income" : "expense",
-            imageName: item.imageName || ""
+            imageName: item.imageName || "",
+            image: normalizeLedgerImage(item.image)
           };
         })
       };
@@ -349,6 +382,23 @@ function normalizeLedgerMonth(result, fallbackMonthKey) {
         progress: Number(item.progress || 0)
       };
     })
+  };
+}
+
+function normalizeLedgerImage(image) {
+  if (!image || !image.thumbnailUrl) {
+    return null;
+  }
+
+  return {
+    fileId: image.fileId,
+    originalName: image.originalName || "收支凭证",
+    mimeType: image.mimeType || "",
+    sizeBytes: Number(image.sizeBytes || 0),
+    width: Number(image.width || 0),
+    height: Number(image.height || 0),
+    thumbnailUrl: image.thumbnailUrl || "",
+    originalUrl: image.originalUrl || ""
   };
 }
 
@@ -395,7 +445,16 @@ export default {
         amount: null,
         note: "",
         date: getTodayDate(),
-        imageName: ""
+        imageName: "",
+        imageFile: null,
+        imageFileId: null,
+        imagePreviewUrl: "",
+        imageUploaded: false
+      },
+      imagePreviewVisible: false,
+      previewImage: {
+        url: "",
+        name: ""
       },
       categoryDraft: {
         expense: {
@@ -561,16 +620,86 @@ export default {
       this.entryForm.amount = null;
       this.entryForm.note = "";
       this.entryForm.date = getTodayDate();
-      this.entryForm.imageName = "";
+      this.clearEntryImage();
       this.ensureCategorySelection();
       this.entryDialogVisible = true;
     },
     openCategoryManager() {
       this.categoryDialogVisible = true;
     },
+    triggerImageSelect() {
+      if (this.$refs.imageFileInput) {
+        this.$refs.imageFileInput.value = "";
+        this.$refs.imageFileInput.click();
+      }
+    },
     onImageChange(event) {
       var file = event.target && event.target.files ? event.target.files[0] : null;
-      this.entryForm.imageName = file ? file.name : "";
+      if (!file) {
+        this.clearEntryImage();
+        return;
+      }
+
+      if (ALLOWED_LEDGER_IMAGE_TYPES.indexOf(file.type) === -1) {
+        this.$message.warning("仅支持 JPG、PNG、WEBP 图片");
+        event.target.value = "";
+        this.clearEntryImage();
+        return;
+      }
+
+      if (file.size > MAX_LEDGER_IMAGE_SIZE) {
+        this.$message.warning("图片大小不能超过 5MB");
+        event.target.value = "";
+        this.clearEntryImage();
+        return;
+      }
+
+      if (this.entryForm.imagePreviewUrl) {
+        URL.revokeObjectURL(this.entryForm.imagePreviewUrl);
+      }
+
+      this.entryForm.imageFile = file;
+      this.entryForm.imageFileId = null;
+      this.entryForm.imageName = file.name;
+      this.entryForm.imagePreviewUrl = URL.createObjectURL(file);
+      this.entryForm.imageUploaded = false;
+    },
+    clearEntryImage() {
+      if (this.entryForm.imagePreviewUrl) {
+        URL.revokeObjectURL(this.entryForm.imagePreviewUrl);
+      }
+      if (this.$refs.imageFileInput) {
+        this.$refs.imageFileInput.value = "";
+      }
+      this.entryForm.imageFile = null;
+      this.entryForm.imageFileId = null;
+      this.entryForm.imageName = "";
+      this.entryForm.imagePreviewUrl = "";
+      this.entryForm.imageUploaded = false;
+    },
+    ensureEntryImageUploaded() {
+      if (!this.entryForm.imageFile || this.entryForm.imageFileId) {
+        return Promise.resolve(this.entryForm.imageFileId);
+      }
+
+      return uploadUserLedgerImage(this.entryForm.imageFile).then(
+        function(result) {
+          var payload = extractPayload(result);
+          this.entryForm.imageFileId = payload.fileId || null;
+          this.entryForm.imageUploaded = Boolean(payload.fileId);
+          return this.entryForm.imageFileId;
+        }.bind(this)
+      );
+    },
+    previewLedgerImage(item) {
+      if (!item.image || !item.image.originalUrl) {
+        return;
+      }
+      this.previewImage = {
+        url: item.image.originalUrl,
+        name: item.image.originalName || "收支凭证"
+      };
+      this.imagePreviewVisible = true;
     },
     submitEntry() {
       if (!this.entryForm.categoryId) {
@@ -583,20 +712,26 @@ export default {
         return;
       }
 
-      createUserLedger({
-        type: this.entryForm.type,
-        category_id: Number(this.entryForm.categoryId),
-        amount: Number(this.entryForm.amount),
-        remark: this.entryForm.note,
-        record_date: this.entryForm.date,
-        image_url: this.entryForm.imageName
-      })
+      this.ensureEntryImageUploaded()
+        .then(
+          function(imageFileId) {
+            return createUserLedger({
+              type: this.entryForm.type,
+              category_id: Number(this.entryForm.categoryId),
+              amount: Number(this.entryForm.amount),
+              remark: this.entryForm.note,
+              record_date: this.entryForm.date,
+              image_file_id: imageFileId || null
+            });
+          }.bind(this)
+        )
         .then(
           function(result) {
             var payload = extractPayload(result);
             var monthKey = payload.month || String(this.entryForm.date || "").slice(0, 7) || getCurrentMonthKey();
 
             this.entryDialogVisible = false;
+            this.clearEntryImage();
             this.refreshLedger(monthKey);
             this.$message.success(this.entryDialogTitle + "已保存并回显到列表。");
           }.bind(this)
@@ -878,6 +1013,40 @@ export default {
   font-size: 12px;
 }
 
+.ledger-item__image {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ledger-item__image small {
+  max-width: 180px;
+  color: #a16207;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ledger-item__thumb-button {
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 2px solid #ffffff;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.ledger-item__thumb-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .ledger-item__amount {
   font-size: 18px;
 }
@@ -1016,8 +1185,7 @@ export default {
 }
 
 .ledger-entry-form__date,
-.ledger-entry-form__number,
-.ledger-entry-form__file {
+.ledger-entry-form__number {
   min-height: 40px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
@@ -1025,10 +1193,126 @@ export default {
   background: #fff;
 }
 
-.ledger-entry-form__image-name {
-  margin: -4px 0 0;
-  color: #a16207;
+.ledger-entry-form__file-input {
+  display: none;
+}
+
+.ledger-entry-form__upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 120px;
+  border: 2px dashed var(--border-color);
+  border-radius: 12px;
+  background: rgba(249, 250, 251, 0.8);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.ledger-entry-form__upload:hover {
+  border-color: var(--brand-color);
+  background: rgba(99, 102, 241, 0.04);
+}
+
+.ledger-entry-form__upload-icon {
+  width: 32px;
+  height: 32px;
+  color: var(--text-muted);
+}
+
+.ledger-entry-form__upload:hover .ledger-entry-form__upload-icon {
+  color: var(--brand-color);
+}
+
+.ledger-entry-form__upload-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.ledger-entry-form__upload-hint {
   font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ledger-entry-form__preview {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(249, 250, 251, 0.9);
+  border: 1px solid var(--border-color);
+}
+
+.ledger-entry-form__preview img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #ffffff;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+}
+
+.ledger-entry-form__preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ledger-entry-form__preview-meta strong {
+  font-size: 14px;
+  color: var(--text-main);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ledger-entry-form__preview-meta span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.ledger-entry-form__preview-remove {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.06);
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ledger-entry-form__preview-remove:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.ledger-image-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.ledger-image-preview img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 18px;
+  object-fit: contain;
+  background: #0f172a;
+}
+
+.ledger-image-preview p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 13px;
 }
 
 .ledger-entry-form__footer {

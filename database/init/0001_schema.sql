@@ -59,6 +59,27 @@ CREATE TABLE IF NOT EXISTS `user_categories` (
   CONSTRAINT `fk_user_categories_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `file_uploads` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `biz_type` VARCHAR(32) NOT NULL COMMENT 'ledger_image|avatar|other',
+  `original_name` VARCHAR(255) NOT NULL,
+  `mime_type` VARCHAR(100) NOT NULL,
+  `size_bytes` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `original_object_key` VARCHAR(500) NOT NULL,
+  `thumbnail_object_key` VARCHAR(500) DEFAULT NULL,
+  `width` INT DEFAULT NULL,
+  `height` INT DEFAULT NULL,
+  `status` VARCHAR(32) NOT NULL DEFAULT 'uploaded' COMMENT 'uploaded|bound|deleted',
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_file_uploads_user_id` (`user_id`),
+  KEY `idx_file_uploads_biz_type` (`biz_type`),
+  KEY `idx_file_uploads_status` (`status`),
+  CONSTRAINT `fk_file_uploads_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS `ledger_records` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` BIGINT UNSIGNED NOT NULL,
@@ -67,15 +88,17 @@ CREATE TABLE IF NOT EXISTS `ledger_records` (
   `amount` DECIMAL(18, 2) NOT NULL DEFAULT 0.00,
   `remark` VARCHAR(255) DEFAULT NULL,
   `record_date` DATE NOT NULL,
-  `image_url` VARCHAR(500) DEFAULT NULL,
+  `image_file_id` BIGINT UNSIGNED DEFAULT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_ledger_records_user_date` (`user_id`, `record_date`),
   KEY `idx_ledger_records_user_type_date` (`user_id`, `record_type`, `record_date`),
   KEY `idx_ledger_records_category_id` (`category_id`),
+  KEY `idx_ledger_records_image_file_id` (`image_file_id`),
   CONSTRAINT `fk_ledger_records_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_ledger_records_category_id` FOREIGN KEY (`category_id`) REFERENCES `user_categories` (`id`) ON DELETE SET NULL
+  CONSTRAINT `fk_ledger_records_category_id` FOREIGN KEY (`category_id`) REFERENCES `user_categories` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_ledger_records_image_file_id` FOREIGN KEY (`image_file_id`) REFERENCES `file_uploads` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `budgets` (
@@ -164,4 +187,3 @@ CREATE TABLE IF NOT EXISTS `family_members` (
   CONSTRAINT `fk_family_members_family_id` FOREIGN KEY (`family_id`) REFERENCES `families` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_family_members_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-

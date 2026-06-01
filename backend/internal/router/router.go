@@ -7,9 +7,10 @@ import (
 	"billsoftware/backend/internal/config"
 	"billsoftware/backend/internal/handler"
 	"billsoftware/backend/internal/middleware"
+	"billsoftware/backend/internal/storage"
 )
 
-func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
+func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine, objectStorage *storage.ObjectStorage) *gin.Engine {
 	gin.SetMode(cfg.Server.Mode)
 
 	httpRouter := gin.New()
@@ -20,7 +21,8 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	userAuthHandler := handler.NewUserAuthHandler(engine)
 	adminAuthHandler := handler.NewAdminAuthHandler()
 	userHandler := handler.NewUserHandler(engine)
-	userLedgerHandler := handler.NewUserLedgerHandler(engine)
+	userFileHandler := handler.NewUserFileHandler(engine, objectStorage, cfg.MinIO)
+	userLedgerHandler := handler.NewUserLedgerHandler(engine, objectStorage)
 	userBillHandler := handler.NewUserBillHandler(engine)
 	userBudgetHandler := handler.NewUserBudgetHandler(engine)
 	userChartHandler := handler.NewUserChartHandler(engine)
@@ -55,6 +57,8 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine) *gin.Engine {
 	protectedUserGroup.Use(middleware.UserAuthRequired(engine))
 	protectedUserGroup.GET("/ledger", userLedgerHandler.GetLedger)
 	protectedUserGroup.POST("/ledger", userLedgerHandler.CreateLedger)
+	protectedUserGroup.DELETE("/ledger/:id", userLedgerHandler.DeleteLedger)
+	protectedUserGroup.POST("/files", userFileHandler.Upload)
 	protectedUserGroup.GET("/categories", userLedgerHandler.ListCategories)
 	protectedUserGroup.POST("/categories", userLedgerHandler.CreateCategory)
 	protectedUserGroup.DELETE("/categories/:id", userLedgerHandler.DeleteCategory)

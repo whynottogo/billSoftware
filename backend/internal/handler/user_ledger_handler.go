@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"math"
@@ -10,12 +11,13 @@ import (
 	"strings"
 	"time"
 
-	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/gin-gonic/gin"
+	mysqlDriver "github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
 
 	"billsoftware/backend/internal/model"
 	"billsoftware/backend/internal/response"
+	"billsoftware/backend/internal/storage"
 )
 
 const (
@@ -24,17 +26,18 @@ const (
 )
 
 type UserLedgerHandler struct {
-	engine *xorm.Engine
+	engine  *xorm.Engine
+	storage *storage.ObjectStorage
 }
 
 type createLedgerRequest struct {
-	Type       string  `json:"type"`
-	CategoryID uint64  `json:"category_id"`
-	Amount     float64 `json:"amount"`
-	Remark     string  `json:"remark"`
-	Note       string  `json:"note"`
-	RecordDate string  `json:"record_date"`
-	ImageURL   string  `json:"image_url"`
+	Type        string  `json:"type"`
+	CategoryID  uint64  `json:"category_id"`
+	Amount      float64 `json:"amount"`
+	Remark      string  `json:"remark"`
+	Note        string  `json:"note"`
+	RecordDate  string  `json:"record_date"`
+	ImageFileID *uint64 `json:"image_file_id"`
 }
 
 type createCategoryRequest struct {
@@ -44,14 +47,32 @@ type createCategoryRequest struct {
 }
 
 type ledgerRecordRow struct {
-	ID           uint64    `xorm:"id"`
-	RecordType   string    `xorm:"record_type"`
-	Amount       float64   `xorm:"amount"`
-	Remark       string    `xorm:"remark"`
-	RecordDate   time.Time `xorm:"record_date"`
-	ImageURL     string    `xorm:"image_url"`
-	CreatedAt    time.Time `xorm:"created_at"`
-	CategoryName string    `xorm:"category_name"`
+	ID                      uint64    `xorm:"id"`
+	RecordType              string    `xorm:"record_type"`
+	Amount                  float64   `xorm:"amount"`
+	Remark                  string    `xorm:"remark"`
+	RecordDate              time.Time `xorm:"record_date"`
+	ImageFileID             uint64    `xorm:"image_file_id"`
+	CreatedAt               time.Time `xorm:"created_at"`
+	CategoryName            string    `xorm:"category_name"`
+	ImageOriginalName       string    `xorm:"image_original_name"`
+	ImageMimeType           string    `xorm:"image_mime_type"`
+	ImageSizeBytes          uint64    `xorm:"image_size_bytes"`
+	ImageOriginalObjectKey  string    `xorm:"image_original_object_key"`
+	ImageThumbnailObjectKey string    `xorm:"image_thumbnail_object_key"`
+	ImageWidth              int       `xorm:"image_width"`
+	ImageHeight             int       `xorm:"image_height"`
+}
+
+type ledgerImagePayload struct {
+	FileID       uint64 `json:"fileId"`
+	OriginalName string `json:"originalName"`
+	MimeType     string `json:"mimeType"`
+	SizeBytes    uint64 `json:"sizeBytes"`
+	Width        int    `json:"width"`
+	Height       int    `json:"height"`
+	ThumbnailURL string `json:"thumbnailUrl"`
+	OriginalURL  string `json:"originalUrl"`
 }
 
 type categoryListItem struct {
@@ -69,21 +90,22 @@ type monthSummary struct {
 }
 
 type monthLedgerItem struct {
-	ID        uint64  `json:"id"`
-	Badge     string  `json:"badge"`
-	Category  string  `json:"category"`
-	Time      string  `json:"time"`
-	Note      string  `json:"note"`
-	Amount    float64 `json:"amount"`
-	Type      string  `json:"type"`
-	ImageName string  `json:"imageName"`
+	ID        uint64              `json:"id"`
+	Badge     string              `json:"badge"`
+	Category  string              `json:"category"`
+	Time      string              `json:"time"`
+	Note      string              `json:"note"`
+	Amount    float64             `json:"amount"`
+	Type      string              `json:"type"`
+	ImageName string              `json:"imageName"`
+	Image     *ledgerImagePayload `json:"image,omitempty"`
 }
 
 type monthLedgerGroup struct {
-	Date         string           `json:"date"`
-	Weekday      string           `json:"weekday"`
-	TotalIncome  float64          `json:"totalIncome"`
-	TotalExpense float64          `json:"totalExpense"`
+	Date         string            `json:"date"`
+	Weekday      string            `json:"weekday"`
+	TotalIncome  float64           `json:"totalIncome"`
+	TotalExpense float64           `json:"totalExpense"`
 	Items        []monthLedgerItem `json:"items"`
 }
 
@@ -99,8 +121,8 @@ type monthOverview struct {
 	Progress int    `json:"progress"`
 }
 
-func NewUserLedgerHandler(engine *xorm.Engine) *UserLedgerHandler {
-	return &UserLedgerHandler{engine: engine}
+func NewUserLedgerHandler(engine *xorm.Engine, objectStorage *storage.ObjectStorage) *UserLedgerHandler {
+	return &UserLedgerHandler{engine: engine, storage: objectStorage}
 }
 
 func (h *UserLedgerHandler) GetLedger(c *gin.Context) {
@@ -124,11 +146,19 @@ func (h *UserLedgerHandler) GetLedger(c *gin.Context) {
 			lr.amount,
 			lr.remark,
 			lr.record_date,
-			lr.image_url,
+			COALESCE(lr.image_file_id, 0) AS image_file_id,
 			lr.created_at,
-			COALESCE(uc.name, '') AS category_name
+			COALESCE(uc.name, '') AS category_name,
+			COALESCE(fu.original_name, '') AS image_original_name,
+			COALESCE(fu.mime_type, '') AS image_mime_type,
+			COALESCE(fu.size_bytes, 0) AS image_size_bytes,
+			COALESCE(fu.original_object_key, '') AS image_original_object_key,
+			COALESCE(fu.thumbnail_object_key, '') AS image_thumbnail_object_key,
+			COALESCE(fu.width, 0) AS image_width,
+			COALESCE(fu.height, 0) AS image_height
 		FROM ledger_records lr
 		LEFT JOIN user_categories uc ON uc.id = lr.category_id AND uc.user_id = lr.user_id
+		LEFT JOIN file_uploads fu ON fu.id = lr.image_file_id AND fu.user_id = lr.user_id
 		WHERE lr.user_id = ? AND lr.record_date >= ? AND lr.record_date < ?
 		ORDER BY lr.record_date DESC, lr.created_at DESC, lr.id DESC
 	`, userID, monthStart.Format("2006-01-02"), monthEnd.Format("2006-01-02")).Find(&rows); err != nil {
@@ -142,7 +172,13 @@ func (h *UserLedgerHandler) GetLedger(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, buildMonthLedgerResponse(monthKey, rows, categories))
+	payload, err := h.buildMonthLedgerResponse(c.Request.Context(), monthKey, rows, categories)
+	if err != nil {
+		response.Fail(c, http.StatusInternalServerError, "build ledger image urls failed")
+		return
+	}
+
+	response.Success(c, payload)
 }
 
 func (h *UserLedgerHandler) CreateLedger(c *gin.Context) {
@@ -200,25 +236,116 @@ func (h *UserLedgerHandler) CreateLedger(c *gin.Context) {
 		remark = strings.TrimSpace(req.Note)
 	}
 
+	var imageFileID *uint64
+	if req.ImageFileID != nil && *req.ImageFileID > 0 {
+		file := &model.FileUpload{}
+		has, err := h.engine.Where("id = ? AND user_id = ? AND biz_type = ? AND status = ?", *req.ImageFileID, userID, model.FileBizTypeLedgerImage, model.FileStatusUploaded).Get(file)
+		if err != nil {
+			response.Fail(c, http.StatusInternalServerError, "query uploaded image failed")
+			return
+		}
+		if !has {
+			response.Fail(c, http.StatusBadRequest, "uploaded image does not exist")
+			return
+		}
+		imageFileID = req.ImageFileID
+	}
+
 	ledger := &model.LedgerRecord{
-		UserID:     userID,
-		RecordType: recordType,
-		CategoryID: req.CategoryID,
-		Amount:     round2(req.Amount),
-		Remark:     remark,
-		RecordDate: recordDate,
-		ImageURL:   strings.TrimSpace(req.ImageURL),
+		UserID:      userID,
+		RecordType:  recordType,
+		CategoryID:  req.CategoryID,
+		Amount:      round2(req.Amount),
+		Remark:      remark,
+		RecordDate:  recordDate,
+		ImageFileID: imageFileID,
 	}
 
 	if _, err := h.engine.Insert(ledger); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "create ledger record failed")
 		return
 	}
+	if imageFileID != nil {
+		if _, err := h.engine.ID(*imageFileID).Cols("status").Update(&model.FileUpload{Status: model.FileStatusBound}); err != nil {
+			response.Fail(c, http.StatusInternalServerError, "bind uploaded image failed")
+			return
+		}
+	}
 
 	response.Success(c, gin.H{
 		"record_id": ledger.ID,
 		"month":     recordDate.Format("2006-01"),
 	})
+}
+
+func (h *UserLedgerHandler) DeleteLedger(c *gin.Context) {
+	userID, ok := currentUserID(c)
+	if !ok {
+		response.Fail(c, http.StatusUnauthorized, "user context is invalid")
+		return
+	}
+
+	recordID, err := strconv.ParseUint(strings.TrimSpace(c.Param("id")), 10, 64)
+	if err != nil || recordID == 0 {
+		response.Fail(c, http.StatusBadRequest, "ledger id is invalid")
+		return
+	}
+
+	ledger := &model.LedgerRecord{}
+	has, err := h.engine.Where("id = ? AND user_id = ?", recordID, userID).Get(ledger)
+	if err != nil {
+		response.Fail(c, http.StatusInternalServerError, "query ledger record failed")
+		return
+	}
+	if !has {
+		response.Fail(c, http.StatusNotFound, "ledger record not found")
+		return
+	}
+
+	var upload *model.FileUpload
+	if ledger.ImageFileID != nil && *ledger.ImageFileID > 0 {
+		file := &model.FileUpload{}
+		fileHas, err := h.engine.Where("id = ? AND user_id = ?", *ledger.ImageFileID, userID).Get(file)
+		if err != nil {
+			response.Fail(c, http.StatusInternalServerError, "query ledger image failed")
+			return
+		}
+		if fileHas {
+			upload = file
+		}
+	}
+
+	if upload != nil {
+		if err := h.storage.Delete(c.Request.Context(), upload.OriginalObjectKey, upload.ThumbnailObjectKey); err != nil {
+			response.Fail(c, http.StatusInternalServerError, "delete ledger image objects failed")
+			return
+		}
+	}
+
+	session := h.engine.NewSession()
+	defer session.Close()
+	if err := session.Begin(); err != nil {
+		response.Fail(c, http.StatusInternalServerError, "begin delete ledger failed")
+		return
+	}
+	if _, err := session.ID(recordID).Delete(&model.LedgerRecord{}); err != nil {
+		_ = session.Rollback()
+		response.Fail(c, http.StatusInternalServerError, "delete ledger record failed")
+		return
+	}
+	if upload != nil {
+		if _, err := session.ID(upload.ID).Delete(&model.FileUpload{}); err != nil {
+			_ = session.Rollback()
+			response.Fail(c, http.StatusInternalServerError, "delete image metadata failed")
+			return
+		}
+	}
+	if err := session.Commit(); err != nil {
+		response.Fail(c, http.StatusInternalServerError, "commit delete ledger failed")
+		return
+	}
+
+	response.Success(c, gin.H{"deleted": true})
 }
 
 func (h *UserLedgerHandler) ListCategories(c *gin.Context) {
@@ -395,7 +522,7 @@ func (h *UserLedgerHandler) loadUserCategories(userID uint64, recordType string)
 	return categories, nil
 }
 
-func buildMonthLedgerResponse(monthKey string, rows []ledgerRecordRow, allCategories []model.UserCategory) gin.H {
+func (h *UserLedgerHandler) buildMonthLedgerResponse(ctx context.Context, monthKey string, rows []ledgerRecordRow, allCategories []model.UserCategory) (gin.H, error) {
 	summary := monthSummary{
 		Income:  0,
 		Expense: 0,
@@ -456,6 +583,16 @@ func buildMonthLedgerResponse(monthKey string, rows []ledgerRecordRow, allCatego
 			timeText = row.CreatedAt.Format("15:04")
 		}
 
+		imagePayload, err := h.buildLedgerImagePayload(ctx, row)
+		if err != nil {
+			return nil, err
+		}
+
+		imageName := ""
+		if imagePayload != nil {
+			imageName = imagePayload.OriginalName
+		}
+
 		group.Items = append(group.Items, monthLedgerItem{
 			ID:        row.ID,
 			Badge:     badge,
@@ -464,7 +601,8 @@ func buildMonthLedgerResponse(monthKey string, rows []ledgerRecordRow, allCatego
 			Note:      note,
 			Amount:    amount,
 			Type:      row.RecordType,
-			ImageName: strings.TrimSpace(row.ImageURL),
+			ImageName: imageName,
+			Image:     imagePayload,
 		})
 
 		if row.RecordType == recordTypeIncome {
@@ -545,7 +683,33 @@ func buildMonthLedgerResponse(monthKey string, rows []ledgerRecordRow, allCatego
 		"groups":     groups,
 		"categories": categoryUsage,
 		"overview":   overview,
+	}, nil
+}
+
+func (h *UserLedgerHandler) buildLedgerImagePayload(ctx context.Context, row ledgerRecordRow) (*ledgerImagePayload, error) {
+	if row.ImageFileID == 0 || strings.TrimSpace(row.ImageOriginalObjectKey) == "" {
+		return nil, nil
 	}
+
+	thumbnailURL, err := h.storage.PresignedGetURL(ctx, row.ImageThumbnailObjectKey)
+	if err != nil {
+		return nil, err
+	}
+	originalURL, err := h.storage.PresignedGetURL(ctx, row.ImageOriginalObjectKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ledgerImagePayload{
+		FileID:       row.ImageFileID,
+		OriginalName: strings.TrimSpace(row.ImageOriginalName),
+		MimeType:     strings.TrimSpace(row.ImageMimeType),
+		SizeBytes:    row.ImageSizeBytes,
+		Width:        row.ImageWidth,
+		Height:       row.ImageHeight,
+		ThumbnailURL: thumbnailURL,
+		OriginalURL:  originalURL,
+	}, nil
 }
 
 func buildMonthOverview(summary monthSummary, recordedDays int, expenseCount int, categories []monthCategoryUsage) []monthOverview {

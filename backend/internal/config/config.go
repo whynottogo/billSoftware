@@ -10,6 +10,7 @@ import (
 type AppConfig struct {
 	Server   ServerConfig   `yaml:"server"`
 	Database DatabaseConfig `yaml:"database"`
+	MinIO    MinIOConfig    `yaml:"minio"`
 }
 
 type ServerConfig struct {
@@ -31,6 +32,17 @@ type DatabaseConfig struct {
 	MaxIdleConns int    `yaml:"max_idle_conns"`
 }
 
+type MinIOConfig struct {
+	Endpoint       string `yaml:"endpoint"`
+	AccessKey      string `yaml:"access_key"`
+	SecretKey      string `yaml:"secret_key"`
+	Bucket         string `yaml:"bucket"`
+	UseSSL         bool   `yaml:"use_ssl"`
+	PresignMinutes int    `yaml:"presign_minutes"`
+	ThumbnailSize  int    `yaml:"thumbnail_size"`
+	MaxUploadMB    int64  `yaml:"max_upload_mb"`
+}
+
 func (s ServerConfig) Address() string {
 	return fmt.Sprintf(":%d", s.Port)
 }
@@ -48,4 +60,3 @@ func LoadConfig(configPath string) (*AppConfig, error) {
 
 	return cfg, nil
 }
-
