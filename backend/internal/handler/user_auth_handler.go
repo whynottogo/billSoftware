@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -142,15 +143,23 @@ func (h *UserAuthHandler) Login(c *gin.Context) {
 		return
 	}
 
+	avatar := strings.TrimSpace(user.AvatarCompressed)
+	if avatar == "" {
+		avatar = strings.TrimSpace(user.AvatarOriginal)
+	}
+
 	response.Success(c, gin.H{
 		"token": token,
 		"profile": gin.H{
-			"id":       user.ID,
-			"username": user.Username,
-			"nickname": user.Nickname,
-			"phone":    user.Phone,
-			"email":    user.Email,
-			"status":   user.Status,
+			"id":              user.ID,
+			"username":        user.Username,
+			"nickname":        user.Nickname,
+			"phone":           user.Phone,
+			"email":           user.Email,
+			"status":          user.Status,
+			"avatar":          avatar,
+			"avatarCompressed": strings.TrimSpace(user.AvatarCompressed),
+			"avatarOriginal":  strings.TrimSpace(user.AvatarOriginal),
 		},
 	})
 }
@@ -168,6 +177,7 @@ func (h *UserAuthHandler) cloneDefaultCategories(userID uint64) error {
 				UserID:       userID,
 				CategoryType: item.CategoryType,
 				Name:         item.Name,
+				Icon:         item.Icon,
 				SortOrder:    item.SortOrder,
 				IsSystem:     1,
 			})

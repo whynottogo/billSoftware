@@ -131,7 +131,7 @@
       <SimpleLineChart
         :labels="monthData.dailyTrend.map(function(item) { return item.label; })"
         :series="trendSeries"
-        :height="280"
+        :height="200"
       />
     </article>
 
@@ -145,7 +145,7 @@
       <SimpleGroupedBarChart
         :labels="monthData.comparison.map(function(item) { return item.label; })"
         :series="comparisonSeries"
-        :height="300"
+        :height="220"
       />
     </article>
 

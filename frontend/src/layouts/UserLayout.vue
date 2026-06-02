@@ -23,8 +23,14 @@
 
       <div class="user-shell__footer">
         <div class="user-shell__session">
-          <p>当前会话</p>
-          <strong>{{ sessionLabel }}</strong>
+          <div class="user-shell__session-header">
+            <img v-if="sessionAvatar" :src="sessionAvatar" alt="用户头像" class="user-shell__session-avatar" />
+            <span v-else class="user-shell__session-initial">{{ sessionInitial }}</span>
+            <div>
+              <p>当前会话</p>
+              <strong>{{ sessionLabel }}</strong>
+            </div>
+          </div>
           <span>用户端与管理端登录态相互隔离</span>
         </div>
         <button class="user-shell__logout" @click="logout">退出登录</button>
@@ -67,18 +73,30 @@ export default {
       return "/user/ledger";
     },
     sessionLabel() {
+      const profile = this.sessionProfile;
+      return profile.account || profile.username || "用户端工作区";
+    },
+    sessionProfile() {
       const rawProfile = localStorage.getItem("bill_user_profile");
 
       if (!rawProfile) {
-        return "用户端工作区";
+        return {};
       }
 
       try {
-        const profile = JSON.parse(rawProfile);
-        return profile.account || profile.username || "用户端工作区";
+        return JSON.parse(rawProfile) || {};
       } catch (error) {
-        return "用户端工作区";
+        return {};
       }
+    },
+    sessionAvatar() {
+      const profile = this.sessionProfile;
+      return profile.avatar || profile.avatarCompressed || "";
+    },
+    sessionInitial() {
+      const profile = this.sessionProfile;
+      const account = (profile.account || profile.username || "").trim();
+      return account ? account.slice(0, 1).toUpperCase() : "U";
     }
   },
   methods: {
@@ -104,12 +122,17 @@ export default {
 
 .user-shell__sidebar {
   width: 248px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
   padding: 24px 18px 20px;
   border-right: 1px solid var(--border-color);
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(18px);
   display: flex;
   flex-direction: column;
+  overflow-y: hidden;
+  flex-shrink: 0;
 }
 
 .user-shell__brand {
@@ -223,6 +246,33 @@ export default {
   font-size: 15px;
 }
 
+.user-shell__session-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-shell__session-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.user-shell__session-initial {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  background: var(--brand-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 14px;
+}
+
 .user-shell__logout {
   min-height: 46px;
   border-radius: 16px;
@@ -236,6 +286,7 @@ export default {
   flex: 1;
   padding: 28px 30px;
   overflow-y: auto;
+  min-width: 0;
 }
 
 @media (max-width: 960px) {

@@ -20,7 +20,7 @@
       <article class="profile-panel page-card">
         <div class="profile-panel__header">
           <h2>头像与基础信息</h2>
-          <span>支持头像占位上传和资料编辑</span>
+          <span>支持头像上传、压缩预览和资料编辑</span>
         </div>
 
         <div class="profile-avatar">
@@ -32,8 +32,8 @@
             <strong>{{ profile.nickname }}</strong>
             <p>账号：{{ profile.account }}</p>
             <div class="profile-avatar__buttons">
-              <button class="finance-button finance-button--ghost" @click="triggerAvatarUpload">上传头像</button>
-              <button class="finance-button finance-button--ghost" @click="resetAvatar">恢复默认</button>
+              <button class="finance-button finance-button--ghost" :disabled="savingProfile" @click="triggerAvatarUpload">上传头像</button>
+              <button class="finance-button finance-button--ghost" :disabled="savingProfile" @click="resetAvatar">恢复默认</button>
             </div>
             <small>{{ avatarHint }}</small>
           </div>
@@ -43,7 +43,7 @@
           ref="avatarInput"
           class="profile-avatar__input"
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp"
           @change="onAvatarChange"
         />
 
@@ -74,23 +74,10 @@
         </div>
 
         <div class="profile-panel__footer">
-          <button class="finance-button finance-button--primary" @click="saveProfile">保存资料</button>
-          <button class="finance-button" @click="restoreProfile">还原本次修改</button>
-        </div>
-      </article>
-
-      <article class="session-panel page-card">
-        <div class="session-panel__header">
-          <h3>会话安全</h3>
-          <p>统一管理主动退出与会话失效提示文案。</p>
-        </div>
-        <div class="session-panel__tip">
-          <strong>统一提示文案</strong>
-          <span>账号已在其他地方登录，请重新登录。</span>
-        </div>
-        <div class="session-panel__actions">
-          <button class="finance-button finance-button--primary" @click="logoutNow">主动退出登录</button>
-          <button class="finance-button" @click="simulateKickout">模拟被挤下线提示</button>
+          <button class="finance-button finance-button--primary" :disabled="savingProfile" @click="saveProfile">
+            {{ savingProfile ? "保存中..." : "保存资料" }}
+          </button>
+          <button class="finance-button" :disabled="savingProfile" @click="restoreProfile">还原本次修改</button>
         </div>
       </article>
     </section>
@@ -100,12 +87,14 @@
 <script>
 import {
   buildUserProfileError,
-  clearUserSession,
   getUserProfile,
   normalizeUserProfilePayload,
   persistUserSessionProfile,
   updateUserProfile
 } from "@/api/userProfile";
+
+const MAX_COMPRESSED_AVATAR_BYTES = 2 * 1024 * 1024;
+const ALLOWED_AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 function cloneProfile(profile) {
   return Object.assign({}, profile || {});
@@ -163,13 +152,21 @@ function canvasToDataUrl(canvas, quality) {
   return canvas.toDataURL("image/jpeg", quality);
 }
 
+function isAllowedAvatar(file) {
+  return ALLOWED_AVATAR_TYPES.indexOf(file.type) !== -1;
+}
+
 function buildAvatarPayload(file) {
+  if (!isAllowedAvatar(file)) {
+    return Promise.reject(new Error("仅支持 JPG、PNG、WebP 格式头像"));
+  }
+
   return readFileAsDataUrl(file).then(function(originalDataUrl) {
     if (file.size <= 2 * 1024 * 1024) {
       return {
         previewUrl: originalDataUrl,
         originalDataUrl: originalDataUrl,
-        compressedDataUrl: "",
+        compressedDataUrl: originalDataUrl,
         compressed: false
       };
     }
@@ -179,31 +176,30 @@ function buildAvatarPayload(file) {
       const context = canvas.getContext("2d");
 
       if (!context) {
-        return {
-          previewUrl: originalDataUrl,
-          originalDataUrl: originalDataUrl,
-          compressedDataUrl: originalDataUrl,
-          compressed: true
-        };
+        throw new Error("当前浏览器不支持头像压缩，请更换 2M 以内图片");
       }
 
       let scale = 1;
       let quality = 0.88;
       let compressedDataUrl = originalDataUrl;
 
-      for (let index = 0; index < 7; index += 1) {
+      for (let index = 0; index < 12; index += 1) {
         canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
         canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
         compressedDataUrl = canvasToDataUrl(canvas, quality);
 
-        if (estimateDataUrlBytes(compressedDataUrl) <= 2 * 1024 * 1024) {
+        if (estimateDataUrlBytes(compressedDataUrl) <= MAX_COMPRESSED_AVATAR_BYTES) {
           break;
         }
 
-        scale *= 0.86;
-        quality = Math.max(0.46, quality - 0.08);
+        scale *= 0.78;
+        quality = Math.max(0.38, quality - 0.08);
+      }
+
+      if (estimateDataUrlBytes(compressedDataUrl) > MAX_COMPRESSED_AVATAR_BYTES) {
+        throw new Error("头像压缩后仍超过 2M，请更换图片");
       }
 
       return {
@@ -295,6 +291,8 @@ export default {
         return;
       }
 
+      this.avatarHint = "正在处理头像，请稍候...";
+
       buildAvatarPayload(file)
         .then(
           function(avatarPayload) {
@@ -304,13 +302,14 @@ export default {
             this.profile.avatarUpdatedAt = new Date().toISOString();
             this.avatarHint = avatarPayload.compressed
               ? `已为 ${createAvatarPlaceholder(file.name)} 生成压缩头像，保存后将同步到真实接口`
-              : `已更新头像：${createAvatarPlaceholder(file.name)}`;
-            this.$message.success("头像占位已更新");
+              : `已更新头像：${createAvatarPlaceholder(file.name)}，保存后生效`;
+            this.$message.success("头像已处理，请点击保存资料生效");
           }.bind(this)
         )
         .catch(
-          function() {
-            this.$message.error("头像读取失败，请重试");
+          function(error) {
+            this.avatarHint = "头像处理失败，请重新选择 JPG、PNG 或 WebP 图片。";
+            this.$message.error(error && error.message ? error.message : "头像读取失败，请重试");
           }.bind(this)
         )
         .finally(function() {
@@ -378,25 +377,6 @@ export default {
     },
     goPasswordPage() {
       this.$router.push("/user/profile/password");
-    },
-    logoutNow() {
-      clearUserSession("logout");
-      this.$router.push({
-        path: "/user/login",
-        query: {
-          reason: "logout"
-        }
-      });
-    },
-    simulateKickout() {
-      clearUserSession("kicked");
-      this.$router.push({
-        path: "/user/session-kickout",
-        query: {
-          reason: "kicked",
-          from: "profile"
-        }
-      });
     }
   }
 };
@@ -406,11 +386,32 @@ export default {
 .profile-page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 14px;
+  min-height: calc(100vh - 56px);
 }
 
 .profile-hero {
-  padding: 30px;
+  padding: 20px 24px;
+  background:
+    radial-gradient(circle at right top, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0) 46%),
+    linear-gradient(140deg, rgba(246, 211, 74, 0.94) 0%, rgba(255, 248, 220, 0.92) 54%, rgba(255, 255, 255, 0.95) 100%);
+  border: 1px solid rgba(246, 211, 74, 0.4);
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+  flex: 1;
+}
+
+.profile-panel {
+  padding: 18px;
+  height: 100%;
+}
+
+.profile-hero {
+  padding: 20px 24px;
   background:
     radial-gradient(circle at right top, rgba(255, 255, 255, 0.64) 0%, rgba(255, 255, 255, 0) 46%),
     linear-gradient(140deg, rgba(246, 211, 74, 0.94) 0%, rgba(255, 248, 220, 0.92) 54%, rgba(255, 255, 255, 0.95) 100%);
@@ -421,89 +422,82 @@ export default {
   width: fit-content;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  min-height: 34px;
-  padding: 0 14px;
+  gap: 10px;
+  min-height: 28px;
+  padding: 0 12px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.76);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
 }
 
 .profile-hero__badge strong {
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
 .profile-hero h1 {
-  margin: 16px 0 0;
-  font-size: 34px;
+  margin: 10px 0 0;
+  font-size: 24px;
   line-height: 1.2;
 }
 
 .profile-hero p {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   max-width: 760px;
-  line-height: 1.7;
+  line-height: 1.5;
+  font-size: 13px;
   color: rgba(23, 23, 23, 0.74);
 }
 
 .profile-hero__actions {
-  margin-top: 20px;
+  margin-top: 12px;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 }
 
-.profile-content {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 18px;
+.profile-panel {
+  padding: 18px;
 }
 
-.profile-panel,
-.session-panel {
-  padding: 24px;
-}
-
-.profile-panel__header h2,
-.profile-panel__header span,
-.session-panel__header h3,
-.session-panel__header p {
+.profile-panel__header h2 {
   margin: 0;
+  font-size: 18px;
 }
 
-.profile-panel__header span,
-.session-panel__header p {
+.profile-panel__header span {
   display: block;
-  margin-top: 8px;
+  margin-top: 4px;
+  font-size: 13px;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.4;
 }
 
 .profile-avatar {
-  margin-top: 18px;
+  margin-top: 14px;
   display: flex;
-  gap: 18px;
+  gap: 14px;
   align-items: center;
-  padding: 16px;
-  border-radius: 20px;
+  padding: 12px;
+  border-radius: 14px;
   background: rgba(255, 250, 233, 0.68);
   border: 1px solid rgba(246, 211, 74, 0.32);
 }
 
 .profile-avatar__preview {
-  width: 78px;
-  height: 78px;
-  border-radius: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
   overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(246, 211, 74, 0.44);
   color: var(--text-main);
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 800;
+  flex-shrink: 0;
 }
 
 .profile-avatar__preview img {
@@ -514,26 +508,28 @@ export default {
 
 .profile-avatar__meta strong {
   display: block;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .profile-avatar__meta p {
-  margin: 6px 0 0;
+  margin: 4px 0 0;
+  font-size: 13px;
   color: var(--text-subtle);
 }
 
 .profile-avatar__buttons {
-  margin-top: 12px;
+  margin-top: 8px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .profile-avatar__meta small {
   display: block;
-  margin-top: 10px;
+  margin-top: 6px;
+  font-size: 12px;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 .profile-avatar__input {
@@ -541,30 +537,31 @@ export default {
 }
 
 .profile-form-grid {
-  margin-top: 18px;
+  margin-top: 14px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 10px;
 }
 
 .profile-form__field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .profile-form__field span {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-subtle);
 }
 
 .profile-form__field input {
-  min-height: 46px;
-  border-radius: 14px;
+  min-height: 38px;
+  border-radius: 10px;
   border: 1px solid var(--border-color);
-  padding: 0 14px;
+  padding: 0 12px;
   background: #fff;
+  font-size: 14px;
 }
 
 .profile-form__field input[readonly] {
@@ -573,41 +570,15 @@ export default {
 }
 
 .profile-form__field small {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .profile-panel__footer {
-  margin-top: 20px;
+  margin-top: 14px;
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.session-panel__tip {
-  margin-top: 16px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: rgba(255, 244, 214, 0.72);
-  border: 1px solid rgba(246, 211, 74, 0.42);
-}
-
-.session-panel__tip strong,
-.session-panel__tip span {
-  display: block;
-}
-
-.session-panel__tip span {
-  margin-top: 8px;
-  color: var(--text-subtle);
-  line-height: 1.6;
-}
-
-.session-panel__actions {
-  margin-top: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
 @media (max-width: 1080px) {
@@ -618,11 +589,11 @@ export default {
 
 @media (max-width: 860px) {
   .profile-hero {
-    padding: 24px;
+    padding: 16px 18px;
   }
 
   .profile-hero h1 {
-    font-size: 28px;
+    font-size: 20px;
   }
 
   .profile-form-grid {

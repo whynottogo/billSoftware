@@ -68,8 +68,8 @@ func (h *UserProfileHandler) UpdateProfile(c *gin.Context) {
 	if avatarOriginal == "" && avatar != "" {
 		avatarOriginal = avatar
 	}
-	if avatarCompressed == "" && avatar != "" && avatarOriginal == "" {
-		avatarCompressed = avatar
+	if avatarCompressed == "" && avatarOriginal != "" {
+		avatarCompressed = avatarOriginal
 	}
 
 	updateMap := map[string]any{

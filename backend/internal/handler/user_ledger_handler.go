@@ -44,6 +44,7 @@ type createCategoryRequest struct {
 	Type  string `json:"type"`
 	Name  string `json:"name"`
 	Badge string `json:"badge"`
+	Icon  string `json:"icon"`
 }
 
 type ledgerRecordRow struct {
@@ -55,6 +56,7 @@ type ledgerRecordRow struct {
 	ImageFileID             uint64    `xorm:"image_file_id"`
 	CreatedAt               time.Time `xorm:"created_at"`
 	CategoryName            string    `xorm:"category_name"`
+	CategoryIcon            string    `xorm:"category_icon"`
 	ImageOriginalName       string    `xorm:"image_original_name"`
 	ImageMimeType           string    `xorm:"image_mime_type"`
 	ImageSizeBytes          uint64    `xorm:"image_size_bytes"`
@@ -80,6 +82,7 @@ type categoryListItem struct {
 	Type      string `json:"type"`
 	Name      string `json:"name"`
 	Badge     string `json:"badge"`
+	Icon      string `json:"icon"`
 	IsDefault bool   `json:"isDefault"`
 }
 
@@ -92,6 +95,7 @@ type monthSummary struct {
 type monthLedgerItem struct {
 	ID        uint64              `json:"id"`
 	Badge     string              `json:"badge"`
+	Icon      string              `json:"icon"`
 	Category  string              `json:"category"`
 	Time      string              `json:"time"`
 	Note      string              `json:"note"`
@@ -112,6 +116,7 @@ type monthLedgerGroup struct {
 type monthCategoryUsage struct {
 	Name  string `json:"name"`
 	Badge string `json:"badge"`
+	Icon  string `json:"icon"`
 	Count int    `json:"count"`
 }
 
@@ -149,6 +154,7 @@ func (h *UserLedgerHandler) GetLedger(c *gin.Context) {
 			COALESCE(lr.image_file_id, 0) AS image_file_id,
 			lr.created_at,
 			COALESCE(uc.name, '') AS category_name,
+			COALESCE(uc.icon, '') AS category_icon,
 			COALESCE(fu.original_name, '') AS image_original_name,
 			COALESCE(fu.mime_type, '') AS image_mime_type,
 			COALESCE(fu.size_bytes, 0) AS image_size_bytes,
@@ -374,6 +380,7 @@ func (h *UserLedgerHandler) ListCategories(c *gin.Context) {
 			Type:      item.CategoryType,
 			Name:      item.Name,
 			Badge:     badgeFromName(item.Name),
+			Icon:      item.Icon,
 			IsDefault: item.IsSystem == 1,
 		})
 	}
@@ -409,6 +416,12 @@ func (h *UserLedgerHandler) CreateCategory(c *gin.Context) {
 		return
 	}
 
+	icon := strings.TrimSpace(req.Icon)
+	if icon == "" {
+		response.Fail(c, http.StatusBadRequest, "icon is required")
+		return
+	}
+
 	exists, err := h.engine.Where("user_id = ? AND category_type = ? AND name = ?", userID, recordType, name).Exist(&model.UserCategory{})
 	if err != nil {
 		response.Fail(c, http.StatusInternalServerError, "check category name failed")
@@ -435,6 +448,7 @@ func (h *UserLedgerHandler) CreateCategory(c *gin.Context) {
 		UserID:       userID,
 		CategoryType: recordType,
 		Name:         name,
+		Icon:         icon,
 		SortOrder:    maxSort.Value + 1,
 		IsSystem:     0,
 	}
@@ -454,6 +468,7 @@ func (h *UserLedgerHandler) CreateCategory(c *gin.Context) {
 			Type:      category.CategoryType,
 			Name:      category.Name,
 			Badge:     normalizeBadge(req.Badge, category.Name),
+			Icon:      category.Icon,
 			IsDefault: false,
 		},
 	})
@@ -535,6 +550,7 @@ func (h *UserLedgerHandler) buildMonthLedgerResponse(ctx context.Context, monthK
 	type usageAccumulator struct {
 		Name  string
 		Badge string
+		Icon  string
 		Count int
 	}
 	usageMap := make(map[string]*usageAccumulator)
@@ -593,9 +609,12 @@ func (h *UserLedgerHandler) buildMonthLedgerResponse(ctx context.Context, monthK
 			imageName = imagePayload.OriginalName
 		}
 
+		categoryIcon := strings.TrimSpace(row.CategoryIcon)
+
 		group.Items = append(group.Items, monthLedgerItem{
 			ID:        row.ID,
 			Badge:     badge,
+			Icon:      categoryIcon,
 			Category:  categoryName,
 			Time:      timeText,
 			Note:      note,
@@ -616,6 +635,7 @@ func (h *UserLedgerHandler) buildMonthLedgerResponse(ctx context.Context, monthK
 			usage = &usageAccumulator{
 				Name:  categoryName,
 				Badge: badge,
+				Icon:  categoryIcon,
 				Count: 0,
 			}
 			usageMap[categoryName] = usage
@@ -632,6 +652,7 @@ func (h *UserLedgerHandler) buildMonthLedgerResponse(ctx context.Context, monthK
 			usageMap[name] = &usageAccumulator{
 				Name:  name,
 				Badge: badgeFromName(name),
+				Icon:  item.Icon,
 				Count: 0,
 			}
 		}
@@ -661,6 +682,7 @@ func (h *UserLedgerHandler) buildMonthLedgerResponse(ctx context.Context, monthK
 		categoryUsage = append(categoryUsage, monthCategoryUsage{
 			Name:  item.Name,
 			Badge: item.Badge,
+			Icon:  item.Icon,
 			Count: item.Count,
 		})
 	}

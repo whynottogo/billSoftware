@@ -190,12 +190,20 @@ export default {
             const token = this.extractToken(result);
 
             localStorage.setItem("bill_user_token", token);
-            localStorage.setItem(
-              "bill_user_profile",
-              JSON.stringify({
-                account: this.form.account
-              })
-            );
+
+            const serverProfile = (result && result.data && result.data.profile) || {};
+            const sessionProfile = {
+              account: serverProfile.username || serverProfile.account || this.form.account,
+              username: serverProfile.username || serverProfile.account || this.form.account,
+              nickname: serverProfile.nickname || "",
+              phone: serverProfile.phone || "",
+              email: serverProfile.email || "",
+              avatar: serverProfile.avatar || serverProfile.avatarCompressed || serverProfile.avatarOriginal || "",
+              avatarCompressed: serverProfile.avatarCompressed || serverProfile.avatar_compressed || "",
+              avatarOriginal: serverProfile.avatarOriginal || serverProfile.avatar_original || ""
+            };
+
+            localStorage.setItem("bill_user_profile", JSON.stringify(sessionProfile));
             this.$message.success("登录成功");
             this.$router.push("/user/ledger");
           }.bind(this)

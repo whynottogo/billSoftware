@@ -56,24 +56,27 @@
 
           <div class="ledger-group__list">
             <article v-for="item in group.items" :key="item.id" class="ledger-item">
-              <div class="ledger-item__icon">{{ item.badge }}</div>
+              <CategoryIcon :icon="item.icon" :badge="item.badge" :size="40" class="ledger-item__icon" />
               <div class="ledger-item__content">
                 <div class="ledger-item__headline">
                   <strong>{{ item.category }}</strong>
                   <span>{{ item.time }}</span>
                 </div>
-                <p>{{ item.note }}</p>
-                <div v-if="item.image && item.image.thumbnailUrl" class="ledger-item__image">
-                  <button type="button" class="ledger-item__thumb-button" @click.stop="previewLedgerImage(item)">
-                    <img :src="item.image.thumbnailUrl" :alt="item.image.originalName || '收支凭证'" />
-                  </button>
-                  <small>{{ item.image.originalName }}</small>
-                </div>
-                <small v-else-if="item.imageName" class="ledger-item__media">图片：{{ item.imageName }}</small>
+                <p v-if="item.note">{{ item.note }}</p>
               </div>
-              <strong :class="['ledger-item__amount', item.type === 'income' ? 'is-income' : 'is-expense']">
-                {{ signedMoney(item.amount, item.type) }}
-              </strong>
+              <div class="ledger-item__right">
+                <strong :class="['ledger-item__amount', item.type === 'income' ? 'is-income' : 'is-expense']">
+                  {{ signedMoney(item.amount, item.type) }}
+                </strong>
+                <button
+                  v-if="item.image && item.image.thumbnailUrl"
+                  type="button"
+                  class="ledger-item__thumb"
+                  @click.stop="previewLedgerImage(item)"
+                >
+                  <img :src="item.image.thumbnailUrl" :alt="item.image.originalName || '收支凭证'" />
+                </button>
+              </div>
             </article>
           </div>
         </article>
@@ -91,7 +94,7 @@
 
           <div class="category-grid">
             <article v-for="item in currentMonth.categories" :key="item.name" class="category-card">
-              <span class="category-card__badge">{{ item.badge }}</span>
+              <CategoryIcon :icon="item.icon" :badge="item.badge" :size="36" class="category-card__icon" />
               <strong>{{ item.name }}</strong>
               <small>{{ item.count }} 笔</small>
             </article>
@@ -122,29 +125,40 @@
 
   <el-dialog v-model="entryDialogVisible" :title="entryDialogTitle" width="560px" destroy-on-close>
     <form class="ledger-entry-form" @submit.prevent="submitEntry">
-      <label class="ledger-entry-form__field">
-        <span>分类</span>
-        <el-select v-model="entryForm.categoryId" placeholder="请选择分类">
-          <el-option v-for="item in entryCategoryOptions" :key="item.id" :label="item.name" :value="item.id">
-            <div class="ledger-option">
-              <strong>{{ item.badge }}</strong>
-              <span>{{ item.name }}</span>
-            </div>
-          </el-option>
-        </el-select>
-      </label>
+      <div class="ledger-entry-form__row">
+        <label class="ledger-entry-form__field ledger-entry-form__field--category">
+          <span>分类</span>
+          <el-select
+            ref="categorySelect"
+            v-model="entryForm.categoryId"
+            placeholder="请选择分类"
+            popper-class="ledger-category-dropdown"
+          >
+            <el-option
+              v-for="item in entryCategoryOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+              class="ledger-category-option"
+            >
+              <CategoryIcon :icon="item.icon" :badge="item.badge" :size="28" />
+              <span class="ledger-category-option__name">{{ item.name }}</span>
+            </el-option>
+          </el-select>
+        </label>
 
-      <label class="ledger-entry-form__field">
-        <span>金额</span>
-        <input
-          v-model.number="entryForm.amount"
-          class="ledger-entry-form__number"
-          type="number"
-          min="0.01"
-          step="0.01"
-          placeholder="请输入金额"
-        />
-      </label>
+        <label class="ledger-entry-form__field ledger-entry-form__field--amount">
+          <span>金额</span>
+          <input
+            v-model.number="entryForm.amount"
+            class="ledger-entry-form__number"
+            type="number"
+            min="0.01"
+            step="0.01"
+            placeholder="请输入金额"
+          />
+        </label>
+      </div>
 
       <label class="ledger-entry-form__field">
         <span>备注</span>
@@ -156,7 +170,7 @@
         <input v-model="entryForm.date" class="ledger-entry-form__date" type="date" />
       </label>
 
-      <label class="ledger-entry-form__field">
+      <div class="ledger-entry-form__field">
         <span>图片（可选，最多 1 张）</span>
         <div v-if="!entryForm.imagePreviewUrl" class="ledger-entry-form__upload" @click="triggerImageSelect">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="ledger-entry-form__upload-icon">
@@ -176,13 +190,19 @@
           <button type="button" class="ledger-entry-form__preview-remove" @click="clearEntryImage">移除</button>
         </div>
         <input ref="imageFileInput" class="ledger-entry-form__file-input" type="file" accept="image/jpeg,image/png,image/webp" @change="onImageChange" />
-      </label>
+      </div>
 
       <footer class="ledger-entry-form__footer">
-        <button class="ledger-entry-form__button ledger-entry-form__button--ghost" type="button" @click="entryDialogVisible = false">
+        <button class="ledger-entry-form__button ledger-entry-form__button--ghost" type="button" :disabled="entrySubmitting" @click="entryDialogVisible = false">
           取消
         </button>
-        <button class="ledger-entry-form__button ledger-entry-form__button--primary" type="submit">保存</button>
+        <button class="ledger-entry-form__button ledger-entry-form__button--primary" type="submit" :disabled="entrySubmitting">
+          <svg v-if="entrySubmitting" class="ledger-entry-form__spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" stroke-opacity="0.25" />
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round" />
+          </svg>
+          {{ entrySubmitting ? "保存中..." : "保存" }}
+        </button>
       </footer>
     </form>
   </el-dialog>
@@ -202,13 +222,13 @@
       </el-tabs>
 
       <div class="ledger-category-manager__create">
-        <label class="ledger-category-manager__field">
+        <label class="ledger-category-manager__field ledger-category-manager__field--name">
           <span>分类名称</span>
-          <el-input v-model="categoryDraft[categoryTab].name" maxlength="12" placeholder="例如：旅行" />
+          <el-input v-model="categoryDraft[categoryTab].name" maxlength="12" placeholder="例如：旅行" size="default" />
         </label>
-        <label class="ledger-category-manager__field ledger-category-manager__field--short">
-          <span>徽章</span>
-          <el-input v-model="categoryDraft[categoryTab].badge" maxlength="2" placeholder="旅" />
+        <label class="ledger-category-manager__field ledger-category-manager__field--icon">
+          <span>选择图标</span>
+          <IconPicker :selected="categoryDraft[categoryTab].icon" @select="onIconSelect" />
         </label>
         <button class="ledger-category-manager__add" type="button" @click="addCategory">新增分类</button>
       </div>
@@ -216,7 +236,7 @@
       <div class="ledger-category-manager__list">
         <article v-for="item in currentCategoryList" :key="item.id" class="ledger-category-card">
           <div class="ledger-category-card__meta">
-            <span class="ledger-category-card__badge">{{ item.badge }}</span>
+            <CategoryIcon :icon="item.icon" :badge="item.badge" :size="36" />
             <div>
               <strong>{{ item.name }}</strong>
               <small>{{ item.isDefault ? "默认分类" : "自定义分类" }}</small>
@@ -245,6 +265,8 @@ import {
   listUserCategories,
   uploadUserLedgerImage
 } from "@/api/userLedger";
+import CategoryIcon from "@/components/CategoryIcon.vue";
+import IconPicker from "@/components/IconPicker.vue";
 
 const ALLOWED_LEDGER_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_LEDGER_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -357,6 +379,7 @@ function normalizeLedgerMonth(result, fallbackMonthKey) {
           return {
             id: item.id,
             badge: item.badge || toBadge(item.category),
+            icon: item.icon || "",
             category: item.category || "未分类",
             time: item.time || "00:00",
             note: item.note || "",
@@ -372,6 +395,7 @@ function normalizeLedgerMonth(result, fallbackMonthKey) {
       return {
         name: item.name || "未分类",
         badge: item.badge || toBadge(item.name),
+        icon: item.icon || "",
         count: Number(item.count || 0)
       };
     }),
@@ -412,6 +436,7 @@ function normalizeCategoryList(result, type) {
       type: item.type || type,
       name: item.name || "",
       badge: item.badge || toBadge(item.name),
+      icon: item.icon || "",
       isDefault: Boolean(item.isDefault)
     };
   });
@@ -427,6 +452,10 @@ function buildErrorMessage(error, fallback) {
 
 export default {
   name: "UserHome",
+  components: {
+    CategoryIcon,
+    IconPicker
+  },
   data() {
     return {
       monthIndex: 0,
@@ -451,6 +480,7 @@ export default {
         imagePreviewUrl: "",
         imageUploaded: false
       },
+      entrySubmitting: false,
       imagePreviewVisible: false,
       previewImage: {
         url: "",
@@ -459,11 +489,11 @@ export default {
       categoryDraft: {
         expense: {
           name: "",
-          badge: ""
+          icon: ""
         },
         income: {
           name: "",
-          badge: ""
+          icon: ""
         }
       }
     };
@@ -633,6 +663,9 @@ export default {
         this.$refs.imageFileInput.click();
       }
     },
+    onIconSelect(iconKey) {
+      this.categoryDraft[this.categoryTab].icon = iconKey;
+    },
     onImageChange(event) {
       var file = event.target && event.target.files ? event.target.files[0] : null;
       if (!file) {
@@ -702,6 +735,10 @@ export default {
       this.imagePreviewVisible = true;
     },
     submitEntry() {
+      if (this.entrySubmitting) {
+        return;
+      }
+
       if (!this.entryForm.categoryId) {
         this.$message.warning("请选择分类");
         return;
@@ -711,6 +748,8 @@ export default {
         this.$message.warning("金额必须大于 0");
         return;
       }
+
+      this.entrySubmitting = true;
 
       this.ensureEntryImageUploaded()
         .then(
@@ -730,6 +769,7 @@ export default {
             var payload = extractPayload(result);
             var monthKey = payload.month || String(this.entryForm.date || "").slice(0, 7) || getCurrentMonthKey();
 
+            this.entrySubmitting = false;
             this.entryDialogVisible = false;
             this.clearEntryImage();
             this.refreshLedger(monthKey);
@@ -738,6 +778,7 @@ export default {
         )
         .catch(
           function(error) {
+            this.entrySubmitting = false;
             this.$message.error(buildErrorMessage(error, "保存失败，请稍后重试。"));
           }.bind(this)
         );
@@ -748,16 +789,20 @@ export default {
         this.$message.warning("分类名称不能为空");
         return;
       }
+      if (!draft.icon) {
+        this.$message.warning("请选择一个图标");
+        return;
+      }
 
       createUserCategory({
         type: this.categoryTab,
         name: draft.name,
-        badge: draft.badge
+        icon: draft.icon
       })
         .then(
           function() {
             draft.name = "";
-            draft.badge = "";
+            draft.icon = "";
             return Promise.all([this.refreshCategories(), this.refreshLedger(this.currentMonth.key)]);
           }.bind(this)
         )
@@ -798,7 +843,9 @@ export default {
 .ledger-page {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 16px;
+  height: calc(100vh - 56px);
+  overflow: hidden;
 }
 
 .ledger-page__toolbar {
@@ -815,13 +862,13 @@ export default {
 }
 
 .month-switcher button {
-  width: 40px;
-  height: 40px;
-  border-radius: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
   background: rgba(255, 255, 255, 0.9);
   color: var(--text-main);
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .month-switcher button:disabled {
@@ -830,7 +877,7 @@ export default {
 }
 
 .month-switcher strong {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 .ledger-page__actions {
@@ -839,11 +886,12 @@ export default {
 }
 
 .ledger-page__action {
-  min-height: 44px;
-  padding: 0 18px;
+  min-height: 36px;
+  padding: 0 14px;
   border: none;
   border-radius: 999px;
   color: #ffffff;
+  font-size: 13px;
   font-weight: 700;
   box-shadow: var(--shadow-sm);
 }
@@ -863,12 +911,12 @@ export default {
 .ledger-page__summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 
 .summary-card {
-  padding: 22px 24px;
-  border-radius: 24px;
+  padding: 16px 18px;
+  border-radius: 18px;
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
@@ -876,13 +924,13 @@ export default {
 
 .summary-card span {
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .summary-card strong {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .summary-card strong.is-income {
@@ -895,57 +943,86 @@ export default {
 
 .ledger-page__content {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) 320px;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1.55fr) 300px;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
 }
 
 .ledger-feed {
-  padding: 24px;
+  padding: 20px;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.ledger-feed:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.ledger-feed::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ledger-feed::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.ledger-feed:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.ledger-feed::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .ledger-empty {
-  padding: 28px;
-  border-radius: 20px;
+  padding: 20px;
+  border-radius: 16px;
   background: var(--card-muted);
   border: 1px dashed var(--border-color);
 }
 
 .ledger-empty strong {
   display: block;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .ledger-empty p {
-  margin: 10px 0 0;
+  margin: 8px 0 0;
   color: var(--text-muted);
+  font-size: 13px;
 }
 
 .ledger-group + .ledger-group {
-  margin-top: 26px;
+  margin-top: 18px;
 }
 
 .ledger-group__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 
 .ledger-group__header h2 {
   margin: 0;
-  font-size: 28px;
+  font-size: 22px;
 }
 
 .ledger-group__header span {
-  margin-left: 10px;
+  margin-left: 8px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .ledger-group__totals {
   display: inline-flex;
-  gap: 12px;
+  gap: 10px;
   font-weight: 700;
+  font-size: 13px;
 }
 
 .ledger-group__totals .is-income {
@@ -959,41 +1036,32 @@ export default {
 .ledger-group__list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
 }
 
 .ledger-item {
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) auto;
-  gap: 16px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 12px;
   align-items: center;
-  padding: 18px 16px;
-  border-radius: 22px;
+  padding: 12px 14px;
+  border-radius: 14px;
   background: var(--card-muted);
   border: 1px solid rgba(229, 231, 235, 0.92);
 }
 
 .ledger-item__icon {
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
-  background: #ffffff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-subtle);
+  border-radius: 14px;
 }
 
 .ledger-item__headline {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .ledger-item__headline strong {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .ledger-item__headline span,
@@ -1002,45 +1070,34 @@ export default {
 }
 
 .ledger-item__content p {
-  margin: 6px 0 0;
-  font-size: 14px;
+  margin: 4px 0 0;
+  font-size: 13px;
 }
 
-.ledger-item__media {
-  display: inline-block;
-  margin-top: 8px;
-  color: #a16207;
-  font-size: 12px;
+.ledger-item__right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
 }
 
-.ledger-item__image {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.ledger-item__image small {
-  max-width: 180px;
-  color: #a16207;
-  font-size: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ledger-item__thumb-button {
-  width: 52px;
-  height: 52px;
+.ledger-item__thumb {
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border: 2px solid #ffffff;
-  border-radius: 16px;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  border-radius: 10px;
   background: #ffffff;
-  box-shadow: var(--shadow-sm);
   overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s;
 }
 
-.ledger-item__thumb-button img {
+.ledger-item__thumb:hover {
+  transform: scale(1.1);
+}
+
+.ledger-item__thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -1048,7 +1105,7 @@ export default {
 }
 
 .ledger-item__amount {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .ledger-item__amount.is-income {
@@ -1062,11 +1119,37 @@ export default {
 .ledger-side {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 14px;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.ledger-side:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.ledger-side::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ledger-side::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.ledger-side:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.ledger-side::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .ledger-side__section {
-  padding: 22px;
+  padding: 18px;
+  flex-shrink: 0;
 }
 
 .ledger-side__header {
@@ -1074,12 +1157,12 @@ export default {
   align-items: flex-start;
   justify-content: space-between;
   gap: 14px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .ledger-side__header h3 {
-  margin: 0 0 4px;
-  font-size: 22px;
+  margin: 0 0 2px;
+  font-size: 18px;
 }
 
 .ledger-side__header p {
@@ -1098,41 +1181,35 @@ export default {
 .category-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 8px;
 }
 
 .category-card {
-  padding: 16px;
-  border-radius: 20px;
+  padding: 12px;
+  border-radius: 14px;
   background: var(--card-muted);
   border: 1px solid rgba(229, 231, 235, 0.92);
 }
 
-.category-card__badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 14px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-  color: var(--text-subtle);
-  font-weight: 700;
+.category-card__icon {
+  border-radius: 12px;
 }
 
 .category-card strong {
   display: block;
-  margin-top: 12px;
+  margin-top: 8px;
+  font-size: 13px;
 }
 
 .category-card small {
   display: block;
-  margin-top: 6px;
+  margin-top: 4px;
   color: var(--text-muted);
+  font-size: 12px;
 }
 
 .overview-card + .overview-card {
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 .overview-card__meta {
@@ -1175,7 +1252,32 @@ export default {
 .ledger-entry-form__field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+}
+
+.ledger-entry-form__row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.ledger-entry-form__field--category {
+  flex: 1;
+  min-width: 0;
+}
+
+.ledger-entry-form__field--category :deep(.el-select) {
+  width: 100%;
+}
+
+.ledger-entry-form__field--category :deep(.el-select__wrapper) {
+  min-height: 40px;
+  border-radius: 10px;
+}
+
+.ledger-entry-form__field--amount {
+  flex: none;
+  width: 140px;
 }
 
 .ledger-entry-form__field > span {
@@ -1339,44 +1441,127 @@ export default {
   background: var(--brand-color);
 }
 
-.ledger-option {
-  display: inline-flex;
-  align-items: center;
+.ledger-entry-form__button--primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.ledger-entry-form__button--ghost:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ledger-entry-form__spinner {
+  width: 16px;
+  height: 16px;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.ledger-entry-form__category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 8px;
 }
 
-.ledger-option strong {
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
-  background: rgba(246, 211, 74, 0.35);
-  display: inline-flex;
+.ledger-entry-form__category-item {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.ledger-entry-form__category-item:hover {
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.ledger-entry-form__category-item.is-selected {
+  border-color: var(--brand-color, #6366f1);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.ledger-entry-form__category-item span {
+  font-size: 11px;
+  color: var(--text-subtle, #6b7280);
+  max-width: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ledger-entry-form__category-item.is-selected span {
+  color: var(--brand-color, #6366f1);
+  font-weight: 600;
+}
+
+.ledger-category-option {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 3px !important;
+  padding: 6px 2px !important;
+  float: none !important;
+}
+
+.ledger-category-option .ledger-category-option__name {
+  font-size: 11px;
+  color: var(--text-subtle, #6b7280);
+  max-width: 58px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ledger-category-option.selected .ledger-category-option__name {
+  color: var(--brand-color, #6366f1);
+  font-weight: 600;
 }
 
 .ledger-category-manager__create {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 130px auto;
+  display: flex;
+  align-items: flex-end;
   gap: 12px;
-  align-items: end;
   margin: 8px 0 16px;
 }
 
 .ledger-category-manager__field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+}
+
+.ledger-category-manager__field--name {
+  flex: 1;
+}
+
+.ledger-category-manager__field--name :deep(.el-input__wrapper) {
+  border-radius: 10px;
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.ledger-category-manager__field--icon {
+  flex: none;
 }
 
 .ledger-category-manager__field span {
   font-size: 13px;
   font-weight: 600;
   color: var(--text-subtle);
+  line-height: 1;
 }
 
 .ledger-category-manager__add {
-  min-height: 40px;
+  height: 40px;
   border-radius: 10px;
   border: none;
   background: var(--brand-color);
@@ -1404,17 +1589,6 @@ export default {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-}
-
-.ledger-category-card__badge {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  background: rgba(246, 211, 74, 0.4);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
 }
 
 .ledger-category-card__meta strong {
@@ -1471,5 +1645,40 @@ export default {
   .category-grid {
     grid-template-columns: 1fr;
   }
+}
+</style>
+
+<style>
+.ledger-category-dropdown {
+  width: auto !important;
+  min-width: auto !important;
+}
+
+.ledger-category-dropdown .el-select-dropdown__list {
+  display: grid;
+  grid-template-columns: repeat(5, 64px);
+  gap: 4px;
+  padding: 6px;
+  width: auto !important;
+  min-width: auto !important;
+}
+
+.ledger-category-dropdown .el-select-dropdown__item {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 64px;
+  height: auto;
+  padding: 6px 2px;
+  float: none;
+}
+
+.ledger-category-dropdown .el-select-dropdown__item .ledger-category-option__name {
+  font-size: 11px;
+  max-width: 58px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>
