@@ -8,6 +8,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `email` VARCHAR(128) DEFAULT NULL,
   `password_hash` VARCHAR(255) NOT NULL,
   `status` TINYINT NOT NULL DEFAULT 0 COMMENT '0=disabled,1=enabled',
+  `approval_status` VARCHAR(16) NOT NULL DEFAULT 'pending' COMMENT 'pending|approved|rejected',
+  `approval_updated_at` DATETIME DEFAULT NULL,
+  `approval_remark` VARCHAR(255) DEFAULT NULL,
   `avatar_original` LONGTEXT DEFAULT NULL,
   `avatar_compressed` LONGTEXT DEFAULT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -15,7 +18,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_users_username` (`username`),
   UNIQUE KEY `uk_users_phone` (`phone`),
-  KEY `idx_users_status` (`status`)
+  KEY `idx_users_status` (`status`),
+  KEY `idx_users_approval_status` (`approval_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `user_sessions` (

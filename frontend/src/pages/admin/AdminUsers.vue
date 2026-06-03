@@ -39,7 +39,17 @@
       </label>
     </section>
 
-    <section class="admin-users-table page-card">
+    <section v-if="loadError" class="admin-users-state page-card is-error">
+      <strong>用户列表加载失败</strong>
+      <p>{{ loadError }}</p>
+      <button class="table-actions__detail" @click="refreshRows">重新加载</button>
+    </section>
+
+    <section v-else-if="loading" class="admin-users-state page-card">
+      正在加载用户列表...
+    </section>
+
+    <section v-else class="admin-users-table page-card">
       <table>
         <thead>
           <tr>
@@ -200,6 +210,8 @@ export default {
       keyword: "",
       status: "all",
       rows: [],
+      loading: false,
+      loadError: "",
       statusUpdatingMap: {}
     };
   },
@@ -238,6 +250,9 @@ export default {
   },
   methods: {
     refreshRows() {
+      this.loading = true;
+      this.loadError = "";
+
       return listAdminUsers()
         .then(
           function(result) {
@@ -246,8 +261,16 @@ export default {
         )
         .catch(
           function(error) {
+            const message = buildErrorMessage(error, "用户列表加载失败，请检查后端服务");
+
             this.rows = [];
-            this.$message.error(buildErrorMessage(error, "用户列表加载失败，请检查后端服务"));
+            this.loadError = message;
+            this.$message.error(message);
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.loading = false;
           }.bind(this)
         );
     },
@@ -318,6 +341,7 @@ export default {
 
 .admin-users-page__header,
 .admin-users-page__filters,
+.admin-users-state,
 .admin-users-table {
   padding: 24px;
 }
@@ -405,6 +429,27 @@ export default {
 
 .admin-users-table {
   overflow: hidden;
+}
+
+.admin-users-state {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  color: var(--text-subtle);
+}
+
+.admin-users-state strong {
+  color: var(--text-main);
+  font-size: 18px;
+}
+
+.admin-users-state p {
+  margin: 0;
+}
+
+.admin-users-state.is-error {
+  border-color: rgba(220, 38, 38, 0.2);
+  background: rgba(254, 242, 242, 0.92);
 }
 
 .admin-users-table table {

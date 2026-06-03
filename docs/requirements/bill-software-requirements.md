@@ -1150,7 +1150,7 @@ req_id: ADMIN-AUTH-001
 side: admin
 module: 管理员登录
 status: 已完成
-owner_ai: Codex
+owner_ai: Codex main
 dependencies: ["SYS-ARCH-001", "SYS-AUTH-003"]
 ```
 
@@ -1175,7 +1175,7 @@ req_id: ADMIN-DASHBOARD-001
 side: admin
 module: 后台门户
 status: 已完成
-owner_ai: Codex
+owner_ai: Codex worker A
 dependencies: ["ADMIN-AUTH-001"]
 ```
 
@@ -1200,7 +1200,7 @@ req_id: ADMIN-APPROVAL-001
 side: admin
 module: 后台门户
 status: 已完成
-owner_ai: Codex
+owner_ai: Codex worker B
 dependencies: ["ADMIN-AUTH-001", "ADMIN-USER-001"]
 ```
 
@@ -1225,7 +1225,7 @@ req_id: ADMIN-FAMILY-001
 side: admin
 module: 后台门户
 status: 已完成
-owner_ai: Codex
+owner_ai: Codex worker C
 dependencies: ["ADMIN-AUTH-001", "USER-FAMILY-001"]
 ```
 
@@ -1275,7 +1275,7 @@ req_id: ADMIN-USER-002
 side: admin
 module: 用户管理
 status: 已完成
-owner_ai: Codex
+owner_ai: Codex worker B
 dependencies: ["ADMIN-USER-001"]
 ```
 

@@ -30,6 +30,9 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine, objectStorage *st
 	userProfileHandler := handler.NewUserProfileHandler(engine)
 	userFamilyHandler := handler.NewUserFamilyHandler(engine)
 	adminUserBillHandler := handler.NewAdminUserBillHandler(engine)
+	adminDashboardHandler := handler.NewAdminDashboardHandler(engine)
+	adminApprovalHandler := handler.NewAdminApprovalHandler(engine)
+	adminFamilyHandler := handler.NewAdminFamilyHandler(engine)
 
 	httpRouter.GET("/api/health", healthHandler.Ping)
 
@@ -51,6 +54,15 @@ func NewHTTPRouter(cfg *config.AppConfig, engine *xorm.Engine, objectStorage *st
 		protectedGroup.PUT("/users/:id/status", userHandler.ChangeStatus)
 		protectedGroup.GET("/users/:id/summary", userHandler.Summary)
 		protectedGroup.GET("/users/:id/bills/overview", adminUserBillHandler.GetOverview)
+		protectedGroup.GET("/dashboard/overview", adminDashboardHandler.Overview)
+		protectedGroup.GET("/approvals/users", adminApprovalHandler.ListPendingUsers)
+		protectedGroup.POST("/approvals/users/batch-approve", adminApprovalHandler.BatchApproveUsers)
+		protectedGroup.POST("/approvals/users/batch-reject", adminApprovalHandler.BatchRejectUsers)
+		protectedGroup.POST("/approvals/users/:id/approve", adminApprovalHandler.ApproveUser)
+		protectedGroup.POST("/approvals/users/:id/reject", adminApprovalHandler.RejectUser)
+		protectedGroup.GET("/families/summary", adminFamilyHandler.Summary)
+		protectedGroup.GET("/families", adminFamilyHandler.List)
+		protectedGroup.GET("/families/:familyId", adminFamilyHandler.Detail)
 	}
 
 	protectedUserGroup := userGroup.Group("")

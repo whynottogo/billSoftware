@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"xorm.io/xorm"
@@ -74,9 +75,19 @@ func (h *UserHandler) ChangeStatus(c *gin.Context) {
 		return
 	}
 
-	if _, err := session.ID(id).Cols("status").Update(&model.User{
+	update := &model.User{
 		Status: payload.Status,
-	}); err != nil {
+	}
+	updateCols := []string{"status"}
+
+	if payload.Status == 1 {
+		now := time.Now()
+		update.ApprovalStatus = model.UserApprovalApproved
+		update.ApprovalUpdatedAt = &now
+		updateCols = append(updateCols, "approval_status", "approval_updated_at")
+	}
+
+	if _, err := session.ID(id).Cols(updateCols...).Update(update); err != nil {
 		_ = session.Rollback()
 		response.Fail(c, http.StatusInternalServerError, "update user status failed")
 		return

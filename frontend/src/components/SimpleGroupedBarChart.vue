@@ -76,6 +76,10 @@ export default {
     height: {
       type: Number,
       default: 300
+    },
+    valueUnit: {
+      type: String,
+      default: "currency"
     }
   },
   data() {
@@ -202,6 +206,10 @@ export default {
     },
     formatCurrency(value) {
       var number = Number(value || 0);
+
+      if (this.valueUnit === "count") {
+        return Math.round(number).toLocaleString("zh-CN");
+      }
 
       if (!number) {
         return "¥0";

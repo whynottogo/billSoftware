@@ -7,6 +7,7 @@ module.exports = (_, argv) => {
   const isProduction = argv.mode === "production";
   const rawPublicBase = process.env.BILL_PUBLIC_BASE || "/";
   const normalizedPublicBase = rawPublicBase.endsWith("/") ? rawPublicBase : `${rawPublicBase}/`;
+  const apiTarget = process.env.BILL_API_TARGET || "http://127.0.0.1:8080";
 
   return {
     entry: path.resolve(__dirname, "src/main.js"),
@@ -77,7 +78,7 @@ module.exports = (_, argv) => {
       proxy: [
         {
           context: ["/api"],
-          target: "http://127.0.0.1:8080",
+          target: apiTarget,
           changeOrigin: true
         }
       ]

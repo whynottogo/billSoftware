@@ -103,7 +103,7 @@ export default {
         return result.token;
       }
 
-      return "mock-admin-token";
+      return "";
     },
     buildErrorMessage(error) {
       if (error && error.response && error.response.data && error.response.data.message) {
@@ -122,6 +122,10 @@ export default {
         .then(
           function (result) {
             const token = this.extractToken(result);
+            if (!token) {
+              this.$message.error("管理员登录响应缺少 token，请检查后端接口");
+              return;
+            }
 
             localStorage.setItem("bill_admin_token", token);
             this.$message.success("管理员登录成功");

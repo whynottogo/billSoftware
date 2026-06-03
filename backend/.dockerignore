@@ -2,4 +2,3 @@
 .gitignore
 configs/app.yaml
 tmp
-bin

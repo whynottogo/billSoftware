@@ -25,6 +25,7 @@ import AdminUserDetail from "@/pages/admin/AdminUserDetail.vue";
 import AdminDashboard from "@/pages/admin/AdminDashboard.vue";
 import AdminApprovals from "@/pages/admin/AdminApprovals.vue";
 import AdminFamilies from "@/pages/admin/AdminFamilies.vue";
+import AdminFamilyDetail from "@/pages/admin/AdminFamilyDetail.vue";
 
 const routes = [
   {
@@ -164,6 +165,10 @@ const routes = [
       {
         path: "families",
         component: AdminFamilies
+      },
+      {
+        path: "families/:familyId",
+        component: AdminFamilyDetail
       }
     ]
   }

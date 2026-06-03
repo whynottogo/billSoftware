@@ -8,40 +8,65 @@
 
       <div class="finance-hero__headline">
         <h1>集中处理新注册用户的审批动作</h1>
-        <p>页面优先落地审批工作流信息结构，审批接口后续联调接入。</p>
+        <p>待审批清单已接入真实接口，批准后用户可登录，拒绝后用户继续保持不可登录。</p>
       </div>
 
       <div class="finance-stat-grid finance-stat-grid--triple">
         <article class="finance-stat-card">
           <span>待审批用户</span>
           <strong>{{ summary.pendingCount }}</strong>
-          <small>可逐条批准或拒绝</small>
+          <small>{{ loading ? "正在同步" : "来自真实用户表" }}</small>
         </article>
         <article class="finance-stat-card">
           <span>当前已选择</span>
           <strong>{{ selectedCount }}</strong>
-          <small>支持批量操作</small>
+          <small>支持批量批准或拒绝</small>
         </article>
         <article class="finance-stat-card">
           <span>最近操作</span>
           <strong>{{ recentActionLabel }}</strong>
-          <small>仅记录原型操作轨迹</small>
+          <small>{{ recentActionHint }}</small>
         </article>
       </div>
     </section>
 
     <section class="page-card finance-panel">
-      <header class="finance-panel__header">
+      <header class="finance-panel__header admin-approvals-page__panel-header">
         <div>
           <h3>待审批列表</h3>
-          <p>字段包含昵称、联系方式、注册时间和申请用途。</p>
+          <p>字段包含昵称、邮箱、手机号、注册时间和申请用途。</p>
         </div>
+
+        <button class="finance-button finance-button--ghost" :disabled="loading" @click="loadUsers">
+          {{ loading ? "加载中..." : "重试" }}
+        </button>
       </header>
 
-      <div class="admin-approvals-page__list">
+      <div v-if="errorMessage" class="admin-approvals-page__state is-error">
+        <strong>审批列表加载失败</strong>
+        <span>{{ errorMessage }}</span>
+        <button class="finance-button finance-button--primary" :disabled="loading" @click="loadUsers">重试</button>
+      </div>
+
+      <div v-else-if="loading && users.length === 0" class="admin-approvals-page__state">
+        <strong>正在加载待审批用户</strong>
+        <span>请稍候，系统正在读取管理端审批接口。</span>
+      </div>
+
+      <div v-else-if="users.length === 0" class="admin-approvals-page__state">
+        <strong>暂无待审批用户</strong>
+        <span>新注册且尚未处理的用户会显示在这里。</span>
+      </div>
+
+      <div v-else class="admin-approvals-page__list">
         <article v-for="user in users" :key="user.id" class="admin-approvals-page__row">
           <label class="admin-approvals-page__check">
-            <input :checked="isSelected(user.id)" type="checkbox" @change="toggleSelect(user.id)" />
+            <input
+              :checked="isSelected(user.id)"
+              :disabled="isRowBusy(user.id)"
+              type="checkbox"
+              @change="toggleSelect(user.id)"
+            />
           </label>
 
           <div class="admin-approvals-page__main">
@@ -59,8 +84,20 @@
           </div>
 
           <div class="admin-approvals-page__actions">
-            <button class="finance-button finance-button--primary" @click="approve(user)">批准</button>
-            <button class="finance-button finance-button--ghost" @click="reject(user)">拒绝</button>
+            <button
+              class="finance-button finance-button--primary"
+              :disabled="isRowBusy(user.id)"
+              @click="approve(user)"
+            >
+              {{ rowActionLabel(user.id, "批准") }}
+            </button>
+            <button
+              class="finance-button finance-button--ghost"
+              :disabled="isRowBusy(user.id)"
+              @click="reject(user)"
+            >
+              {{ rowActionLabel(user.id, "拒绝") }}
+            </button>
           </div>
         </article>
       </div>
@@ -70,16 +107,16 @@
       <header class="finance-panel__header">
         <div>
           <h3>批量操作</h3>
-          <p>当前阶段仅提供原型级反馈，不触发真实后端审批。</p>
+          <p>批量动作只处理当前勾选的待审批用户。</p>
         </div>
       </header>
 
       <div class="admin-approvals-page__bulk">
-        <button class="finance-button finance-button--primary" :disabled="selectedCount === 0" @click="approveBatch">
-          批量批准
+        <button class="finance-button finance-button--primary" :disabled="!canRunBatch" @click="approveBatch">
+          {{ batchBusy ? "处理中..." : "批量批准" }}
         </button>
-        <button class="finance-button finance-button--ghost" :disabled="selectedCount === 0" @click="rejectBatch">
-          批量拒绝
+        <button class="finance-button finance-button--ghost" :disabled="!canRunBatch" @click="rejectBatch">
+          {{ batchBusy ? "处理中..." : "批量拒绝" }}
         </button>
         <span>{{ selectedCount }} 位用户已勾选</span>
       </div>
@@ -88,26 +125,167 @@
 </template>
 
 <script>
-import { getPendingApprovalsData } from "@/utils/adminPortalMock";
+import { ElMessageBox } from "element-plus";
+import {
+  approveApprovalUser,
+  batchApproveApprovalUsers,
+  batchRejectApprovalUsers,
+  listPendingApprovalUsers,
+  rejectApprovalUser
+} from "@/api/adminApprovals";
+
+function asText(value, fallback) {
+  if (value === undefined || value === null || value === "") {
+    return fallback;
+  }
+
+  return String(value);
+}
+
+function parseDate(input) {
+  if (!input) {
+    return null;
+  }
+
+  var date = new Date(input);
+  if (Number.isNaN(date.getTime())) {
+    return null;
+  }
+
+  return date;
+}
+
+function pad(value) {
+  return value < 10 ? "0" + value : String(value);
+}
+
+function formatDate(input) {
+  var date = parseDate(input);
+  if (!date) {
+    return "-";
+  }
+
+  return (
+    date.getFullYear() +
+    "-" +
+    pad(date.getMonth() + 1) +
+    "-" +
+    pad(date.getDate()) +
+    " " +
+    pad(date.getHours()) +
+    ":" +
+    pad(date.getMinutes())
+  );
+}
+
+function extractList(result) {
+  if (result && result.data && Array.isArray(result.data.list)) {
+    return result.data.list;
+  }
+
+  if (result && Array.isArray(result.list)) {
+    return result.list;
+  }
+
+  return [];
+}
+
+function extractPendingCount(result, fallback) {
+  if (result && result.data && result.data.summary && typeof result.data.summary.pending_count === "number") {
+    return result.data.summary.pending_count;
+  }
+
+  if (result && result.summary && typeof result.summary.pending_count === "number") {
+    return result.summary.pending_count;
+  }
+
+  return fallback;
+}
+
+function buildErrorMessage(error, fallback) {
+  if (error && error.response && error.response.data && error.response.data.message) {
+    return error.response.data.message;
+  }
+
+  return fallback;
+}
+
+function mapUser(user) {
+  var username = asText(user && user.username, "-");
+  var nickname = asText(user && user.nickname, username);
+
+  return {
+    id: String(user && user.id ? user.id : ""),
+    name: nickname,
+    username: username,
+    email: asText(user && user.email, "-"),
+    phone: asText(user && user.phone, "-"),
+    registerDate: formatDate(user && user.created_at),
+    reason: asText(user && user.application_purpose, "注册后等待管理员审批")
+  };
+}
 
 export default {
   name: "AdminApprovals",
   data() {
-    var source = getPendingApprovalsData();
-
     return {
-      users: source.users,
-      summary: source.summary,
+      users: [],
+      summary: {
+        pendingCount: 0
+      },
       selectedIds: [],
-      recentActionLabel: "无"
+      busyMap: {},
+      loading: false,
+      batchBusy: false,
+      errorMessage: "",
+      recentActionLabel: "无",
+      recentActionHint: "等待审批动作"
     };
   },
   computed: {
     selectedCount() {
       return this.selectedIds.length;
+    },
+    canRunBatch() {
+      return this.selectedCount > 0 && !this.batchBusy && !this.loading;
     }
   },
+  created() {
+    this.loadUsers();
+  },
   methods: {
+    loadUsers() {
+      this.loading = true;
+      this.errorMessage = "";
+
+      return listPendingApprovalUsers()
+        .then(
+          function(result) {
+            var list = extractList(result).map(mapUser);
+            this.users = list;
+            this.summary.pendingCount = extractPendingCount(result, list.length);
+            this.selectedIds = this.selectedIds.filter(
+              function(userId) {
+                return list.some(function(user) {
+                  return user.id === userId;
+                });
+              }.bind(this)
+            );
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.errorMessage = buildErrorMessage(error, "待审批用户加载失败，请检查后端服务");
+            this.users = [];
+            this.summary.pendingCount = 0;
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.loading = false;
+          }.bind(this)
+        );
+    },
     isSelected(userId) {
       return this.selectedIds.indexOf(userId) !== -1;
     },
@@ -120,23 +298,162 @@ export default {
         this.selectedIds.splice(index, 1);
       }
     },
+    isRowBusy(userId) {
+      return Boolean(this.busyMap[userId]) || this.batchBusy;
+    },
+    setRowBusy(userId, value) {
+      var nextMap = Object.assign({}, this.busyMap);
+      if (value) {
+        nextMap[userId] = true;
+      } else {
+        delete nextMap[userId];
+      }
+
+      this.busyMap = nextMap;
+    },
+    rowActionLabel(userId, label) {
+      return this.isRowBusy(userId) ? "处理中..." : label;
+    },
+    removeUsers(userIds) {
+      this.users = this.users.filter(function(user) {
+        return userIds.indexOf(user.id) === -1;
+      });
+      this.selectedIds = this.selectedIds.filter(function(userId) {
+        return userIds.indexOf(userId) === -1;
+      });
+      this.summary.pendingCount = this.users.length;
+    },
     approve(user) {
-      this.recentActionLabel = "批准 " + user.name;
-      this.$message.success("已批准 " + user.name + "（原型操作）");
+      if (this.isRowBusy(user.id)) {
+        return;
+      }
+
+      this.setRowBusy(user.id, true);
+      approveApprovalUser(user.id)
+        .then(
+          function() {
+            this.removeUsers([user.id]);
+            this.recentActionLabel = "批准 " + user.name;
+            this.recentActionHint = "已允许用户端登录";
+            this.$message.success("已批准 " + user.name);
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.error(buildErrorMessage(error, "批准失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.setRowBusy(user.id, false);
+          }.bind(this)
+        );
     },
     reject(user) {
-      this.recentActionLabel = "拒绝 " + user.name;
-      this.$message.warning("已拒绝 " + user.name + "（原型操作）");
+      if (this.isRowBusy(user.id)) {
+        return;
+      }
+
+      ElMessageBox.prompt("请输入拒绝原因", "拒绝用户", {
+        confirmButtonText: "确认拒绝",
+        cancelButtonText: "取消",
+        inputPlaceholder: "例如：资料不完整",
+        inputType: "textarea"
+      })
+        .then(
+          function(result) {
+            var remark = result && result.value ? result.value : "";
+            this.setRowBusy(user.id, true);
+
+            return rejectApprovalUser(user.id, remark)
+              .then(
+                function() {
+                  this.removeUsers([user.id]);
+                  this.recentActionLabel = "拒绝 " + user.name;
+                  this.recentActionHint = "用户端登录保持禁用";
+                  this.$message.warning("已拒绝 " + user.name);
+                }.bind(this)
+              )
+              .catch(
+                function(error) {
+                  this.$message.error(buildErrorMessage(error, "拒绝失败，请稍后重试"));
+                }.bind(this)
+              )
+              .finally(
+                function() {
+                  this.setRowBusy(user.id, false);
+                }.bind(this)
+              );
+          }.bind(this)
+        )
+        .catch(function() {});
     },
     approveBatch() {
-      this.recentActionLabel = "批量批准";
-      this.$message.success("已批量批准 " + this.selectedCount + " 位用户（原型操作）");
-      this.selectedIds = [];
+      if (!this.canRunBatch) {
+        return;
+      }
+
+      var userIds = this.selectedIds.slice();
+      this.batchBusy = true;
+      batchApproveApprovalUsers(userIds)
+        .then(
+          function() {
+            this.removeUsers(userIds);
+            this.recentActionLabel = "批量批准";
+            this.recentActionHint = "已处理 " + userIds.length + " 位用户";
+            this.$message.success("已批量批准 " + userIds.length + " 位用户");
+          }.bind(this)
+        )
+        .catch(
+          function(error) {
+            this.$message.error(buildErrorMessage(error, "批量批准失败，请稍后重试"));
+          }.bind(this)
+        )
+        .finally(
+          function() {
+            this.batchBusy = false;
+          }.bind(this)
+        );
     },
     rejectBatch() {
-      this.recentActionLabel = "批量拒绝";
-      this.$message.warning("已批量拒绝 " + this.selectedCount + " 位用户（原型操作）");
-      this.selectedIds = [];
+      if (!this.canRunBatch) {
+        return;
+      }
+
+      var userIds = this.selectedIds.slice();
+      ElMessageBox.prompt("请输入统一拒绝原因", "批量拒绝用户", {
+        confirmButtonText: "确认拒绝",
+        cancelButtonText: "取消",
+        inputPlaceholder: "例如：批量资料待补充",
+        inputType: "textarea"
+      })
+        .then(
+          function(result) {
+            var remark = result && result.value ? result.value : "";
+            this.batchBusy = true;
+
+            return batchRejectApprovalUsers(userIds, remark)
+              .then(
+                function() {
+                  this.removeUsers(userIds);
+                  this.recentActionLabel = "批量拒绝";
+                  this.recentActionHint = "已处理 " + userIds.length + " 位用户";
+                  this.$message.warning("已批量拒绝 " + userIds.length + " 位用户");
+                }.bind(this)
+              )
+              .catch(
+                function(error) {
+                  this.$message.error(buildErrorMessage(error, "批量拒绝失败，请稍后重试"));
+                }.bind(this)
+              )
+              .finally(
+                function() {
+                  this.batchBusy = false;
+                }.bind(this)
+              );
+          }.bind(this)
+        )
+        .catch(function() {});
     }
   }
 };
@@ -151,6 +468,10 @@ export default {
   padding: 28px;
 }
 
+.admin-approvals-page__panel-header {
+  gap: 16px;
+}
+
 .admin-approvals-page__list {
   display: flex;
   flex-direction: column;
@@ -162,7 +483,7 @@ export default {
   grid-template-columns: 36px minmax(0, 1fr) auto;
   gap: 14px;
   padding: 16px;
-  border-radius: 18px;
+  border-radius: 8px;
   border: 1px solid var(--border-color);
   background: #ffffff;
 }
@@ -176,6 +497,7 @@ export default {
 .admin-approvals-page__check input {
   width: 18px;
   height: 18px;
+  accent-color: #2563eb;
 }
 
 .admin-approvals-page__title {
@@ -220,10 +542,11 @@ export default {
   gap: 10px;
 }
 
-.admin-approvals-page__actions .finance-button {
+.admin-approvals-page__actions .finance-button,
+.admin-approvals-page__panel-header .finance-button {
   min-height: 38px;
   padding: 0 14px;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 .admin-approvals-page__bulk {
@@ -236,6 +559,34 @@ export default {
 .admin-approvals-page__bulk span {
   color: var(--text-subtle);
   font-size: 13px;
+}
+
+.admin-approvals-page__state {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px dashed var(--border-color);
+  border-radius: 8px;
+  background: #fafafa;
+  text-align: center;
+}
+
+.admin-approvals-page__state strong {
+  color: var(--text-main);
+  font-size: 17px;
+}
+
+.admin-approvals-page__state span {
+  color: var(--text-subtle);
+  font-size: 13px;
+}
+
+.admin-approvals-page__state.is-error {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: rgba(254, 242, 242, 0.82);
 }
 
 @media (max-width: 980px) {

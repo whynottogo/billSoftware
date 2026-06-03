@@ -31,20 +31,18 @@ require_cmd python3
 require_cmd rsync
 require_cmd ssh
 require_cmd scp
-
-if [[ -n "$DEPLOY_PASSWORD" ]]; then
-  require_cmd sshpass
-  SSH_PREFIX=(sshpass -p "$DEPLOY_PASSWORD")
-else
-  SSH_PREFIX=()
-fi
+require_cmd zsh
 
 SSH_TARGET="$REMOTE_USER@$REMOTE_HOST"
-SSH_CMD=("${SSH_PREFIX[@]}" ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$SSH_TARGET")
-SCP_CMD=("${SSH_PREFIX[@]}" scp -P "$REMOTE_PORT" -o StrictHostKeyChecking=no)
 RSYNC_RSH="ssh -o StrictHostKeyChecking=no -p $REMOTE_PORT"
 if [[ -n "$DEPLOY_PASSWORD" ]]; then
+  require_cmd sshpass
+  SSH_CMD=(sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$SSH_TARGET")
+  SCP_CMD=(sshpass -p "$DEPLOY_PASSWORD" scp -P "$REMOTE_PORT" -o StrictHostKeyChecking=no)
   RSYNC_RSH="sshpass -p $DEPLOY_PASSWORD $RSYNC_RSH"
+else
+  SSH_CMD=(ssh -o StrictHostKeyChecking=no -p "$REMOTE_PORT" "$SSH_TARGET")
+  SCP_CMD=(scp -P "$REMOTE_PORT" -o StrictHostKeyChecking=no)
 fi
 
 render_backend_config() {
@@ -109,6 +107,21 @@ echo "==> Rendering deployment config"
 render_backend_config
 render_backend_env
 
+echo "==> Building backend linux binary"
+mkdir -p "$TMP_DIR/backend-app"
+rsync -a --delete \
+  --exclude '.git' \
+  --exclude 'configs/app.yaml' \
+  --exclude 'tmp' \
+  --exclude 'bin' \
+  "$ROOT_DIR/backend/" \
+  "$TMP_DIR/backend-app/"
+mkdir -p "$TMP_DIR/backend-app/bin"
+(
+  cd "$TMP_DIR/backend-app"
+  zsh -ic 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o bin/billserver ./cmd/server'
+)
+
 echo "==> Preparing remote directories"
 "${SSH_CMD[@]}" "
   set -e
@@ -130,9 +143,8 @@ rsync -az --delete \
   --exclude '.git' \
   --exclude 'configs/app.yaml' \
   --exclude 'tmp' \
-  --exclude 'bin' \
   -e "$RSYNC_RSH" \
-  "$ROOT_DIR/backend/" \
+  "$TMP_DIR/backend-app/" \
   "$SSH_TARGET:$REMOTE_ROOT/backend/app/"
 
 echo "==> Syncing deployment manifests"

@@ -67,12 +67,13 @@ func (h *UserAuthHandler) Register(c *gin.Context) {
 	}
 
 	user := &model.User{
-		Username:     req.Username,
-		Nickname:     req.Nickname,
-		Phone:        req.Phone,
-		Email:        req.Email,
-		PasswordHash: service.HashPassword(req.Password),
-		Status:       0,
+		Username:       req.Username,
+		Nickname:       req.Nickname,
+		Phone:          req.Phone,
+		Email:          req.Email,
+		PasswordHash:   service.HashPassword(req.Password),
+		Status:         0,
+		ApprovalStatus: model.UserApprovalPending,
 	}
 
 	if _, err := h.engine.Insert(user); err != nil {
@@ -86,9 +87,10 @@ func (h *UserAuthHandler) Register(c *gin.Context) {
 	}
 
 	response.Success(c, gin.H{
-		"user_id": user.ID,
-		"status":  "disabled",
-		"message": "registered successfully, waiting for admin enable",
+		"user_id":         user.ID,
+		"status":          "disabled",
+		"approval_status": user.ApprovalStatus,
+		"message":         "registered successfully, waiting for admin approval",
 	})
 }
 
@@ -107,6 +109,16 @@ func (h *UserAuthHandler) Login(c *gin.Context) {
 	}
 	if !has {
 		response.Fail(c, http.StatusUnauthorized, "username or phone is incorrect")
+		return
+	}
+
+	if user.ApprovalStatus != model.UserApprovalApproved {
+		if user.ApprovalStatus == model.UserApprovalRejected {
+			response.Fail(c, http.StatusForbidden, "user approval was rejected")
+			return
+		}
+
+		response.Fail(c, http.StatusForbidden, "user is waiting for admin approval")
 		return
 	}
 
@@ -151,15 +163,16 @@ func (h *UserAuthHandler) Login(c *gin.Context) {
 	response.Success(c, gin.H{
 		"token": token,
 		"profile": gin.H{
-			"id":              user.ID,
-			"username":        user.Username,
-			"nickname":        user.Nickname,
-			"phone":           user.Phone,
-			"email":           user.Email,
-			"status":          user.Status,
-			"avatar":          avatar,
+			"id":               user.ID,
+			"username":         user.Username,
+			"nickname":         user.Nickname,
+			"phone":            user.Phone,
+			"email":            user.Email,
+			"status":           user.Status,
+			"approval_status":  user.ApprovalStatus,
+			"avatar":           avatar,
 			"avatarCompressed": strings.TrimSpace(user.AvatarCompressed),
-			"avatarOriginal":  strings.TrimSpace(user.AvatarOriginal),
+			"avatarOriginal":   strings.TrimSpace(user.AvatarOriginal),
 		},
 	})
 }
